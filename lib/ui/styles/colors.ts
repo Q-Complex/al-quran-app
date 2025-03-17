@@ -3,6 +3,9 @@
  */
 
 import { MD3DarkTheme, MD3LightTheme } from 'react-native-paper'
+/**
+ * Theme colors
+ */
 
 const Colors = {
   light: {
@@ -942,5 +945,7 @@ const Colors = {
     },
   },
 }
+
+export { Colors }
 
 export default Colors

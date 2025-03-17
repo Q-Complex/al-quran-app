@@ -1,7 +1,5 @@
 /**
- * Utilities
+ * Utils
  */
 
-import Languages from '@/lib/utils/languages'
-
-export { Languages }
+export * from '@/lib/utils/db'

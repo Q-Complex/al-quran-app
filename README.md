@@ -1,105 +1,114 @@
-# expo-react-native-paper
+# Quran Application
 
-[![EAS Build](https://github.com/youzarsiph/expo-react-native-paper/actions/workflows/eas-build.yml/badge.svg)](https://github.com/youzarsiph/expo-react-native-paper/actions/workflows/eas-build.yml)
-[![EAS Review](https://github.com/youzarsiph/expo-react-native-paper/actions/workflows/eas-reviews.yml/badge.svg)](https://github.com/youzarsiph/expo-react-native-paper/actions/workflows/eas-reviews.yml)
-[![EAS Update](https://github.com/youzarsiph/expo-react-native-paper/actions/workflows/eas-update.yml/badge.svg)](https://github.com/youzarsiph/expo-react-native-paper/actions/workflows/eas-update.yml)
-[![CodeQL](https://github.com/youzarsiph/expo-react-native-paper/actions/workflows/codeql.yml/badge.svg)](https://github.com/youzarsiph/expo-react-native-paper/actions/workflows/codeql.yml)
-[![ESLint](https://github.com/youzarsiph/expo-react-native-paper/actions/workflows/eslint.yml/badge.svg)](https://github.com/youzarsiph/expo-react-native-paper/actions/workflows/eslint.yml)
-[![Prettier](https://github.com/youzarsiph/expo-react-native-paper/actions/workflows/prettier.yml/badge.svg)](https://github.com/youzarsiph/expo-react-native-paper/actions/workflows/prettier.yml)
+[![EAS Build](https://github.com/youzarsiph/quran/actions/workflows/eas-build.yml/badge.svg)](https://github.com/youzarsiph/quran/actions/workflows/eas-build.yml)
+[![EAS Review](https://github.com/youzarsiph/quran/actions/workflows/eas-reviews.yml/badge.svg)](https://github.com/youzarsiph/quran/actions/workflows/eas-reviews.yml)
+[![EAS Update](https://github.com/youzarsiph/quran/actions/workflows/eas-update.yml/badge.svg)](https://github.com/youzarsiph/quran/actions/workflows/eas-update.yml)
+[![CodeQL](https://github.com/youzarsiph/quran/actions/workflows/codeql.yml/badge.svg)](https://github.com/youzarsiph/quran/actions/workflows/codeql.yml)
+[![ESLint](https://github.com/youzarsiph/quran/actions/workflows/eslint.yml/badge.svg)](https://github.com/youzarsiph/quran/actions/workflows/eslint.yml)
+[![Prettier](https://github.com/youzarsiph/quran/actions/workflows/prettier.yml/badge.svg)](https://github.com/youzarsiph/quran/actions/workflows/prettier.yml)
 
-This repository is a template for React Native Expo applications. It integrates Expo Router and React Native Paper. It also demonstrates how to use Github Actions for linting and formatting.
+## Overview
 
-## Features
+The Quran Application is a modern, cross-platform mobile and web application designed to provide users with a seamless and customizable Quran reading experience. Utilizing advanced technologies and industry-standard best practices, the application supports multiple languages, customizable themes, and text directions. Our mission is to make the Quran accessible and understandable to a global audience.
 
-- Expo
-- Expo Router
-- Material Design V3
-- Light & Dark modes with custom themes
-- Cross Platform
-- LTR and RTL support
-- Multi lingual (`ar`, `en` and `tr`)
-- CI/CD. For more info checkout this [page](https://github.com/expo/expo-github-action/tree/main)
+## Key Features
 
-## Platforms
+- **Expo Framework**: Facilitates rapid development and streamlines project initialization.
+- **Expo Router**: Ensures intuitive and efficient navigation within the application.
+- **Material Design V3**: Adheres to modern design principles for a visually appealing interface.
+- **Theming**: Supports light and dark themes with extensive customization options.
+- **Cross-Platform Compatibility**: Available on Web, iOS, and Android, ensuring broad accessibility.
+- **Text Direction Support**: Accommodates both Left-to-Right (LTR) and Right-to-Left (RTL) directions.
+- **Multi-Lingual Support**: Offers Quran text in Arabic (`ar`), English (`en`), and Turkish (`tr`).
+- **CI/CD Integration**: Automated build, test, and deployment processes via GitHub Actions, ensuring high quality and reliability.
 
-- Web
-- IOS
-- Android
+## Supported Platforms
 
-## Screenshots
-
-![Home Screen (Tabs)](./screenshots/home-default-light.png)
-![Profile Screen (Tabs)](./screenshots/profile-teal-dark.png)
-![Settings Screen (Tabs)](./screenshots/settings-lime-light.png)
-![Modal Screen (Stack)](./screenshots/modal-light-red.png)
-![Search Screen (Stack)](./screenshots/search-orange-dark.png)
-![Login Screen (Stack)](./screenshots/login-violet-light.png)
-![Signup Screen (Stack)](./screenshots/signup-green-dark.png)
-![Home Screen (Drawer)](./screenshots/home-blue-dark.png)
-![Profile Screen (Drawer)](./screenshots/profile-olive-light.png)
-![Settings Screen (Drawer)](./screenshots/settings-violet-light.png)
+- **Web**
+- **iOS**
+- **Android**
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+To set up the project locally for development and testing, follow these steps:
 
 ### Prerequisites
 
-- Node.js
-- npm
+Ensure you have the following software installed:
+
+- **Node.js**
+- **npm** or **Yarn**
 
 ### Installation
 
-Clone the repo:
+Clone the repository and install the necessary dependencies:
 
 ```bash
-git clone https://github.com/youzarsiph/expo-react-native-paper.git
-```
-
-Open `package.json` and update the `name` field to match your app's name:
-
-```jsonc
-{
-  // Change the following line
-  "name": "expo-react-native-paper",
-  "main": "expo-router/entry",
-  "version": "1.0.0",
-  ...
-}
-
-```
-
-Install dependencies:
-
-```bash
+git clone https://github.com/youzarsiph/quran.git
+cd quran
 npm install
 ```
 
-Run the app:
+or if using Yarn:
+
+```bash
+git clone https://github.com/youzarsiph/quran.git
+cd quran
+yarn install
+```
+
+### Running the Application
+
+Start the application using the command below:
 
 ```bash
 npm start
 ```
 
-## Built With
+or with Yarn:
 
-- TypeScript
-- React
-- React Native
-- Expo
-- Expo Router
-- React Native Paper
+```bash
+yarn start
+```
+
+This will launch the application in development mode.
+
+## Technology Stack
+
+- **TypeScript**: Ensures code reliability through static type checking.
+- **React**: Core framework for building the user interface.
+- **React Native**: Enables cross-platform application development.
+- **Expo**: Simplifies the development of portable applications for multiple platforms.
+- **Expo Router**: Manages navigation and routing within the application.
+- **React Native Paper**: Provides a UI component library based on Material Design guidelines.
 
 ## Contributing
 
-Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
+We welcome contributions from the open-source community. Your efforts are vital to enhancing the application and improving the experience for users. Please follow these guidelines when contributing:
 
-1. Fork the Project
-2. Create your Feature Branch (git checkout -b feature/AmazingFeature)
-3. Commit your Changes (git commit -m 'Add some AmazingFeature')
-4. Push to the Branch (git push origin feature/AmazingFeature)
-5. Open a Pull Request
+1. **Fork the Repository**: Begin by forking the project to your GitHub account.
+2. **Create a Feature Branch**: Branch out from the main branch for your feature development using `git checkout -b feature/YourFeatureName`.
+3. **Commit Your Changes**: Make your changes and commit them with a descriptive message, e.g., `git commit -m 'Add new feature: YourFeatureName'`.
+4. **Push to the Branch**: Push your changes to your fork using `git push origin feature/YourFeatureName`.
+5. **Open a Pull Request**: Submit a pull request to the main repository for review.
+6. **Code Review**: Your pull request will be reviewed by the maintainers, and feedback will be provided if necessary.
+7. **Merge**: Once your changes are approved and everything is in order, the maintainers will merge your pull request.
 
-## License
+We have a [Contributing Guide](CONTRIBUTING.md) that provides more details on our development workflow and contribution standards.
 
-Distributed under the MIT License. See LICENSE for more information.
+## Code of Conduct
+
+We expect all community members to follow our [Code of Conduct](CODE_OF_CONDUCT.md). Please report any unacceptable behavior to the maintainers.
+
+## Licensing
+
+This project is licensed under the MIT License. For more details, please refer to the [LICENSE](LICENSE) file.
+
+## Contact
+
+For any inquiries or feedback, please reach out to:
+
+- **Maintainer**: Yousuf Abu Shanab
+- **GitHub Issues**: [https://github.com/youzarsiph/quran/issues](https://github.com/youzarsiph/quran/issues)
+
+We appreciate your interest and contributions to the Quran Application. Together, we can continue to enhance the accessibility and user experience of Quranic teachings.
