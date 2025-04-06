@@ -1,135 +1,239 @@
-import { useSQLiteContext } from 'expo-sqlite'
+import { router } from 'expo-router'
+import { SQLiteDatabase } from 'expo-sqlite'
 import React from 'react'
 import { View } from 'react-native'
 import {
+  Button,
   Card,
   Chip,
+  Divider,
   MD3Theme,
   Surface,
   Text,
   Tooltip,
 } from 'react-native-paper'
 
-import { TPage, TVerse } from '@/lib/types'
+import { TChapter, TFontFamily, TFontSize, TPage, TVerse } from '@/lib/types'
+import { toMarker } from '@/lib/utils'
+
+// Page container
+const Container = (p: {
+  data: TPage
+  children: React.ReactNode | React.ReactNode[]
+}) => (
+  <Surface elevation={0} style={{ gap: 16 }}>
+    <View
+      style={{
+        paddingTop: 8,
+        flexDirection: 'row',
+        paddingHorizontal: 16,
+        justifyContent: 'space-between',
+      }}
+    >
+      <Tooltip title="Read">
+        <Button onPress={() => router.push(`/chapters/${p.data.chapter_id}`)}>
+          Chapter {p.data.chapter_id}
+        </Button>
+      </Tooltip>
+
+      <Tooltip title="Read">
+        <Button onPress={() => router.push(`/parts/${p.data.part_id}`)}>
+          Part {p.data.part_id}
+        </Button>
+      </Tooltip>
+    </View>
+
+    <View style={{ gap: 8 }}>
+      {p.children}
+
+      <View
+        style={{
+          flexDirection: 'row',
+          paddingHorizontal: 16,
+          justifyContent: 'space-between',
+        }}
+      >
+        <Tooltip title="Read">
+          <Button onPress={() => router.push(`/groups/${p.data.group_id}`)}>
+            Group {p.data.group_id}
+          </Button>
+        </Tooltip>
+
+        <Tooltip title="Page number">
+          <Chip onPress={() => router.push(`/pages/${p.data.id}`)}>
+            {p.data.id}
+          </Chip>
+        </Tooltip>
+
+        <Tooltip title="Read">
+          <Button onPress={() => router.push(`/quarters/${p.data.quarter_id}`)}>
+            Quarter {p.data.quarter_id}
+          </Button>
+        </Tooltip>
+      </View>
+
+      <Divider bold />
+    </View>
+  </Surface>
+)
+
+// Page content
+const Content = (props: {
+  color: string
+  font: TFontFamily
+  size: TFontSize
+  verses: TVerse[]
+  onPress: (v: TVerse) => void
+}) => (
+  <Text style={{ direction: 'rtl', paddingHorizontal: 16 }}>
+    {props.verses.map((v) => (
+      <Text
+        key={v.id}
+        variant={props.size.value}
+        onLongPress={() => props.onPress(v)}
+        style={{
+          lineHeight: props.size.lineHeight,
+          textAlign: 'center',
+          fontFamily: props.font,
+        }}
+      >
+        {v.number !== 1 ? (
+          v.content + ' '
+        ) : (
+          <>
+            <Text
+              style={{
+                textAlign: 'center',
+                color: props.color,
+                fontFamily: props.font,
+              }}
+            >
+              {v.content.slice(0, 39) + '\n'}
+            </Text>
+            {v.content.slice(39) + ' '}
+          </>
+        )}
+
+        <Text
+          style={{
+            color: props.color,
+            fontFamily: props.font,
+          }}
+        >
+          {toMarker(v.number.toString()) + ' '}
+        </Text>
+      </Text>
+    ))}
+  </Text>
+)
+
+const Header = (props: { chapter: TChapter; font: TFontFamily }) => (
+  <Card
+    style={{ marginHorizontal: 16 }}
+    onPress={() => router.push(`/chapters/${props.chapter.id}`)}
+  >
+    <Card.Content
+      style={{
+        padding: 4,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+      }}
+    >
+      <Tooltip title="Chapter">
+        <Chip mode="outlined">{props.chapter.id}</Chip>
+      </Tooltip>
+      <Text
+        variant="bodyLarge"
+        style={{
+          textAlign: 'center',
+          lineHeight: 32,
+          fontFamily: props.font,
+        }}
+      >{`سُورَةُ ${props.chapter.name}`}</Text>
+      <Tooltip title="Verse count">
+        <Chip mode="outlined">{props.chapter.verse_count}</Chip>
+      </Tooltip>
+    </Card.Content>
+  </Card>
+)
 
 const Page = (props: {
+  db: SQLiteDatabase
   data: TPage
   theme: MD3Theme
-  filterValue?: number
-  filterField?: 'chapter' | 'part' | 'group' | 'quarter'
-  onMarkerPress: (id: number) => void
+  verses: TVerse[]
+  font: { family: TFontFamily; size: TFontSize }
+  onVersePress: (v: number) => void
 }) => {
-  const db = useSQLiteContext()
-  const [verses, setVerses] = React.useState<TVerse[]>([])
+  const firstVerse = props.verses[0].chapter_id
 
-  // Data verses
-  React.useEffect(() => {
-    ;(async () => {
-      const args = [props.data.id]
-      let query = 'SELECT * FROM "verses" WHERE "page_id" = ?'
+  // Check if the page contains only verses of one chapter
+  if (props.verses.every((v) => v.chapter_id === firstVerse)) {
+    let chapter = undefined
 
-      if (props.filterField && props.filterValue) {
-        args.push(props.filterValue)
-        query += ` AND "${props.filterField}_id" = ?`
-      }
+    // Check if the 1st verses of a chapter in this page
+    if (props.verses.filter((v) => v.number === 1).length === 1) {
+      chapter = props.db.getFirstSync<TChapter>(
+        'SELECT * FROM "chapters" WHERE "id" = ?',
+        firstVerse,
+      )!
+    }
 
-      setVerses(await db.getAllAsync<TVerse>(query, args))
-    })()
+    return (
+      <Container data={props.data}>
+        {chapter && <Header chapter={chapter} font={props.font.family} />}
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+        <Text style={{ direction: 'rtl', paddingHorizontal: 16 }}>
+          <Content
+            color={props.theme.colors.primary}
+            font={props.font.family}
+            size={props.font.size}
+            onPress={(v: TVerse) => props.onVersePress(v.id)}
+            verses={props.verses}
+          />
+        </Text>
+      </Container>
+    )
+  }
 
-  const toMarker = (verseNumber: string) => {
-    const Numbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩']
-    return verseNumber
-      .split('')
-      .map((i) => Numbers[parseInt(i, 10)])
-      .reduce((prv, cur) => prv + cur)
+  // Extract chapters from page verses
+  const chapters: (TChapter & { verses: TVerse[] })[] = []
+  for (const v of props.verses) {
+    if (!chapters.map((i) => i.id).includes(v.chapter_id)) {
+      const chapter = props.db.getFirstSync<TChapter>(
+        'SELECT * FROM "chapters" WHERE "id" = ?',
+        v.chapter_id,
+      )!
+
+      chapters.push({
+        ...chapter,
+        verses: [v],
+      })
+    } else {
+      chapters.find((c) => c.id === v.chapter_id)?.verses.push(v)
+    }
   }
 
   return (
-    <View style={{ gap: 16, marginBottom: 16 }}>
-      <Surface
-        elevation={0}
-        style={{
-          padding: 2,
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: 16,
-          justifyContent: 'space-between',
-          backgroundColor: props.theme.colors.surface,
-        }}
-      >
-        <Text variant="bodySmall">Chapter {props.data.chapter_id}</Text>
+    <Container data={props.data}>
+      {chapters.map((c) => (
+        <View key={c.id} style={{ gap: 16 }}>
+          {/* Check if the chapter verses includes 1st verse */}
+          {c.verses.find((v) => v.number === 1) && (
+            <Header chapter={c} font={props.font.family} />
+          )}
 
-        <Text variant="bodySmall">Part {props.data.part_id}</Text>
-      </Surface>
-
-      <View style={{ gap: 16, paddingHorizontal: 16 }}>
-        <Text style={{ direction: 'rtl' }}>
-          {verses.map((v) => (
-            <Text key={v.id} variant="titleLarge">
-              {v.number === 1 ? (
-                <>
-                  {'\n'}
-                  <Card mode="outlined" style={{ width: '100%' }}>
-                    <Card.Content
-                      style={{
-                        gap: 16,
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <Chip>Chapter {props.data.chapter_id}</Chip>
-                    </Card.Content>
-                  </Card>
-                  {'\n'}
-                </>
-              ) : undefined}
-              <Text style={{ lineHeight: 40 }}>
-                <Text
-                  variant="titleLarge"
-                  style={{
-                    fontFamily: 'AmiriQuran_400Regular',
-                    lineHeight: 40,
-                  }}
-                >
-                  {v.content}
-                </Text>{' '}
-                <Text
-                  variant="headlineSmall"
-                  onPress={() => props.onMarkerPress(v.id)}
-                  style={{
-                    color: props.theme.colors.primary,
-                    fontFamily: 'AmiriQuran_400Regular',
-                    lineHeight: 40,
-                  }}
-                >
-                  {toMarker(v.number.toString())}
-                </Text>{' '}
-              </Text>
-            </Text>
-          ))}
-        </Text>
-
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Text variant="bodySmall">Group {props.data.group_id}</Text>
-
-          <Tooltip title="Page number">
-            <Chip>{props.data.id}</Chip>
-          </Tooltip>
-
-          <Text variant="bodySmall">Quarter {props.data.quarter_id}</Text>
+          <Content
+            color={props.theme.colors.primary}
+            font={props.font.family}
+            size={props.font.size}
+            onPress={(v: TVerse) => props.onVersePress(v.id)}
+            verses={c.verses}
+          />
         </View>
-      </View>
-    </View>
+      ))}
+    </Container>
   )
 }
 

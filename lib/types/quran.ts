@@ -56,14 +56,12 @@ type TVerse = {
   quarter_id: number
 }
 
-type TParams = 'parts' | 'groups' | 'quarters' | 'pages'
+type TItem = TChapter | TPart | TGroup | TQuarter | TPage
 
-type TFilters = {
-  value?: string
-  display: boolean
-  ordering: boolean
-  operator?: '=' | '>' | '<'
-  field: 'id' | 'order' | 'type' | 'verse_count' | 'page_count'
+type V = {
+  verse_number: number
+  verse_c_id: number
+  verse_content: string
 }
 
-export { TChapter, TFilters, TPart, TGroup, TQuarter, TPage, TParams, TVerse }
+export { TChapter, TPart, TGroup, TQuarter, TPage, TVerse, V, TItem }

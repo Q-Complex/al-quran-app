@@ -1,11 +1,13 @@
 {
   "expo": {
-    "name": "quran",
-    "slug": "quran",
+    "name": "Al Quran",
+    "slug": "al-quran",
+    "owner": "youzarsiph",
     "version": "1.0.0",
+    "description": "Al Quran is a modern application designed to provide users with a seamless and customizable Quran reading experience.",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "al-quran",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
@@ -13,15 +15,21 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "ExpoLocalization_supportsRTL": true
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.quran"
     },
     "web": {
       "bundler": "metro",
@@ -31,7 +39,17 @@
     "plugins": [
       "expo-router",
       "expo-secure-store",
-      "expo-font",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "assets/fonts/Indopak.ttf",
+            "assets/fonts/Uthmanic.ttf",
+            "node_modules/@expo-google-fonts/noto-sans/NotoSans_400Regular.ttf",
+            "node_modules/@expo-google-fonts/noto-kufi-arabic/NotoKufiArabic_400Regular.ttf"
+          ]
+        }
+      ],
       "expo-localization",
       "expo-sqlite"
     ],

@@ -2,20 +2,29 @@
  * Material themes
  */
 
-import { MD3LightTheme, MD3DarkTheme, MD3Theme } from 'react-native-paper'
+import {
+  MD3LightTheme,
+  MD3DarkTheme,
+  MD3Theme,
+  configureFonts,
+} from 'react-native-paper'
 
-import { Colors } from './colors'
+import { Colors } from '@/lib/ui/styles/colors'
+
+const fontConfig = {
+  fontFamily: 'NotoSans_400Regular',
+}
 
 const AppLightTheme: MD3Theme = {
   ...MD3LightTheme,
-  roundness: 5,
-  colors: Colors.light.teal,
+  colors: Colors.light.green,
+  fonts: configureFonts({ config: fontConfig }),
 }
 
 const AppDarkTheme: MD3Theme = {
   ...MD3DarkTheme,
-  roundness: 5,
-  colors: Colors.dark.teal,
+  colors: Colors.dark.green,
+  fonts: configureFonts({ config: fontConfig }),
 }
 
 export { AppLightTheme, AppDarkTheme }

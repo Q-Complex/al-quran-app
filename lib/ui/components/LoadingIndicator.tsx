@@ -1,12 +1,21 @@
 import React from 'react'
-import { ActivityIndicator, Surface } from 'react-native-paper'
+import {
+  ActivityIndicator,
+  ActivityIndicatorProps,
+  Surface,
+} from 'react-native-paper'
 
-const LoadingIndicator = () => (
+const LoadingIndicator = (props: ActivityIndicatorProps) => (
   <Surface
     elevation={0}
-    style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+    style={{
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingTop: 96,
+    }}
   >
-    <ActivityIndicator />
+    <ActivityIndicator {...props} />
   </Surface>
 )
 

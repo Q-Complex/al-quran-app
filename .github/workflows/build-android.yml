@@ -1,0 +1,43 @@
+name: Android Build
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Install and build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Continuous Native Generation
+        run: npx expo prebuild
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'microsoft'
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: |
+          cd android
+          ./gradlew build
+
+      - name: GH Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            android/app/build/outputs/bundle/release/app-release.aab

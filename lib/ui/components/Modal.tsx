@@ -2,10 +2,10 @@ import React from 'react'
 import { View } from 'react-native'
 import {
   Modal as BaseModal,
+  Button,
   IconButton,
   MD3Theme,
   ModalProps,
-  Portal,
   Text,
   Tooltip,
 } from 'react-native-paper'
@@ -15,8 +15,12 @@ const Modal = (props: {
   children: React.ReactNode | React.ReactNode[]
   theme: MD3Theme
   modalProps: ModalProps
-}) => (
-  <Portal>
+}) => {
+  // Close action
+  const close = () =>
+    props.modalProps.onDismiss ? props.modalProps.onDismiss() : undefined
+
+  return (
     <BaseModal
       {...props.modalProps}
       contentContainerStyle={{
@@ -41,21 +45,19 @@ const Modal = (props: {
         <Text variant="titleLarge">{props.title}</Text>
 
         <Tooltip title="Close">
-          <IconButton
-            size={24}
-            icon="close"
-            onPress={() =>
-              props.modalProps.onDismiss
-                ? props.modalProps.onDismiss()
-                : undefined
-            }
-          />
+          <IconButton size={24} icon="close" onPress={close} />
         </Tooltip>
       </View>
 
       {props.children}
+
+      <View style={{ padding: 16 }}>
+        <Button mode="contained" onPress={close}>
+          Close
+        </Button>
+      </View>
     </BaseModal>
-  </Portal>
-)
+  )
+}
 
 export default Modal

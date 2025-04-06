@@ -1,4 +1,5 @@
-import { AmiriQuran_400Regular } from '@expo-google-fonts/amiri-quran'
+import { NotoKufiArabic_400Regular } from '@expo-google-fonts/noto-kufi-arabic'
+import { NotoSans_400Regular } from '@expo-google-fonts/noto-sans'
 import {
   ThemeProvider,
   DarkTheme as NavDarkTheme,
@@ -31,7 +32,12 @@ const RootLayout = () => {
     materialDark: AppDarkTheme,
     materialLight: AppLightTheme,
   })
-  const [loaded, error] = useFonts({ AmiriQuran_400Regular })
+  const [loaded, error] = useFonts({
+    Indopak: require('@/assets/fonts/Indopak.ttf'),
+    Uthmanic: require('@/assets/fonts/Uthmanic.ttf'),
+    NotoKufiArabic_400Regular,
+    NotoSans_400Regular,
+  })
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   React.useEffect(() => {
@@ -72,9 +78,8 @@ const RootLayout = () => {
             }}
           >
             <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
-            <Stack.Screen name="[type]/index" />
-            <Stack.Screen name="[type]/[id]" />
-            <Stack.Screen name="chapters/[id]" />
+            <Stack.Screen name="[slug]/index" />
+            <Stack.Screen name="[slug]/[id]" />
           </Stack>
         </SQLiteProvider>
       </PaperProvider>

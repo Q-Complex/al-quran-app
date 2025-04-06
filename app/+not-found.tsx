@@ -2,10 +2,11 @@ import { router, Stack } from 'expo-router'
 import React from 'react'
 import { Button, Surface, Text } from 'react-native-paper'
 
-import { styles } from '@/lib/ui'
-
 const NotFound = () => (
-  <Surface style={styles.screen}>
+  <Surface
+    elevation={0}
+    style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+  >
     <Stack.Screen options={{ title: 'Oops' }} />
 
     <Text variant="displayLarge">Not found</Text>
@@ -15,7 +16,7 @@ const NotFound = () => (
       instead.
     </Text>
 
-    <Button mode="contained" onPress={() => router.replace('/')}>
+    <Button mode="contained" onPress={() => router.back()}>
       Go Home
     </Button>
   </Surface>

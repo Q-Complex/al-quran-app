@@ -4,28 +4,29 @@ import Drawer from 'expo-router/drawer'
 import { useSQLiteContext } from 'expo-sqlite'
 import React from 'react'
 import { ScrollView } from 'react-native'
-import { Chip, List, ProgressBar, Surface, Tooltip } from 'react-native-paper'
+import { Chip, List, ProgressBar, Surface } from 'react-native-paper'
 
-import { buildQuery, DrawerHeader, TChapter } from '@/lib'
+import { Database, DrawerHeader, TChapter } from '@/lib'
 
 const Home = () => {
   const db = useSQLiteContext()
-  const [data, setData] = React.useState<TChapter[]>([])
-  const [loading, setLoading] = React.useState<boolean>(false)
+  const [query, setQuery] = React.useState<string>('')
+  const [loading, setLoading] = React.useState(false)
+  const [chapters, setChapters] = React.useState<TChapter[]>([])
 
   // Data loading
   React.useEffect(() => {
     setLoading(true)
     ;(async () => {
-      setData(await db.getAllAsync<TChapter>(buildQuery('chapters')))
+      setChapters((await Database.query('chapters', db, query)) as TChapter[])
       setLoading(false)
     })()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [query])
 
   return (
-    <Surface style={{ flex: 1 }}>
+    <Surface elevation={0} style={{ flex: 1 }}>
       <Drawer.Screen
         options={{
           header: (props) => (
@@ -36,6 +37,7 @@ const Home = () => {
               searchBarProps={{
                 value: '',
                 placeholder: 'Search chapters...',
+                onChangeText: (t) => setQuery(t),
               }}
             />
           ),
@@ -45,26 +47,17 @@ const Home = () => {
       <ProgressBar indeterminate={loading} />
 
       <AnimatedFlashList
-        data={data}
+        data={chapters}
         estimatedItemSize={100}
-        renderItem={({ item }: { item: TChapter }) => (
+        renderItem={({ item: c }: { item: TChapter }) => (
           <List.Item
-            title={item.name}
-            onPress={() => router.push(`/chapters/${item.id}`)}
-            left={(props) => <Chip {...props}>{item.id}</Chip>}
-            description={`${item.verse_count} verses, ${item.page_count} pages`}
-            titleStyle={{
-              lineHeight: 25,
-              fontFamily: 'AmiriQuran_400Regular',
-            }}
+            title={`سُورَةُ ${c.name}`}
+            onPress={() => router.push(`/chapters/${c.id}`)}
+            left={(props) => <Chip {...props}>{c.id}</Chip>}
+            titleStyle={{ fontFamily: 'NotoKufiArabic_400Regular' }}
+            description={`${c.type ? 'Meccan' : 'Medinan'}, ${c.verse_count} verses`}
             right={(props) => (
-              <Tooltip title={item.type ? 'Meccan' : 'Medinan'}>
-                <List.Icon
-                  {...props}
-                  icon={item.type ? 'cube' : 'mosque'}
-                  style={[props.style, { marginVertical: 'auto' }]}
-                />
-              </Tooltip>
+              <List.Icon {...props} icon={c.type ? 'cube' : 'mosque'} />
             )}
           />
         )}

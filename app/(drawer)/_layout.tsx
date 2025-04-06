@@ -1,8 +1,10 @@
+import { router } from 'expo-router'
 import { Drawer } from 'expo-router/drawer'
 import React from 'react'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { Appbar } from 'react-native-paper'
 
-import { DrawerContent, DrawerHeader } from '@/lib/ui'
+import { DrawerContent, DrawerHeader } from '@/lib'
 
 const DrawerLayout = () => (
   <GestureHandlerRootView style={{ flex: 1 }}>
@@ -19,6 +21,13 @@ const DrawerLayout = () => (
         drawerStyle: { paddingTop: 32 },
         header: (props) => (
           <DrawerHeader navProps={props} children={undefined} />
+        ),
+        headerRight: (props) => (
+          <Appbar.Action
+            {...props}
+            icon="simple-icons"
+            onPress={() => router.push('/icons')}
+          />
         ),
       }}
     >
