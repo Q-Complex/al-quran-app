@@ -1,7 +1,6 @@
 import { AnimatedFlashList } from '@shopify/flash-list'
 import { router, Stack, useLocalSearchParams } from 'expo-router'
 import { useSQLiteContext } from 'expo-sqlite'
-import { Storage } from 'expo-sqlite/kv-store'
 import React from 'react'
 import {
   Appbar,
@@ -15,28 +14,28 @@ import {
 
 import {
   Database,
-  DefaultSettings,
+  Locales,
   Modal,
   Page,
+  QSettings,
   Slug,
   TChapter,
   TGroup,
   TItem,
   TPage,
   TQuarter,
-  TSettings,
   TVerse,
 } from '@/lib'
 
 const Details = () => {
   const theme = useTheme()
   const db = useSQLiteContext()
+  const { settings } = React.useContext(QSettings)
   const { id, slug } = useLocalSearchParams<{ id: string; slug: Slug }>()
   const [item, setItem] = React.useState<TItem>()
   const [pages, setPages] = React.useState<TPage[]>([])
   const [verses, setVerses] = React.useState<TVerse[]>([])
   const [loading, setLoading] = React.useState(false)
-  const [settings, setSettings] = React.useState<TSettings>(DefaultSettings)
   const [visible, setVisible] = React.useState({
     details: false,
     actions: false,
@@ -45,15 +44,6 @@ const Details = () => {
   const ID = parseInt(id, 10)
   const count = Database.count(slug)
   const types = ['chapters', 'parts', 'groups', 'quarters', 'pages']
-
-  // Data loading
-  React.useEffect(() => {
-    ;(async () => {
-      await Storage.getItemAsync('settings')
-        .then((s) => (s ? setSettings(JSON.parse(s)) : {}))
-        .catch((err) => console.error(err))
-    })()
-  }, [])
 
   // Data loading
   React.useEffect(() => {
@@ -72,9 +62,11 @@ const Details = () => {
     })()
   }, [ID, db, slug])
 
-  const single = slug[0].toUpperCase() + slug.slice(1, slug.length - 1)
+  const single = slug.slice(0, slug.length - 1)
   const title =
-    slug === 'chapters' && item ? `سُورَةُ ${item?.name}` : single + ' ' + id
+    slug === 'chapters' && item
+      ? Locales.t('chapter') + ` ${item?.name}`
+      : Locales.t(single) + ' ' + id
 
   return (
     <Surface elevation={0} style={{ flex: 1 }}>
@@ -87,7 +79,7 @@ const Details = () => {
               : undefined,
           headerRight: (props) => (
             <>
-              <Tooltip title="Previous">
+              <Tooltip title={Locales.t('prev')}>
                 <Appbar.Action
                   {...props}
                   icon="chevron-left"
@@ -95,7 +87,7 @@ const Details = () => {
                   onPress={() => router.push(`/${slug}/${ID - 1}`)}
                 />
               </Tooltip>
-              <Tooltip title="Next">
+              <Tooltip title={Locales.t('next')}>
                 <Appbar.Action
                   {...props}
                   icon="chevron-right"
@@ -103,7 +95,7 @@ const Details = () => {
                   onPress={() => router.push(`/${slug}/${ID + 1}`)}
                 />
               </Tooltip>
-              <Tooltip title="Info">
+              <Tooltip title={Locales.t('info')}>
                 <Appbar.Action
                   {...props}
                   icon="information"
@@ -137,7 +129,7 @@ const Details = () => {
 
       <Modal
         theme={theme}
-        title={`${single} details`}
+        title={Locales.t('details')}
         modalProps={{
           visible: visible.details,
           children: undefined,
@@ -146,7 +138,7 @@ const Details = () => {
       >
         <List.Section>
           <List.Item
-            title={single}
+            title={Locales.t(single)}
             right={(props) => <Text {...props}>{item?.id}</Text>}
             left={(props) => (
               <List.Icon {...props} icon="sort-numeric-ascending" />
@@ -155,7 +147,7 @@ const Details = () => {
           {slug === 'chapters' && (
             <>
               <List.Item
-                title="Name"
+                title={Locales.t('name')}
                 right={(props) => (
                   <Text
                     {...props}
@@ -164,16 +156,18 @@ const Details = () => {
                       fontFamily: 'NotoKufiArabic_400Regular',
                     }}
                   >
-                    {`سُورَةُ ${item?.name}`}
+                    {item?.name}
                   </Text>
                 )}
                 left={(props) => <List.Icon {...props} icon="abjad-arabic" />}
               />
               <List.Item
-                title="Type"
+                title={Locales.t('type')}
                 right={(props) => (
                   <Text {...props}>
-                    {(item as TChapter)?.type ? 'Meccan' : 'Medinan'}
+                    {(item as TChapter)?.type
+                      ? Locales.t('meccan')
+                      : Locales.t('medinan')}
                   </Text>
                 )}
                 left={(props) => (
@@ -184,7 +178,7 @@ const Details = () => {
                 )}
               />
               <List.Item
-                title="Chronological order"
+                title={Locales.t('chronoOrder')}
                 right={(props) => (
                   <Text {...props}>{(item as TChapter)?.order}</Text>
                 )}
@@ -196,7 +190,7 @@ const Details = () => {
           )}
           {types.slice(2).includes(slug) && (
             <List.Item
-              title="Part"
+              title={Locales.t('part')}
               left={(props) => <List.Icon {...props} icon="grid-large" />}
               right={(props) => (
                 <Text {...props}>{(item as TGroup)?.part_id}</Text>
@@ -205,7 +199,7 @@ const Details = () => {
           )}
           {types.slice(3).includes(slug) && (
             <List.Item
-              title="Group"
+              title={Locales.t('group')}
               left={(props) => <List.Icon {...props} icon="grid" />}
               right={(props) => (
                 <Text {...props}>{(item as TQuarter)?.group_id}</Text>
@@ -215,14 +209,14 @@ const Details = () => {
           {slug === 'pages' && (
             <>
               <List.Item
-                title="Quarter"
+                title={Locales.t('quarter')}
                 left={(props) => <List.Icon {...props} icon="dots-grid" />}
                 right={(props) => (
                   <Text {...props}>{(item as TPage)?.quarter_id}</Text>
                 )}
               />
               <List.Item
-                title="Chapter"
+                title={Locales.t('chapter')}
                 left={(props) => <List.Icon {...props} icon="book" />}
                 right={(props) => (
                   <Text {...props}>{(item as TPage)?.chapter_id}</Text>
@@ -232,7 +226,7 @@ const Details = () => {
           )}
           {types.slice(0, types.length - 1).includes(slug) && (
             <List.Item
-              title="Page count"
+              title={Locales.t('pCount')}
               right={(props) => (
                 <Text {...props}>{(item as TChapter)?.page_count}</Text>
               )}
@@ -242,19 +236,20 @@ const Details = () => {
             />
           )}
           <List.Item
-            title="Verse count"
+            title={Locales.t('vCount')}
             right={(props) => <Text {...props}>{item?.verse_count}</Text>}
             left={(props) => <List.Icon {...props} icon="book-open" />}
           />
           <List.Item
-            title="Settings"
-            onPress={() => router.push('/(drawer)/settings')}
+            title={Locales.t('settings')}
+            onPress={() => router.push('/settings')}
             left={(props) => <List.Icon {...props} icon="cog" />}
             right={(props) => <List.Icon {...props} icon="chevron-right" />}
           />
         </List.Section>
       </Modal>
 
+      {/* 
       <Modal
         theme={theme}
         title="Actions"
@@ -265,7 +260,7 @@ const Details = () => {
         }}
       >
         <List.Section>
-          {/* <List.Item
+          <List.Item
             title="Listen"
             onPress={() => {}}
             left={(props) => <List.Icon {...props} icon="ear-hearing" />}
@@ -294,14 +289,15 @@ const Details = () => {
             onPress={() => {}}
             left={(props) => <List.Icon {...props} icon="share-variant" />}
             right={(props) => <List.Icon {...props} icon="chevron-right" />}
-          /> */}
+          />
           <List.Item
             title="Copy"
             onPress={() => {}}
             left={(props) => <List.Icon {...props} icon="content-copy" />}
           />
         </List.Section>
-      </Modal>
+      </Modal> 
+      */}
     </Surface>
   )
 }

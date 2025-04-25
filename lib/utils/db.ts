@@ -4,6 +4,7 @@ import {
   Slug,
   TChapter,
   TGroup,
+  TItem,
   TPage,
   TPart,
   TQuarter,
@@ -16,13 +17,7 @@ const Database = {
     table: Slug,
     db: SQLiteDatabase,
     search?: string,
-  ): Promise<
-    | TChapter[]
-    | (TPart & V)[]
-    | (TGroup & V)[]
-    | (TQuarter & V)[]
-    | (TPage & V)[]
-  > => {
+  ): Promise<(TItem & V)[]> => {
     // No need to join the tables
     if (table === 'chapters') {
       let statement = 'SELECT * FROM "chapters"'
@@ -34,7 +29,7 @@ const Database = {
         FROM "chapters") WHERE "unaccent_name" LIKE '%${search}%'`
       }
 
-      return await db.getAllAsync<TChapter>(statement)
+      return await db.getAllAsync<TChapter & V>(statement)
     }
 
     const groupByField = table.slice(0, table.length - 1).concat('_id')

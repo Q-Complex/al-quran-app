@@ -16,6 +16,8 @@ import {
 import { TChapter, TFontFamily, TFontSize, TPage, TVerse } from '@/lib/types'
 import { toMarker } from '@/lib/utils'
 
+import { Locales } from '../locales'
+
 // Page container
 const Container = (p: {
   data: TPage
@@ -30,15 +32,15 @@ const Container = (p: {
         justifyContent: 'space-between',
       }}
     >
-      <Tooltip title="Read">
+      <Tooltip title={Locales.t('read')}>
         <Button onPress={() => router.push(`/chapters/${p.data.chapter_id}`)}>
-          Chapter {p.data.chapter_id}
+          {Locales.t('chapter')} {p.data.chapter_id}
         </Button>
       </Tooltip>
 
-      <Tooltip title="Read">
+      <Tooltip title={Locales.t('read')}>
         <Button onPress={() => router.push(`/parts/${p.data.part_id}`)}>
-          Part {p.data.part_id}
+          {Locales.t('part')} {p.data.part_id}
         </Button>
       </Tooltip>
     </View>
@@ -53,21 +55,21 @@ const Container = (p: {
           justifyContent: 'space-between',
         }}
       >
-        <Tooltip title="Read">
+        <Tooltip title={Locales.t('read')}>
           <Button onPress={() => router.push(`/groups/${p.data.group_id}`)}>
-            Group {p.data.group_id}
+            {Locales.t('group')} {p.data.group_id}
           </Button>
         </Tooltip>
 
-        <Tooltip title="Page number">
+        <Tooltip title={Locales.t('pNum')}>
           <Chip onPress={() => router.push(`/pages/${p.data.id}`)}>
             {p.data.id}
           </Chip>
         </Tooltip>
 
-        <Tooltip title="Read">
+        <Tooltip title={Locales.t('read')}>
           <Button onPress={() => router.push(`/quarters/${p.data.quarter_id}`)}>
-            Quarter {p.data.quarter_id}
+            {Locales.t('quarter')} {p.data.quarter_id}
           </Button>
         </Tooltip>
       </View>
@@ -92,9 +94,9 @@ const Content = (props: {
         variant={props.size.value}
         onLongPress={() => props.onPress(v)}
         style={{
-          lineHeight: props.size.lineHeight,
           textAlign: 'center',
           fontFamily: props.font,
+          lineHeight: props.size.lineHeight,
         }}
       >
         {v.number !== 1 ? (
@@ -140,9 +142,10 @@ const Header = (props: { chapter: TChapter; font: TFontFamily }) => (
         justifyContent: 'space-between',
       }}
     >
-      <Tooltip title="Chapter">
+      <Tooltip title={Locales.t('chapter')}>
         <Chip mode="outlined">{props.chapter.id}</Chip>
       </Tooltip>
+
       <Text
         variant="bodyLarge"
         style={{
@@ -151,7 +154,8 @@ const Header = (props: { chapter: TChapter; font: TFontFamily }) => (
           fontFamily: props.font,
         }}
       >{`سُورَةُ ${props.chapter.name}`}</Text>
-      <Tooltip title="Verse count">
+
+      <Tooltip title={Locales.t('vCount')}>
         <Chip mode="outlined">{props.chapter.verse_count}</Chip>
       </Tooltip>
     </Card.Content>
@@ -186,11 +190,11 @@ const Page = (props: {
 
         <Text style={{ direction: 'rtl', paddingHorizontal: 16 }}>
           <Content
-            color={props.theme.colors.primary}
-            font={props.font.family}
-            size={props.font.size}
-            onPress={(v: TVerse) => props.onVersePress(v.id)}
             verses={props.verses}
+            size={props.font.size}
+            font={props.font.family}
+            color={props.theme.colors.primary}
+            onPress={(v: TVerse) => props.onVersePress(v.id)}
           />
         </Text>
       </Container>
@@ -225,11 +229,11 @@ const Page = (props: {
           )}
 
           <Content
-            color={props.theme.colors.primary}
-            font={props.font.family}
-            size={props.font.size}
-            onPress={(v: TVerse) => props.onVersePress(v.id)}
             verses={c.verses}
+            size={props.font.size}
+            font={props.font.family}
+            color={props.theme.colors.primary}
+            onPress={(v: TVerse) => props.onVersePress(v.id)}
           />
         </View>
       ))}

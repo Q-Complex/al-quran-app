@@ -1,5 +1,5 @@
 import React from 'react'
-import { View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import {
   Modal as BaseModal,
   Button,
@@ -9,6 +9,8 @@ import {
   Text,
   Tooltip,
 } from 'react-native-paper'
+
+import { Locales } from '../locales'
 
 const Modal = (props: {
   title: string
@@ -44,16 +46,18 @@ const Modal = (props: {
       >
         <Text variant="titleLarge">{props.title}</Text>
 
-        <Tooltip title="Close">
+        <Tooltip title={Locales.t('close')}>
           <IconButton size={24} icon="close" onPress={close} />
         </Tooltip>
       </View>
 
-      {props.children}
+      <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+        {props.children}
+      </ScrollView>
 
       <View style={{ padding: 16 }}>
         <Button mode="contained" onPress={close}>
-          Close
+          {Locales.t('close')}
         </Button>
       </View>
     </BaseModal>

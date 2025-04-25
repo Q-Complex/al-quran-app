@@ -8,14 +8,13 @@ type TFontSize = {
   value: 'bodyLarge' | 'titleLarge' | 'headlineLarge'
   lineHeight?: number
 }
-type TLanguage = 'Arabic' | 'English'
-type TTheme = 'Auto' | 'Dark' | 'Light'
+type TLanguage = 'System' | 'Arabic' | 'English' | 'Turkish'
+type TTheme = 'System' | 'Dark' | 'Light'
 
 type TSettings = {
   font: {
     family: TFontFamily
     size: TFontSize
-    lineHeight: number
   }
   language: TLanguage
   theme: TTheme
