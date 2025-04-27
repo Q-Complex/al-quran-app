@@ -1,4 +1,3 @@
-import { Storage } from 'expo-sqlite/kv-store'
 import React from 'react'
 import { View } from 'react-native'
 import {
@@ -13,6 +12,7 @@ import {
 import {
   Constants,
   DefaultSettings,
+  KVStore,
   Locales,
   Modal,
   QSettings,
@@ -25,7 +25,6 @@ import {
 
 const Settings = () => {
   const theme = useTheme()
-  const [reload, setReload] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const [visible, setVisible] = React.useState(false)
   const [content, setContent] = React.useState('font')
@@ -35,16 +34,10 @@ const Settings = () => {
   React.useEffect(() => {
     setLoading(true)
     ;(async () => {
-      if (!reload) {
-        await Storage.getItemAsync('settings')
-          .then((data) => (data ? setSettings(JSON.parse(data)) : {}))
-          .catch((err) => console.error(err))
-      } else {
-        setTimeout(() => {}, 500)
-      }
+      await KVStore.settings.load((v) => (v ? setSettings(JSON.parse(v)) : {}))
       setLoading(false)
     })()
-  }, [reload])
+  }, [])
 
   const showModal = (content: string) => {
     setContent(content)
@@ -56,11 +49,7 @@ const Settings = () => {
       <ProgressBar indeterminate={loading} />
 
       <List.AccordionGroup>
-        <List.Accordion
-          id={1}
-          title={Locales.t('appearance')}
-          left={(props) => <List.Icon {...props} icon="theme-light-dark" />}
-        >
+        <List.Accordion id={1} title={Locales.t('appearance')}>
           <List.Item
             title={Locales.t('language')}
             description={Locales.t(settings.language)}
@@ -77,11 +66,7 @@ const Settings = () => {
           />
         </List.Accordion>
 
-        <List.Accordion
-          id={2}
-          title={Locales.t('quran')}
-          left={(props) => <List.Icon {...props} icon="abjad-arabic" />}
-        >
+        <List.Accordion id={2} title={Locales.t('quran')}>
           <List.Item
             title={Locales.t('font')}
             description={Locales.t(settings.font.family)}
@@ -105,12 +90,9 @@ const Settings = () => {
         <Button
           mode="contained"
           onPress={async () =>
-            await Storage.setItemAsync('settings', JSON.stringify(settings))
-              .then(() => {
-                setReload(true)
-                onChange(settings)
-              })
-              .catch((err) => console.error(err))
+            await KVStore.settings.save(JSON.stringify(settings), () =>
+              onChange(settings),
+            )
           }
         >
           {Locales.t('save')}

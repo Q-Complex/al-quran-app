@@ -29,7 +29,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.quran"
+      "package": "com.youzarsiph.alquran"
     },
     "web": {
       "bundler": "metro",

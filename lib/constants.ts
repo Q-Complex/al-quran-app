@@ -24,7 +24,7 @@ const DefaultSettings: TSettings = {
     family: Constants.font.families[0] as TFontFamily,
     size: Constants.font.sizes[0] as TFontSize,
   },
-  language: 'English',
+  language: 'System',
   theme: 'System',
 }
 

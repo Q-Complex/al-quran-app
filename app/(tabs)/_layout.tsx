@@ -20,7 +20,22 @@ const TabLayout = () => (
           <MaterialCommunityIcons
             {...props}
             size={24}
-            name={props.focused ? 'home' : 'home-outline'}
+            name={props.focused ? 'home-variant' : 'home-variant-outline'}
+          />
+        ),
+      }}
+    />
+    <Tabs.Screen
+      name="bookmarks"
+      options={{
+        title: Locales.t('bookmarks'),
+        tabBarIcon: (props) => (
+          <MaterialCommunityIcons
+            {...props}
+            size={24}
+            name={
+              props.focused ? 'bookmark-multiple' : 'bookmark-multiple-outline'
+            }
           />
         ),
       }}
@@ -33,7 +48,7 @@ const TabLayout = () => (
           <MaterialCommunityIcons
             {...props}
             size={24}
-            name={props.focused ? 'text-box-search' : 'text-box-search-outline'}
+            name={props.focused ? 'book-search' : 'book-search-outline'}
           />
         ),
       }}

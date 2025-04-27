@@ -1,16 +1,14 @@
 import { AnimatedFlashList } from '@shopify/flash-list'
 import { router, Tabs } from 'expo-router'
 import { useSQLiteContext } from 'expo-sqlite'
-import Storage from 'expo-sqlite/kv-store'
 import React from 'react'
 import { List, ProgressBar, Surface } from 'react-native-paper'
 
-import { Database, TabsHeader, Locales, TVerse } from '@/lib'
+import { Database, TabsHeader, Locales, TVerse, KVStore } from '@/lib'
 
 const Search = () => {
   const db = useSQLiteContext()
   const [query, setQuery] = React.useState('')
-  const [reload, setReload] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const [history, setHistory] = React.useState<string[]>([])
   const [results, setResults] = React.useState<TVerse[]>([])
@@ -19,13 +17,10 @@ const Search = () => {
   React.useEffect(() => {
     setLoading(true)
     ;(async () => {
-      await Storage.getItemAsync('history')
-        .then((h) => (h ? setHistory(JSON.parse(h)) : setHistory([])))
-        .catch((err) => console.error(err))
-
+      await KVStore.history.load((h) => (h ? setHistory(JSON.parse(h)) : {}))
       setLoading(false)
     })()
-  }, [reload])
+  }, [])
 
   // Search logic
   React.useEffect(() => {
@@ -55,15 +50,15 @@ const Search = () => {
                 value: '',
                 placeholder: Locales.t('search'),
                 onChangeText: (t) => setQuery(t),
-                onEndEditing: async () =>
-                  query !== '' && !history.includes(query)
-                    ? await Storage.setItemAsync(
-                        'history',
-                        JSON.stringify([...history, query]),
-                      )
-                        .then(() => setReload(!reload))
-                        .catch((err) => console.error(err))
-                    : {},
+                onEndEditing: async () => {
+                  if (query !== '' && !history.includes(query)) {
+                    const newHistory = [...history, query]
+
+                    await KVStore.history.save(JSON.stringify(newHistory), () =>
+                      setHistory(newHistory),
+                    )
+                  }
+                },
               }}
             />
           ),
@@ -86,8 +81,8 @@ const Search = () => {
           renderItem={({ item }: { item: TVerse }) => (
             <List.Item
               descriptionNumberOfLines={1}
-              description={item.content + '...'}
-              title={`${item.chapter_id}:${item.number}`}
+              description={item.content}
+              title={`${Locales.t('verse')} ${item.chapter_id}:${item.number}`}
               onPress={() => router.push(`/pages/${item.page_id}`)}
               right={(props) => <List.Icon {...props} icon="chevron-right" />}
               descriptionStyle={{
@@ -119,9 +114,7 @@ const Search = () => {
                       <List.Icon {...props} icon="delete-clock" />
                     )}
                     onPress={async () =>
-                      await Storage.setItemAsync('history', '[]')
-                        .then(() => setReload(!reload))
-                        .catch((err) => console.error(err))
+                      await KVStore.history.delete(() => setHistory([]))
                     }
                   />
                 </>

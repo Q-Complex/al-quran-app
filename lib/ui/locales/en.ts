@@ -7,10 +7,11 @@ const En = {
   home: 'Home',
   search: 'Search',
   settings: 'Settings',
-  chapter: 'Chapter',
   meccan: 'Meccan',
   medinan: 'Medinan',
   verseCount: 'verses',
+  chapters: 'Chapters',
+  chapter: 'Chapter',
   parts: 'Parts',
   part: 'Part',
   groups: 'Groups',
@@ -64,6 +65,13 @@ const En = {
   Medium: 'Medium',
   Large: 'Large',
   'Extra Large': 'Extra Large',
+  bookmark: 'Bookmark',
+  bookmarks: 'Bookmarks',
+  noBookmarks: 'No Bookmarks',
+  rmBookmark: 'Remove bookmark',
+  pressToBookmark: 'Long press on a verse then select bookmark',
+  share: 'Share',
+  copy: 'Copy',
 }
 
 export { En }

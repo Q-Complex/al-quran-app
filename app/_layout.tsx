@@ -4,7 +4,6 @@ import { ThemeProvider } from '@react-navigation/native'
 import { useFonts } from 'expo-font'
 import { SplashScreen, Stack } from 'expo-router'
 import { SQLiteProvider } from 'expo-sqlite'
-import { Storage } from 'expo-sqlite/kv-store'
 import { StatusBar, StatusBarStyle } from 'expo-status-bar'
 import React from 'react'
 import { useColorScheme } from 'react-native'
@@ -14,6 +13,7 @@ import {
   AppDarkTheme,
   AppLightTheme,
   DefaultSettings,
+  KVStore,
   Locales,
   NavDarkTheme,
   NavLightTheme,
@@ -49,9 +49,7 @@ const RootLayout = () => {
   // Load settings
   React.useEffect(() => {
     ;(async () => {
-      await Storage.getItemAsync('settings')
-        .then((v) => (v ? setSettings(JSON.parse(v)) : {}))
-        .catch((err) => console.error(err))
+      await KVStore.settings.load((v) => (v ? setSettings(JSON.parse(v)) : {}))
     })()
   }, [])
 

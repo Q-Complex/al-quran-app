@@ -64,7 +64,7 @@ const Home = () => {
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ gap: 16, padding: 16 }}
+            contentContainerStyle={{ gap: 16, padding: 16, paddingBottom: 0 }}
           >
             <Chip
               onClose={() => {}}

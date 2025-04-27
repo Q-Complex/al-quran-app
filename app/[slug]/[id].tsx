@@ -1,4 +1,5 @@
 import { AnimatedFlashList } from '@shopify/flash-list'
+import * as Clipboard from 'expo-clipboard'
 import { router, Stack, useLocalSearchParams } from 'expo-router'
 import { useSQLiteContext } from 'expo-sqlite'
 import React from 'react'
@@ -14,6 +15,7 @@ import {
 
 import {
   Database,
+  KVStore,
   Locales,
   Modal,
   Page,
@@ -35,6 +37,8 @@ const Details = () => {
   const [item, setItem] = React.useState<TItem>()
   const [pages, setPages] = React.useState<TPage[]>([])
   const [verses, setVerses] = React.useState<TVerse[]>([])
+  const [bookmarks, setBookmarks] = React.useState<TVerse[]>([])
+  const [pressedVerse, setPVerse] = React.useState<TVerse>()
   const [loading, setLoading] = React.useState(false)
   const [visible, setVisible] = React.useState({
     details: false,
@@ -61,6 +65,18 @@ const Details = () => {
       setLoading(false)
     })()
   }, [ID, db, slug])
+
+  // Load bookmarks
+  React.useEffect(() => {
+    setLoading(true)
+    ;(async () => {
+      await KVStore.bookmarks.load((v) =>
+        v ? setBookmarks(JSON.parse(v)) : {},
+      )
+
+      setLoading(false)
+    })()
+  }, [])
 
   const single = slug.slice(0, slug.length - 1)
   const title =
@@ -118,7 +134,10 @@ const Details = () => {
             data={item}
             theme={theme}
             verses={verses.filter((i) => i.page_id === item.id)}
-            onVersePress={(id) => setVisible({ ...visible, actions: true })}
+            onVersePress={(v) => {
+              setPVerse(v)
+              setVisible({ ...visible, actions: true })
+            }}
             font={{
               family: settings.font.family,
               size: settings.font.size,
@@ -244,60 +263,51 @@ const Details = () => {
             title={Locales.t('settings')}
             onPress={() => router.push('/settings')}
             left={(props) => <List.Icon {...props} icon="cog" />}
-            right={(props) => <List.Icon {...props} icon="chevron-right" />}
           />
         </List.Section>
       </Modal>
 
-      {/* 
       <Modal
         theme={theme}
-        title="Actions"
+        title={`${Locales.t('verse')} ${pressedVerse?.chapter_id}:${pressedVerse?.number}`}
         modalProps={{
-          visible: visible.actions,
           children: undefined,
+          visible: visible.actions,
           onDismiss: () => setVisible({ ...visible, actions: false }),
         }}
       >
         <List.Section>
+          {pressedVerse &&
+          bookmarks.map((v) => v.id).includes(pressedVerse.id) ? (
+            <List.Item
+              title={Locales.t('rmBookmark')}
+              left={(props) => <List.Icon {...props} icon="bookmark-check" />}
+              onPress={async () =>
+                await KVStore.bookmarks.remove(pressedVerse!, bookmarks, (v) =>
+                  setBookmarks(JSON.parse(v)),
+                )
+              }
+            />
+          ) : (
+            <List.Item
+              title={Locales.t('bookmark')}
+              onPress={async () =>
+                await KVStore.bookmarks.add(pressedVerse!, bookmarks, (v) =>
+                  setBookmarks(JSON.parse(v)),
+                )
+              }
+              left={(props) => <List.Icon {...props} icon="bookmark-outline" />}
+            />
+          )}
           <List.Item
-            title="Listen"
-            onPress={() => {}}
-            left={(props) => <List.Icon {...props} icon="ear-hearing" />}
-            right={(props) => <List.Icon {...props} icon="chevron-right" />}
-          />
-          <List.Item
-            title="Translations"
-            onPress={() => {}}
-            left={(props) => <List.Icon {...props} icon="translate" />}
-            right={(props) => <List.Icon {...props} icon="chevron-right" />}
-          />
-          <List.Item
-            title="Tafsir"
-            onPress={() => {}}
-            left={(props) => <List.Icon {...props} icon="book-open" />}
-            right={(props) => <List.Icon {...props} icon="chevron-right" />}
-          />
-          <List.Item
-            title="Bookmark"
-            onPress={() => {}}
-            left={(props) => <List.Icon {...props} icon="bookmark-outline" />}
-            // right={(props) => <List.Icon {...props} icon="check" />}
-          /> 
-          <List.Item
-            title="Share"
-            onPress={() => {}}
-            left={(props) => <List.Icon {...props} icon="share-variant" />}
-            right={(props) => <List.Icon {...props} icon="chevron-right" />}
-          />
-          <List.Item
-            title="Copy"
-            onPress={() => {}}
+            title={Locales.t('copy')}
+            onPress={async () =>
+              await Clipboard.setStringAsync(pressedVerse!.content)
+            }
             left={(props) => <List.Icon {...props} icon="content-copy" />}
           />
         </List.Section>
-      </Modal> 
-      */}
+      </Modal>
     </Surface>
   )
 }

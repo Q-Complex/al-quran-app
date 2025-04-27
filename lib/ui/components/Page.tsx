@@ -168,7 +168,7 @@ const Page = (props: {
   theme: MD3Theme
   verses: TVerse[]
   font: { family: TFontFamily; size: TFontSize }
-  onVersePress: (v: number) => void
+  onVersePress: (v: TVerse) => void
 }) => {
   const firstVerse = props.verses[0].chapter_id
 
@@ -194,7 +194,7 @@ const Page = (props: {
             size={props.font.size}
             font={props.font.family}
             color={props.theme.colors.primary}
-            onPress={(v: TVerse) => props.onVersePress(v.id)}
+            onPress={(v: TVerse) => props.onVersePress(v)}
           />
         </Text>
       </Container>
@@ -233,7 +233,7 @@ const Page = (props: {
             size={props.font.size}
             font={props.font.family}
             color={props.theme.colors.primary}
-            onPress={(v: TVerse) => props.onVersePress(v.id)}
+            onPress={(v: TVerse) => props.onVersePress(v)}
           />
         </View>
       ))}
