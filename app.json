@@ -1,58 +1,56 @@
 {
   "expo": {
-    "name": "Al Quran",
-    "slug": "al-quran",
-    "owner": "youzarsiph",
+    "name": "latest",
+    "slug": "latest",
     "version": "1.0.0",
-    "description": "Al Quran is a modern application designed to provide users with a seamless and customizable Quran reading experience.",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "al-quran",
+    "description": "Al Quran is a modern application designed to provide users with a seamless and customizable Quran reading experience.",
+    "scheme": "latest",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/images/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true,
-      "infoPlist": {
-        "ExpoLocalization_supportsRTL": true
-      }
+      "supportsTablet": true
+    },
+    "extra": {
+      "supportsRTL": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.youzarsiph.alquran"
+      "edgeToEdgeEnabled": true
     },
     "web": {
       "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "extra": {
-      "supportsRTL": true,
-      "forcesRTL": true
-    },
     "plugins": [
       "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff"
+        }
+      ],
+      "expo-sqlite",
+      "expo-localization",
       [
         "expo-font",
         {
           "fonts": [
-            "assets/fonts/Indopak.ttf",
-            "assets/fonts/Uthmanic.ttf",
-            "node_modules/@expo-google-fonts/noto-sans/NotoSans_400Regular.ttf",
-            "node_modules/@expo-google-fonts/noto-kufi-arabic/NotoKufiArabic_400Regular.ttf"
+            "@/assets/fonts/Indopak.ttf",
+            "@/assets/fonts/Uthmanic.ttf",
+            "node_modules/@expo-google-fonts/noto-sans/400Regular/NotoSans_400Regular.ttf",
+            "node_modules/@expo-google-fonts/noto-kufi-arabic/400Regular/NotoKufiArabic_400Regular.ttf"
           ]
         }
-      ],
-      "expo-localization",
-      "expo-sqlite"
+      ]
     ],
     "experiments": {
       "typedRoutes": true

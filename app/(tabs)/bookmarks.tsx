@@ -62,13 +62,19 @@ const Bookmarks = () => {
             />
           )}
           ListEmptyComponent={
-            <List.Item
-              title={Locales.t('noBookmarks')}
-              description={Locales.t('pressToBookmark')}
-              left={(props) => (
-                <List.Icon {...props} icon="bookmark-multiple" />
-              )}
-            />
+            <>
+              <List.Item
+                title={Locales.t('noBookmarks')}
+                left={(props) => (
+                  <List.Icon {...props} icon="bookmark-multiple" />
+                )}
+              />
+              <List.Item
+                title={Locales.t('pressToBookmark')}
+                titleNumberOfLines={2}
+                left={(props) => <List.Icon {...props} icon="bookmark-plus" />}
+              />
+            </>
           }
         />
       </List.Section>

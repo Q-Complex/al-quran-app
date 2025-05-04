@@ -1,10 +1,11 @@
 import { AnimatedFlashList } from '@shopify/flash-list'
-import { router, Tabs } from 'expo-router'
+import { router } from 'expo-router'
 import { useSQLiteContext } from 'expo-sqlite'
 import React from 'react'
-import { List, ProgressBar, Surface } from 'react-native-paper'
+import { View } from 'react-native'
+import { List, ProgressBar, Searchbar, Surface } from 'react-native-paper'
 
-import { Database, TabsHeader, Locales, TVerse, KVStore } from '@/lib'
+import { Database, Locales, TVerse, KVStore } from '@/lib'
 
 const Search = () => {
   const db = useSQLiteContext()
@@ -39,33 +40,15 @@ const Search = () => {
 
   return (
     <Surface elevation={0} style={{ flex: 1 }}>
-      <Tabs.Screen
-        options={{
-          header: (props) => (
-            <TabsHeader
-              navProps={props}
-              children={undefined}
-              withSearchBar
-              searchBarProps={{
-                value: '',
-                placeholder: Locales.t('search'),
-                onChangeText: (t) => setQuery(t),
-                onEndEditing: async () => {
-                  if (query !== '' && !history.includes(query)) {
-                    const newHistory = [...history, query]
-
-                    await KVStore.history.save(JSON.stringify(newHistory), () =>
-                      setHistory(newHistory),
-                    )
-                  }
-                },
-              }}
-            />
-          ),
-        }}
-      />
-
       <ProgressBar indeterminate={loading} />
+
+      <View style={{ gap: 16, padding: 16, paddingBottom: 0 }}>
+        <Searchbar
+          value={query}
+          onChangeText={setQuery}
+          placeholder={Locales.t('search')}
+        />
+      </View>
 
       <List.Section style={{ flex: 1 }}>
         <AnimatedFlashList

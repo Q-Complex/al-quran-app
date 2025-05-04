@@ -34,6 +34,8 @@ const Details = () => {
   const db = useSQLiteContext()
   const { settings } = React.useContext(QSettings)
   const { id, slug } = useLocalSearchParams<{ id: string; slug: Slug }>()
+  const [ID, setID] = React.useState(parseInt(id, 10))
+  const [path, setPath] = React.useState(slug)
   const [item, setItem] = React.useState<TItem>()
   const [pages, setPages] = React.useState<TPage[]>([])
   const [verses, setVerses] = React.useState<TVerse[]>([])
@@ -45,7 +47,6 @@ const Details = () => {
     actions: false,
   })
 
-  const ID = parseInt(id, 10)
   const count = Database.count(slug)
   const types = ['chapters', 'parts', 'groups', 'quarters', 'pages']
 
@@ -53,10 +54,10 @@ const Details = () => {
   React.useEffect(() => {
     setLoading(true)
     ;(async () => {
-      const [p, v] = await Database.extract(db, ID, slug)
+      const [p, v] = await Database.extract(db, ID, path)
 
       setItem(
-        (await db.getFirstAsync(`SELECT * FROM "${slug}" WHERE "id" = ?`, ID))!,
+        (await db.getFirstAsync(`SELECT * FROM "${path}" WHERE "id" = ?`, ID))!,
       )
 
       setPages(p)
@@ -64,7 +65,9 @@ const Details = () => {
 
       setLoading(false)
     })()
-  }, [ID, db, slug])
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ID, path])
 
   // Load bookmarks
   React.useEffect(() => {
@@ -78,21 +81,13 @@ const Details = () => {
     })()
   }, [])
 
-  const single = slug.slice(0, slug.length - 1)
-  const title =
-    slug === 'chapters' && item
-      ? Locales.t('chapter') + ` ${item?.name}`
-      : Locales.t(single) + ' ' + id
+  const single = path.slice(0, slug.length - 1)
 
   return (
     <Surface elevation={0} style={{ flex: 1 }}>
       <Stack.Screen
         options={{
-          title,
-          headerTitleStyle:
-            slug === 'chapters' && item
-              ? { fontSize: 16, fontFamily: 'NotoKufiArabic_400Regular' }
-              : undefined,
+          title: `${Locales.t(single)} ${ID}`,
           headerRight: (props) => (
             <>
               <Tooltip title={Locales.t('prev')}>
@@ -100,7 +95,7 @@ const Details = () => {
                   {...props}
                   icon="chevron-left"
                   disabled={ID === 1}
-                  onPress={() => router.push(`/${slug}/${ID - 1}`)}
+                  onPress={() => setID(ID - 1)}
                 />
               </Tooltip>
               <Tooltip title={Locales.t('next')}>
@@ -108,7 +103,7 @@ const Details = () => {
                   {...props}
                   icon="chevron-right"
                   disabled={ID === count}
-                  onPress={() => router.push(`/${slug}/${ID + 1}`)}
+                  onPress={() => setID(ID + 1)}
                 />
               </Tooltip>
               <Tooltip title={Locales.t('info')}>
@@ -134,6 +129,10 @@ const Details = () => {
             data={item}
             theme={theme}
             verses={verses.filter((i) => i.page_id === item.id)}
+            onButtonPress={(s, i) => {
+              setPath(s)
+              setID(i)
+            }}
             onVersePress={(v) => {
               setPVerse(v)
               setVisible({ ...visible, actions: true })

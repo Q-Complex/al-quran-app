@@ -1,4 +1,3 @@
-import { router } from 'expo-router'
 import { SQLiteDatabase } from 'expo-sqlite'
 import React from 'react'
 import { View } from 'react-native'
@@ -13,7 +12,14 @@ import {
   Tooltip,
 } from 'react-native-paper'
 
-import { TChapter, TFontFamily, TFontSize, TPage, TVerse } from '@/lib/types'
+import {
+  Slug,
+  TChapter,
+  TFontFamily,
+  TFontSize,
+  TPage,
+  TVerse,
+} from '@/lib/types'
 import { toMarker } from '@/lib/utils'
 
 import { Locales } from '../locales'
@@ -21,6 +27,7 @@ import { Locales } from '../locales'
 // Page container
 const Container = (p: {
   data: TPage
+  onButtonPress: (path: Slug, id: number) => void
   children: React.ReactNode | React.ReactNode[]
 }) => (
   <Surface elevation={0} style={{ gap: 16 }}>
@@ -33,13 +40,13 @@ const Container = (p: {
       }}
     >
       <Tooltip title={Locales.t('read')}>
-        <Button onPress={() => router.push(`/chapters/${p.data.chapter_id}`)}>
+        <Button onPress={() => p.onButtonPress('chapters', p.data.chapter_id)}>
           {Locales.t('chapter')} {p.data.chapter_id}
         </Button>
       </Tooltip>
 
       <Tooltip title={Locales.t('read')}>
-        <Button onPress={() => router.push(`/parts/${p.data.part_id}`)}>
+        <Button onPress={() => p.onButtonPress('parts', p.data.part_id)}>
           {Locales.t('part')} {p.data.part_id}
         </Button>
       </Tooltip>
@@ -56,19 +63,21 @@ const Container = (p: {
         }}
       >
         <Tooltip title={Locales.t('read')}>
-          <Button onPress={() => router.push(`/groups/${p.data.group_id}`)}>
+          <Button onPress={() => p.onButtonPress('groups', p.data.group_id)}>
             {Locales.t('group')} {p.data.group_id}
           </Button>
         </Tooltip>
 
         <Tooltip title={Locales.t('pNum')}>
-          <Chip onPress={() => router.push(`/pages/${p.data.id}`)}>
+          <Chip onPress={() => p.onButtonPress('pages', p.data.id)}>
             {p.data.id}
           </Chip>
         </Tooltip>
 
         <Tooltip title={Locales.t('read')}>
-          <Button onPress={() => router.push(`/quarters/${p.data.quarter_id}`)}>
+          <Button
+            onPress={() => p.onButtonPress('quarters', p.data.quarter_id)}
+          >
             {Locales.t('quarter')} {p.data.quarter_id}
           </Button>
         </Tooltip>
@@ -129,10 +138,14 @@ const Content = (props: {
   </Text>
 )
 
-const Header = (props: { chapter: TChapter; font: TFontFamily }) => (
+const Header = (props: {
+  chapter: TChapter
+  font: TFontFamily
+  onButtonPress: (path: Slug, id: number) => void
+}) => (
   <Card
     style={{ marginHorizontal: 16 }}
-    onPress={() => router.push(`/chapters/${props.chapter.id}`)}
+    onPress={() => props.onButtonPress('chapters', props.chapter.id)}
   >
     <Card.Content
       style={{
@@ -169,6 +182,7 @@ const Page = (props: {
   verses: TVerse[]
   font: { family: TFontFamily; size: TFontSize }
   onVersePress: (v: TVerse) => void
+  onButtonPress: (path: Slug, id: number) => void
 }) => {
   const firstVerse = props.verses[0].chapter_id
 
@@ -185,8 +199,14 @@ const Page = (props: {
     }
 
     return (
-      <Container data={props.data}>
-        {chapter && <Header chapter={chapter} font={props.font.family} />}
+      <Container data={props.data} onButtonPress={props.onButtonPress}>
+        {chapter && (
+          <Header
+            chapter={chapter}
+            font={props.font.family}
+            onButtonPress={props.onButtonPress}
+          />
+        )}
 
         <Text style={{ direction: 'rtl', paddingHorizontal: 16 }}>
           <Content
@@ -220,12 +240,16 @@ const Page = (props: {
   }
 
   return (
-    <Container data={props.data}>
+    <Container data={props.data} onButtonPress={props.onButtonPress}>
       {chapters.map((c) => (
         <View key={c.id} style={{ gap: 16 }}>
           {/* Check if the chapter verses includes 1st verse */}
           {c.verses.find((v) => v.number === 1) && (
-            <Header chapter={c} font={props.font.family} />
+            <Header
+              chapter={c}
+              font={props.font.family}
+              onButtonPress={props.onButtonPress}
+            />
           )}
 
           <Content
