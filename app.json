@@ -44,8 +44,8 @@
         "expo-font",
         {
           "fonts": [
-            "@/assets/fonts/Indopak.ttf",
-            "@/assets/fonts/Uthmanic.ttf",
+            "./assets/fonts/Indopak.ttf",
+            "./assets/fonts/Uthmanic.ttf",
             "node_modules/@expo-google-fonts/noto-sans/400Regular/NotoSans_400Regular.ttf",
             "node_modules/@expo-google-fonts/noto-kufi-arabic/400Regular/NotoKufiArabic_400Regular.ttf"
           ]
