@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "latest",
-    "slug": "latest",
+    "name": "al-quran",
+    "slug": "al-quran",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "description": "Al Quran is a modern application designed to provide users with a seamless and customizable Quran reading experience.",
-    "scheme": "latest",
+    "scheme": "al-quran",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
