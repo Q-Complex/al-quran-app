@@ -15,19 +15,25 @@ import {
 import {
   Slug,
   TChapter,
+  TCName,
   TFontFamily,
   TFontSize,
   TPage,
   TVerse,
 } from '@/lib/types'
-import { toMarker } from '@/lib/utils'
 
 import { Locales } from '../locales'
+import { QSettings } from '@/lib/context'
+import { toMarker } from '@/lib/utils'
 
-// Page container
+/**
+ * Page container
+ * @param p properties
+ * @returns React.ReactNode
+ */
 const Container = (p: {
-  data: TPage
-  onButtonPress: (path: Slug, id: number) => void
+  data: TCName & TPage
+  onNavButtonPress: (path: Slug, id: number) => void
   children: React.ReactNode | React.ReactNode[]
 }) => (
   <Surface elevation={0} style={{ gap: 16 }}>
@@ -40,13 +46,15 @@ const Container = (p: {
       }}
     >
       <Tooltip title={Locales.t('read')}>
-        <Button onPress={() => p.onButtonPress('chapters', p.data.chapter_id)}>
-          {Locales.t('chapter')} {p.data.chapter_id}
+        <Button
+          onPress={() => p.onNavButtonPress('chapters', p.data.chapter_id)}
+        >
+          سُورَةُ {p.data.chapter_name}
         </Button>
       </Tooltip>
 
       <Tooltip title={Locales.t('read')}>
-        <Button onPress={() => p.onButtonPress('parts', p.data.part_id)}>
+        <Button onPress={() => p.onNavButtonPress('parts', p.data.part_id)}>
           {Locales.t('part')} {p.data.part_id}
         </Button>
       </Tooltip>
@@ -63,20 +71,20 @@ const Container = (p: {
         }}
       >
         <Tooltip title={Locales.t('read')}>
-          <Button onPress={() => p.onButtonPress('groups', p.data.group_id)}>
+          <Button onPress={() => p.onNavButtonPress('groups', p.data.group_id)}>
             {Locales.t('group')} {p.data.group_id}
           </Button>
         </Tooltip>
 
         <Tooltip title={Locales.t('pNum')}>
-          <Chip onPress={() => p.onButtonPress('pages', p.data.id)}>
+          <Chip onPress={() => p.onNavButtonPress('pages', p.data.id)}>
             {p.data.id}
           </Chip>
         </Tooltip>
 
         <Tooltip title={Locales.t('read')}>
           <Button
-            onPress={() => p.onButtonPress('quarters', p.data.quarter_id)}
+            onPress={() => p.onNavButtonPress('quarters', p.data.quarter_id)}
           >
             {Locales.t('quarter')} {p.data.quarter_id}
           </Button>
@@ -88,24 +96,27 @@ const Container = (p: {
   </Surface>
 )
 
-// Page content
+/**
+ * Page verses
+ * @param props properties
+ * @returns React.ReactNode
+ */
 const Content = (props: {
   color: string
-  font: TFontFamily
-  size: TFontSize
+  font: { family: TFontFamily; size: TFontSize }
   verses: TVerse[]
-  onPress: (v: TVerse) => void
+  onVerseLongPress: (v: TVerse) => void
 }) => (
   <Text style={{ direction: 'rtl', paddingHorizontal: 16 }}>
     {props.verses.map((v) => (
       <Text
         key={v.id}
-        variant={props.size.value}
-        onLongPress={() => props.onPress(v)}
+        variant={props.font.size.value}
+        onLongPress={() => props.onVerseLongPress(v)}
         style={{
           textAlign: 'center',
-          fontFamily: props.font,
-          lineHeight: props.size.lineHeight,
+          fontFamily: props.font.family,
+          lineHeight: props.font.size.lineHeight,
         }}
       >
         {v.number !== 1 ? (
@@ -116,7 +127,7 @@ const Content = (props: {
               style={{
                 textAlign: 'center',
                 color: props.color,
-                fontFamily: props.font,
+                fontFamily: props.font.family,
               }}
             >
               {v.content.slice(0, 39) + '\n'}
@@ -128,24 +139,31 @@ const Content = (props: {
         <Text
           style={{
             color: props.color,
-            fontFamily: props.font,
+            fontFamily: props.font.family,
           }}
         >
-          {toMarker(v.number.toString()) + ' '}
+          {(props.font.family === 'Uthmanic'
+            ? toMarker(v.number.toString())
+            : v.number) + ' '}
         </Text>
       </Text>
     ))}
   </Text>
 )
 
+/**
+ * Chapter header
+ * @param props properties
+ * @returns React.ReactNode
+ */
 const Header = (props: {
   chapter: TChapter
   font: TFontFamily
-  onButtonPress: (path: Slug, id: number) => void
+  onBavButtonPress: (path: Slug, id: number) => void
 }) => (
   <Card
     style={{ marginHorizontal: 16 }}
-    onPress={() => props.onButtonPress('chapters', props.chapter.id)}
+    onPress={() => props.onBavButtonPress('chapters', props.chapter.id)}
   >
     <Card.Content
       style={{
@@ -177,87 +195,82 @@ const Header = (props: {
 
 const Page = (props: {
   db: SQLiteDatabase
-  data: TPage
+  path: Slug
+  data: TCName & TPage & { verses: TVerse[] }
   theme: MD3Theme
-  verses: TVerse[]
-  font: { family: TFontFamily; size: TFontSize }
   onVersePress: (v: TVerse) => void
-  onButtonPress: (path: Slug, id: number) => void
+  onNavButtonPress: (path: Slug, id: number) => void
 }) => {
-  const firstVerse = props.verses[0].chapter_id
+  const { settings } = React.useContext(QSettings)
+  const firstVerse = props.data.verses[0]
 
-  // Check if the page contains only verses of one chapter
-  if (props.verses.every((v) => v.chapter_id === firstVerse)) {
+  // There is only one chapter
+  if (props.path === 'chapters') {
     let chapter = undefined
 
-    // Check if the 1st verses of a chapter in this page
-    if (props.verses.filter((v) => v.number === 1).length === 1) {
+    if (firstVerse.number === 1) {
       chapter = props.db.getFirstSync<TChapter>(
         'SELECT * FROM "chapters" WHERE "id" = ?',
-        firstVerse,
+        firstVerse.chapter_id,
       )!
     }
 
     return (
-      <Container data={props.data} onButtonPress={props.onButtonPress}>
+      <Container data={props.data} onNavButtonPress={props.onNavButtonPress}>
         {chapter && (
           <Header
             chapter={chapter}
-            font={props.font.family}
-            onButtonPress={props.onButtonPress}
+            font={settings.font.family}
+            onBavButtonPress={props.onNavButtonPress}
           />
         )}
 
         <Text style={{ direction: 'rtl', paddingHorizontal: 16 }}>
           <Content
-            verses={props.verses}
-            size={props.font.size}
-            font={props.font.family}
+            verses={props.data.verses}
+            font={settings.font}
             color={props.theme.colors.primary}
-            onPress={(v: TVerse) => props.onVersePress(v)}
+            onVerseLongPress={(v: TVerse) => props.onVersePress(v)}
           />
         </Text>
       </Container>
     )
   }
 
-  // Extract chapters from page verses
+  // There is one or more chapters, we need to extract them
   const chapters: (TChapter & { verses: TVerse[] })[] = []
-  for (const v of props.verses) {
-    if (!chapters.map((i) => i.id).includes(v.chapter_id)) {
-      const chapter = props.db.getFirstSync<TChapter>(
-        'SELECT * FROM "chapters" WHERE "id" = ?',
-        v.chapter_id,
-      )!
-
-      chapters.push({
-        ...chapter,
-        verses: [v],
-      })
-    } else {
+  for (const v of props.data.verses) {
+    if (chapters.map((i) => i.id).includes(v.chapter_id)) {
       chapters.find((c) => c.id === v.chapter_id)?.verses.push(v)
+      continue
     }
+
+    const chapter = props.db.getFirstSync<TChapter>(
+      'SELECT * FROM "chapters" WHERE "id" = ?',
+      v.chapter_id,
+    )!
+
+    chapters.push({ ...chapter, verses: [v] })
   }
 
   return (
-    <Container data={props.data} onButtonPress={props.onButtonPress}>
+    <Container data={props.data} onNavButtonPress={props.onNavButtonPress}>
       {chapters.map((c) => (
         <View key={c.id} style={{ gap: 16 }}>
           {/* Check if the chapter verses includes 1st verse */}
           {c.verses.find((v) => v.number === 1) && (
             <Header
               chapter={c}
-              font={props.font.family}
-              onButtonPress={props.onButtonPress}
+              font={settings.font.family}
+              onBavButtonPress={props.onNavButtonPress}
             />
           )}
 
           <Content
             verses={c.verses}
-            size={props.font.size}
-            font={props.font.family}
+            font={settings.font}
             color={props.theme.colors.primary}
-            onPress={(v: TVerse) => props.onVersePress(v)}
+            onVerseLongPress={(v: TVerse) => props.onVersePress(v)}
           />
         </View>
       ))}

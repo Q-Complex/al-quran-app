@@ -19,9 +19,9 @@ import {
   Locales,
   Modal,
   Page,
-  QSettings,
   Slug,
   TChapter,
+  TCName,
   TGroup,
   TItem,
   TPage,
@@ -32,13 +32,11 @@ import {
 const Details = () => {
   const theme = useTheme()
   const db = useSQLiteContext()
-  const { settings } = React.useContext(QSettings)
   const { id, slug } = useLocalSearchParams<{ id: string; slug: Slug }>()
   const [ID, setID] = React.useState(parseInt(id, 10))
   const [path, setPath] = React.useState(slug)
   const [item, setItem] = React.useState<TItem>()
-  const [pages, setPages] = React.useState<TPage[]>([])
-  const [verses, setVerses] = React.useState<TVerse[]>([])
+  const [pages, setPages] = React.useState<(TCName & TPage)[]>([])
   const [bookmarks, setBookmarks] = React.useState<TVerse[]>([])
   const [pressedVerse, setPVerse] = React.useState<TVerse>()
   const [loading, setLoading] = React.useState(false)
@@ -54,14 +52,10 @@ const Details = () => {
   React.useEffect(() => {
     setLoading(true)
     ;(async () => {
-      const [p, v] = await Database.extract(db, ID, path)
-
+      setPages(await Database.extract(db, ID, path))
       setItem(
         (await db.getFirstAsync(`SELECT * FROM "${path}" WHERE "id" = ?`, ID))!,
       )
-
-      setPages(p)
-      setVerses(v)
 
       setLoading(false)
     })()
@@ -87,7 +81,10 @@ const Details = () => {
     <Surface elevation={0} style={{ flex: 1 }}>
       <Stack.Screen
         options={{
-          title: `${Locales.t(single)} ${ID}`,
+          title:
+            path === 'chapters' && item
+              ? item.name
+              : `${Locales.t(single)} ${ID}`,
           headerRight: (props) => (
             <>
               <Tooltip title={Locales.t('prev')}>
@@ -127,19 +124,15 @@ const Details = () => {
           <Page
             db={db}
             data={item}
+            path={path}
             theme={theme}
-            verses={verses.filter((i) => i.page_id === item.id)}
-            onButtonPress={(s, i) => {
+            onNavButtonPress={(s, i) => {
               setPath(s)
               setID(i)
             }}
             onVersePress={(v) => {
               setPVerse(v)
               setVisible({ ...visible, actions: true })
-            }}
-            font={{
-              family: settings.font.family,
-              size: settings.font.size,
             }}
           />
         )}
@@ -162,7 +155,7 @@ const Details = () => {
               <List.Icon {...props} icon="sort-numeric-ascending" />
             )}
           />
-          {slug === 'chapters' && (
+          {path === 'chapters' && (
             <>
               <List.Item
                 title={Locales.t('name')}
@@ -206,7 +199,7 @@ const Details = () => {
               />
             </>
           )}
-          {types.slice(2).includes(slug) && (
+          {types.slice(2).includes(path) && (
             <List.Item
               title={Locales.t('part')}
               left={(props) => <List.Icon {...props} icon="grid-large" />}
@@ -215,7 +208,7 @@ const Details = () => {
               )}
             />
           )}
-          {types.slice(3).includes(slug) && (
+          {types.slice(3).includes(path) && (
             <List.Item
               title={Locales.t('group')}
               left={(props) => <List.Icon {...props} icon="grid" />}
@@ -224,7 +217,7 @@ const Details = () => {
               )}
             />
           )}
-          {slug === 'pages' && (
+          {path === 'pages' && (
             <>
               <List.Item
                 title={Locales.t('quarter')}
@@ -242,7 +235,7 @@ const Details = () => {
               />
             </>
           )}
-          {types.slice(0, types.length - 1).includes(slug) && (
+          {types.slice(0, types.length - 1).includes(path) && (
             <List.Item
               title={Locales.t('pCount')}
               right={(props) => (
@@ -262,6 +255,7 @@ const Details = () => {
             title={Locales.t('settings')}
             onPress={() => router.push('/settings')}
             left={(props) => <List.Icon {...props} icon="cog" />}
+            right={(props) => <List.Icon {...props} icon="chevron-right" />}
           />
         </List.Section>
       </Modal>

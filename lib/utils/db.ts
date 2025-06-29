@@ -3,6 +3,7 @@ import { SQLiteDatabase } from 'expo-sqlite'
 import {
   Slug,
   TChapter,
+  TCName,
   TGroup,
   TItem,
   TPage,
@@ -11,6 +12,8 @@ import {
   TVerse,
   V,
 } from '@/lib'
+
+type FullPage = TCName & TPage & { verses: TVerse[] }
 
 const Database = {
   query: async (
@@ -62,17 +65,19 @@ const Database = {
     db: SQLiteDatabase,
     id: number,
     table: 'chapters' | 'parts' | 'groups' | 'quarters' | 'pages',
-  ): Promise<[TPage[], TVerse[]]> => {
+  ): Promise<FullPage[]> => {
     const data = await db.getAllAsync<
-      TPage & {
-        verse_id: number
-        verse_number: number
-        verse_c_id: number
-        verse_p_id: number
-        verse_content: string
-      }
+      TCName &
+        TPage & {
+          verse_id: number
+          verse_number: number
+          verse_c_id: number
+          verse_p_id: number
+          verse_content: string
+        }
     >(
       `SELECT
+        "chapters"."name" as "chapter_name",
         "pages"."id",
         "pages"."chapter_id",
         "pages"."part_id",
@@ -84,48 +89,60 @@ const Database = {
         "verses"."chapter_id" as "verse_c_id",
         "verses"."page_id" as "verse_p_id",
         "verses"."number" as "verse_number",
-        "verses"."content" as "verse_content"
-      FROM "pages" 
+        REPLACE(REPLACE("verses"."content", 'ا۟', 'اْ'), 'و۟', 'وْ') as "verse_content"
+      FROM
+        "chapters"
+        INNER JOIN "pages" ON ("chapters"."id" = "pages"."chapter_id")
         INNER JOIN "verses" ON ("pages"."id" = "verses"."page_id")
-      WHERE "verses"."${table.slice(0, table.length - 1)}_id" = ?;`,
+      WHERE
+        "verses"."${table.slice(0, table.length - 1)}_id" = ?;`,
       id,
     )
 
-    const rawPages = [
-      ...data.map((i) => {
-        return {
-          id: i.id,
-          name: i.name,
-          chapter_id: i.chapter_id,
-          part_id: i.part_id,
-          group_id: i.group_id,
-          quarter_id: i.quarter_id,
-          verse_count: i.verse_count,
-        } as TPage
-      }),
-    ]
+    const results: FullPage[] = []
+    for (const row of data) {
+      if (results.map((p) => p.id).includes(row.id)) {
+        results
+          .find((p) => p.id === row.id)
+          ?.verses.push({
+            id: row.verse_id,
+            chapter_id: row.verse_c_id,
+            content: row.verse_content,
+            number: row.verse_number,
+            page_id: row.verse_p_id,
+            group_id: 0,
+            part_id: 0,
+            quarter_id: 0,
+          })
 
-    const pages: TPage[] = []
-    for (const page of rawPages) {
-      if (![...pages.map((i) => i.id)].includes(page.id)) {
-        pages.push(page)
+        continue
       }
+
+      results.push({
+        id: row.id,
+        name: row.name,
+        chapter_id: row.chapter_id,
+        chapter_name: row.chapter_name,
+        group_id: row.group_id,
+        part_id: row.part_id,
+        quarter_id: row.quarter_id,
+        verse_count: row.verse_count,
+        verses: [
+          {
+            id: row.verse_id,
+            chapter_id: row.verse_c_id,
+            content: row.verse_content,
+            number: row.verse_number,
+            page_id: row.verse_p_id,
+            group_id: 0,
+            part_id: 0,
+            quarter_id: 0,
+          },
+        ],
+      })
     }
 
-    return [
-      pages,
-      [
-        ...data.map((i) => {
-          return {
-            id: i.verse_id,
-            number: i.verse_number,
-            content: i.verse_content,
-            chapter_id: i.verse_c_id,
-            page_id: i.verse_p_id,
-          } as TVerse
-        }),
-      ],
-    ]
+    return results
   },
   search: async (db: SQLiteDatabase, query: string): Promise<TVerse[]> =>
     await db.getAllAsync<TVerse>(

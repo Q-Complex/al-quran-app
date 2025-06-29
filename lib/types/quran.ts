@@ -64,4 +64,6 @@ type V = {
   verse_content: string
 }
 
-export { TChapter, TPart, TGroup, TQuarter, TPage, TVerse, V, TItem }
+type TCName = { chapter_name: string }
+
+export { TChapter, TPart, TGroup, TQuarter, TPage, TVerse, V, TItem, TCName }

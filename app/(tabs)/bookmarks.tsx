@@ -2,7 +2,14 @@ import { AnimatedFlashList } from '@shopify/flash-list'
 import { router } from 'expo-router'
 import React from 'react'
 import { RefreshControl } from 'react-native'
-import { IconButton, List, ProgressBar, Surface } from 'react-native-paper'
+import {
+  Icon,
+  IconButton,
+  List,
+  ProgressBar,
+  Surface,
+  Text,
+} from 'react-native-paper'
 
 import { KVStore, Locales, TVerse } from '@/lib'
 
@@ -31,7 +38,9 @@ const Bookmarks = () => {
         <AnimatedFlashList
           data={bookmarks}
           estimatedItemSize={100}
-          ListHeaderComponent={<List.Subheader>Bookmarks</List.Subheader>}
+          ListHeaderComponent={
+            <List.Subheader>{Locales.t('bookmarks')}</List.Subheader>
+          }
           refreshControl={
             <RefreshControl
               refreshing={false}
@@ -69,11 +78,13 @@ const Bookmarks = () => {
                   <List.Icon {...props} icon="bookmark-multiple" />
                 )}
               />
-              <List.Item
-                title={Locales.t('pressToBookmark')}
-                titleNumberOfLines={2}
-                left={(props) => <List.Icon {...props} icon="bookmark-plus" />}
-              />
+              <Surface
+                elevation={0}
+                style={{ gap: 8, padding: 16, alignItems: 'center' }}
+              >
+                <Icon source="bookmark-plus" size={64} />
+                <Text>{Locales.t('pressToBookmark')}</Text>
+              </Surface>
             </>
           }
         />
