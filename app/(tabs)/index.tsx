@@ -71,7 +71,6 @@ const Home = () => {
             title={c.name}
             onPress={() => router.push(`/chapters/${c.id}`)}
             left={(props) => <Chip {...props}>{c.id}</Chip>}
-            titleStyle={{ fontFamily: 'NotoKufiArabic_400Regular' }}
             description={`${c.type ? Locales.t('meccan') : Locales.t('medinan')}, ${c.verse_count} ${Locales.t('verseCount')}`}
             right={(props) => (
               <List.Icon {...props} icon={c.type ? 'cube' : 'mosque'} />

@@ -27,7 +27,6 @@ const Tr = {
   clear: 'Temizle',
   deleteHistory: 'Arama geçmişini sil',
   noSearches: 'Son yapılan arama yok',
-  typeToSearch: 'Aramak için arama çubuğuna yazın...',
   appearance: 'Görünüm',
   language: 'Dil',
   theme: 'Tema',

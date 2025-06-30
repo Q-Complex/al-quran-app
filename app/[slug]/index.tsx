@@ -42,10 +42,7 @@ const ListHome = () => {
             description={`${item.verse_content}...`}
             onPress={() => router.push(`/${slug}/${item.id}`)}
             left={(props) => <Chip {...props}>{item.id}</Chip>}
-            descriptionStyle={{
-              direction: 'rtl',
-              fontFamily: 'NotoKufiArabic_400Regular',
-            }}
+            descriptionStyle={{ direction: 'rtl' }}
           />
         )}
       />

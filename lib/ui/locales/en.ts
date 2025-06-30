@@ -27,7 +27,6 @@ const En = {
   clear: 'Clear',
   deleteHistory: 'Delete search history',
   noSearches: 'No recent searches',
-  typeToSearch: 'Type in searchbar to search...',
   appearance: 'Appearance',
   language: 'Language',
   theme: 'Theme',

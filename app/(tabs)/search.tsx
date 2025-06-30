@@ -2,7 +2,7 @@ import { AnimatedFlashList } from '@shopify/flash-list'
 import { router } from 'expo-router'
 import { useSQLiteContext } from 'expo-sqlite'
 import React from 'react'
-import { View } from 'react-native'
+import { RefreshControl, View } from 'react-native'
 import { List, ProgressBar, Searchbar, Surface } from 'react-native-paper'
 
 import { Database, Locales, TVerse, KVStore } from '@/lib'
@@ -10,6 +10,7 @@ import { Database, Locales, TVerse, KVStore } from '@/lib'
 const Search = () => {
   const db = useSQLiteContext()
   const [query, setQuery] = React.useState('')
+  const [reload, setReload] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const [history, setHistory] = React.useState<string[]>([])
   const [results, setResults] = React.useState<TVerse[]>([])
@@ -36,7 +37,7 @@ const Search = () => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query])
+  }, [query, reload])
 
   return (
     <Surface elevation={0} style={{ flex: 1 }}>
@@ -54,6 +55,12 @@ const Search = () => {
         <AnimatedFlashList
           data={results}
           estimatedItemSize={100}
+          refreshControl={
+            <RefreshControl
+              refreshing={false}
+              onRefresh={() => setReload(!reload)}
+            />
+          }
           ListHeaderComponent={
             <List.Subheader>
               {query === ''
@@ -63,15 +70,12 @@ const Search = () => {
           }
           renderItem={({ item }: { item: TVerse }) => (
             <List.Item
-              descriptionNumberOfLines={1}
               description={item.content}
-              title={`${Locales.t('verse')} ${item.chapter_id}:${item.number}`}
+              descriptionNumberOfLines={1}
+              descriptionStyle={{ direction: 'rtl' }}
               onPress={() => router.push(`/pages/${item.page_id}`)}
               right={(props) => <List.Icon {...props} icon="chevron-right" />}
-              descriptionStyle={{
-                direction: 'rtl',
-                fontFamily: 'NotoKufiArabic_400Regular',
-              }}
+              title={`${Locales.t('verse')} ${item.chapter_id}:${item.number}`}
             />
           )}
           ListEmptyComponent={
@@ -83,7 +87,6 @@ const Search = () => {
                       key={i}
                       title={i}
                       onPress={() => setQuery(i)}
-                      titleStyle={{ fontFamily: 'NotoKufiArabic_400Regular' }}
                       left={(props) => <List.Icon {...props} icon="history" />}
                       right={(props) => (
                         <List.Icon {...props} icon="chevron-right" />
@@ -104,7 +107,6 @@ const Search = () => {
               ) : (
                 <List.Item
                   title={Locales.t('noSearches')}
-                  description={Locales.t('typeToSearch')}
                   left={(props) => <List.Icon {...props} icon="history" />}
                 />
               )}

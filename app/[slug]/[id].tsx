@@ -160,13 +160,7 @@ const Details = () => {
               <List.Item
                 title={Locales.t('name')}
                 right={(props) => (
-                  <Text
-                    {...props}
-                    style={{
-                      ...props.style,
-                      fontFamily: 'NotoKufiArabic_400Regular',
-                    }}
-                  >
+                  <Text {...props} style={{ ...props.style }}>
                     {item?.name}
                   </Text>
                 )}

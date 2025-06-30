@@ -142,7 +142,7 @@ const Content = (props: {
             fontFamily: props.font.family,
           }}
         >
-          {(props.font.family === 'Uthmanic'
+          {(props.font.family !== 'Indopak'
             ? toMarker(v.number.toString())
             : v.number) + ' '}
         </Text>
@@ -157,11 +157,13 @@ const Content = (props: {
  * @returns React.ReactNode
  */
 const Header = (props: {
+  color: string
   chapter: TChapter
   font: TFontFamily
   onBavButtonPress: (path: Slug, id: number) => void
 }) => (
   <Card
+    mode="outlined"
     style={{ marginHorizontal: 16 }}
     onPress={() => props.onBavButtonPress('chapters', props.chapter.id)}
   >
@@ -182,6 +184,7 @@ const Header = (props: {
         style={{
           textAlign: 'center',
           lineHeight: 32,
+          color: props.color,
           fontFamily: props.font,
         }}
       >{`سُورَةُ ${props.chapter.name}`}</Text>
@@ -221,6 +224,7 @@ const Page = (props: {
           <Header
             chapter={chapter}
             font={settings.font.family}
+            color={props.theme.colors.primary}
             onBavButtonPress={props.onNavButtonPress}
           />
         )}
@@ -262,6 +266,7 @@ const Page = (props: {
             <Header
               chapter={c}
               font={settings.font.family}
+              color={props.theme.colors.primary}
               onBavButtonPress={props.onNavButtonPress}
             />
           )}
