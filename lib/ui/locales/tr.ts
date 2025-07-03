@@ -10,12 +10,12 @@ const Tr = {
   meccan: 'Mekke',
   medinan: 'Medine',
   verseCount: 'Ayet',
-  chapterس: 'Sûreler',
+  chapters: 'Sûreler',
   chapter: 'Sûre',
   parts: 'Bölümler',
   part: 'Bölüm',
-  groups: 'Gruplar',
-  group: 'Grup',
+  groups: 'Hizbler',
+  group: 'Hizb',
   quarters: 'Çeyrekler',
   quarter: 'Çeyrek',
   pages: 'Sayfalar',
@@ -71,6 +71,10 @@ const Tr = {
   pressToBookmark: 'Bir ayete uzun basın ve ardından yer işaretini seçin',
   share: 'Paylaş',
   copy: 'Kopyala',
+  settingsSaved: 'Ayarlar kaydedilidi',
+  '1/4': '1/4',
+  '2/4': '2/4',
+  '3/4': '3/4',
 }
 
 export { Tr }

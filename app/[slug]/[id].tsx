@@ -147,7 +147,7 @@ const Details = () => {
           onDismiss: () => setVisible({ ...visible, details: false }),
         }}
       >
-        <List.Section>
+        <List.Section style={{ flex: 1, marginVertical: 0 }}>
           <List.Item
             title={Locales.t(single)}
             right={(props) => <Text {...props}>{item?.id}</Text>}

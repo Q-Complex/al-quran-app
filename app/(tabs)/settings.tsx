@@ -4,6 +4,7 @@ import {
   Button,
   List,
   ProgressBar,
+  Snackbar,
   Surface,
   Text,
   useTheme,
@@ -15,21 +16,23 @@ import {
   KVStore,
   Locales,
   Modal,
-  QSettings,
+  AppSettings,
   TFontFamily,
   TFontSize,
   TLanguage,
+  toMarker,
   TSettings,
   TTheme,
 } from '@/lib'
 
 const Settings = () => {
   const theme = useTheme()
+  const { onChange } = React.useContext(AppSettings)
   const [loading, setLoading] = React.useState(false)
   const [visible, setVisible] = React.useState(false)
   const [content, setContent] = React.useState('font')
+  const [message, setMessage] = React.useState({ visible: false, content: '' })
   const [settings, setSettings] = React.useState<TSettings>(DefaultSettings)
-  const { onChange } = React.useContext(QSettings)
 
   React.useEffect(() => {
     setLoading(true)
@@ -90,9 +93,10 @@ const Settings = () => {
         <Button
           mode="contained"
           onPress={async () =>
-            await KVStore.settings.save(JSON.stringify(settings), () =>
-              onChange(settings),
-            )
+            await KVStore.settings.save(JSON.stringify(settings), () => {
+              onChange(settings)
+              setMessage({ visible: true, content: Locales.t('settingsSaved') })
+            })
           }
         >
           {Locales.t('save')}
@@ -118,7 +122,7 @@ const Settings = () => {
           onDismiss: () => setVisible(false),
         }}
       >
-        <List.Section>
+        <List.Section style={{ flex: 1, marginVertical: 0 }}>
           {content === 'font' ? (
             <List.AccordionGroup>
               <List.Accordion title={Locales.t('font')} id="1">
@@ -204,7 +208,8 @@ const Settings = () => {
                     }}
                   >
                     إِنَّآ أَنزَلْنَـٰهُ قُرْءَٰنًا عَرَبِيًّا لَّعَلَّكُمْ
-                    تَعْقِلُونَ 2
+                    تَعْقِلُونَ{' '}
+                    {settings.font.family === 'Uthmanic' ? toMarker('2') : 2}
                   </Text>
                 </View>
               </List.Accordion>
@@ -293,6 +298,16 @@ const Settings = () => {
           ) : undefined}
         </List.Section>
       </Modal>
+
+      <Snackbar
+        visible={message.visible}
+        onDismiss={() => setMessage({ visible: false, content: '' })}
+        style={{ backgroundColor: theme.colors.primaryContainer }}
+      >
+        <Text style={{ color: theme.colors.onPrimaryContainer }}>
+          {message.content}
+        </Text>
+      </Snackbar>
     </Surface>
   )
 }

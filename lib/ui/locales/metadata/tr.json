@@ -1,0 +1,9 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "El-Kuran",
+    "NSContactsUsageDescription": "El-Kuran"
+  },
+  "android": {
+    "app_name": "El-Kuran"
+  }
+}

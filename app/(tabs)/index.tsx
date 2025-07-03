@@ -2,24 +2,24 @@ import { AnimatedFlashList } from '@shopify/flash-list'
 import { router, Tabs } from 'expo-router'
 import { useSQLiteContext } from 'expo-sqlite'
 import React from 'react'
-import { View } from 'react-native'
 import {
-  Appbar,
   Chip,
+  IconButton,
   List,
   ProgressBar,
-  Searchbar,
   Surface,
   Text,
   Tooltip,
   useTheme,
 } from 'react-native-paper'
 
-import { Database, Locales, Modal, TChapter } from '@/lib'
+import { Database, Locales, Modal, TabsHeader, TChapter } from '@/lib'
+import { RefreshControl } from 'react-native'
 
 const Home = () => {
   const theme = useTheme()
   const db = useSQLiteContext()
+  const [reload, setReload] = React.useState(false)
   const [query, setQuery] = React.useState<string>('')
   const [visible, setVisible] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
@@ -40,44 +40,72 @@ const Home = () => {
     <Surface elevation={0} style={{ flex: 1 }}>
       <Tabs.Screen
         options={{
-          headerRight: (props) => (
-            <Tooltip title={Locales.t('read')}>
-              <Appbar.Action
-                {...props}
-                icon="dots-vertical"
-                onPress={() => setVisible(true)}
-              />
-            </Tooltip>
+          header: (props) => (
+            <TabsHeader
+              navProps={props}
+              children={undefined}
+              withSearchBar
+              searchBarProps={{
+                value: query,
+                loading: loading,
+                onChangeText: setQuery,
+                placeholder: Locales.t('search'),
+              }}
+            />
           ),
         }}
       />
 
       <ProgressBar indeterminate={loading} />
 
-      <AnimatedFlashList
-        data={chapters}
-        estimatedItemSize={100}
-        ListHeaderComponent={
-          <View style={{ gap: 16, padding: 16, paddingBottom: 0 }}>
-            <Searchbar
-              value={query}
-              onChangeText={setQuery}
-              placeholder={Locales.t('search')}
+      <List.Section style={{ flex: 1, marginVertical: 0 }}>
+        <AnimatedFlashList
+          data={chapters}
+          estimatedItemSize={100}
+          refreshControl={
+            <RefreshControl
+              refreshing={false}
+              onRefresh={() => setReload(!reload)}
             />
-          </View>
-        }
-        renderItem={({ item: c }: { item: TChapter }) => (
-          <List.Item
-            title={c.name}
-            onPress={() => router.push(`/chapters/${c.id}`)}
-            left={(props) => <Chip {...props}>{c.id}</Chip>}
-            description={`${c.type ? Locales.t('meccan') : Locales.t('medinan')}, ${c.verse_count} ${Locales.t('verseCount')}`}
-            right={(props) => (
-              <List.Icon {...props} icon={c.type ? 'cube' : 'mosque'} />
-            )}
-          />
-        )}
-      />
+          }
+          ListHeaderComponent={
+            <Surface
+              elevation={0}
+              style={{
+                gap: 16,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <List.Subheader>
+                {query === ''
+                  ? Locales.t('chapters')
+                  : Locales.t('results') + ` ${chapters.length}`}
+              </List.Subheader>
+
+              <Tooltip title={Locales.t('read')}>
+                <IconButton
+                  icon="dots-vertical"
+                  style={{ marginHorizontal: 16 }}
+                  onPress={() => setVisible(true)}
+                />
+              </Tooltip>
+            </Surface>
+          }
+          renderItem={({ item: c }: { item: TChapter }) => (
+            <List.Item
+              title={`سُورَةُ ${c.name}`}
+              titleStyle={{ color: theme.colors.primary }}
+              onPress={() => router.push(`/chapters/${c.id}`)}
+              left={(props) => <Chip {...props}>{c.id}</Chip>}
+              right={(props) => (
+                <List.Icon {...props} icon={c.type ? 'cube' : 'mosque'} />
+              )}
+            />
+          )}
+        />
+      </List.Section>
 
       <Modal
         theme={theme}

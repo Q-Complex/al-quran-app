@@ -29,7 +29,7 @@ const Database = {
         statement = `
         SELECT * FROM (SELECT *,
           REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE("name", 'ۜ', ''), 'ۥ', ''), 'ۦ', ''), 'ۚ', ''), 'ٍ', ''), 'ٌ', ''), 'ً', ''), 'ۢ', ''), '۟', ''), 'ۗ', ''), 'ۖ', ''), 'ۭ', ''), 'ۛ', ''), 'ٱ', 'ا'), 'ٰ', ''), 'ٓ', ''), 'ّ', ''), 'ْ', ''), 'ِ', ''), 'ُ', ''), 'َ', '') as "unaccent_name"
-        FROM "chapters") WHERE "unaccent_name" LIKE '%${search}%'`
+        FROM "chapters") WHERE "name" LIKE '%${search}%' OR "unaccent_name" LIKE '%${search}%'`
       }
 
       return await db.getAllAsync<TChapter & V>(statement)
@@ -157,7 +157,7 @@ const Database = {
           REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE("content", 'ۜ', ''), 'ۥ', ''), 'ۦ', ''), 'ۚ', ''), 'ٍ', ''), 'ٌ', ''), 'ً', ''), 'ۢ', ''), '۟', ''), 'ۗ', ''), 'ۖ', ''), 'ۭ', ''), 'ۛ', ''), 'ٱ', 'ا'), 'ٰ', ''), 'ٓ', ''), 'ّ', ''), 'ْ', ''), 'ِ', ''), 'ُ', ''), 'َ', '') as "unaccent_content"
         FROM "verses"
       )
-      WHERE "unaccent_content" LIKE '%${query}%'`,
+      WHERE "content" LIKE '%${query}%' OR "unaccent_content" LIKE '%${query}%'`,
     ),
   count: (table: Slug) =>
     table === 'chapters'

@@ -1,8 +1,5 @@
-import { NotoKufiArabic_400Regular } from '@expo-google-fonts/noto-kufi-arabic'
-import { NotoSans_400Regular } from '@expo-google-fonts/noto-sans'
 import { ThemeProvider } from '@react-navigation/native'
-import { useFonts } from 'expo-font'
-import { SplashScreen, Stack } from 'expo-router'
+import { Stack } from 'expo-router'
 import { SQLiteProvider } from 'expo-sqlite'
 import { StatusBar, StatusBarStyle } from 'expo-status-bar'
 import React from 'react'
@@ -17,7 +14,7 @@ import {
   Locales,
   NavDarkTheme,
   NavLightTheme,
-  QSettings,
+  AppSettings,
   StackHeader,
   TSettings,
 } from '@/lib'
@@ -28,23 +25,9 @@ export { ErrorBoundary } from 'expo-router'
 // Ensure that reloading on `/modal` keeps a back button present.
 export const unstable_settings = { initialRouteName: '(tabs)' }
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync()
-
 const RootLayout = () => {
   const colorScheme = useColorScheme()
   const [settings, setSettings] = React.useState<TSettings>(DefaultSettings)
-  const [loaded, error] = useFonts({
-    Indopak: require('@/assets/fonts/Indopak.ttf'),
-    Uthmanic: require('@/assets/fonts/Uthmanic.ttf'),
-    NotoKufiArabic_400Regular,
-    NotoSans_400Regular,
-  })
-
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
-  React.useEffect(() => {
-    if (error) throw error
-  }, [error])
 
   // Load settings
   React.useEffect(() => {
@@ -52,16 +35,6 @@ const RootLayout = () => {
       await KVStore.settings.load((v) => (v ? setSettings(JSON.parse(v)) : {}))
     })()
   }, [])
-
-  React.useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync()
-    }
-  }, [loaded])
-
-  if (!loaded) {
-    return null
-  }
 
   if (settings.language !== 'System') {
     Locales.locale =
@@ -86,7 +59,7 @@ const RootLayout = () => {
           databaseName="quran.db"
           assetSource={{ assetId: require('@/assets/data/quran.db') }}
         >
-          <QSettings.Provider
+          <AppSettings.Provider
             value={{ settings, onChange: (v) => setSettings(v) }}
           >
             <Stack
@@ -101,7 +74,7 @@ const RootLayout = () => {
               <Stack.Screen name="[slug]/index" />
               <Stack.Screen name="[slug]/[id]" />
             </Stack>
-          </QSettings.Provider>
+          </AppSettings.Provider>
         </SQLiteProvider>
       </PaperProvider>
 

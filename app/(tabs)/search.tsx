@@ -1,11 +1,11 @@
 import { AnimatedFlashList } from '@shopify/flash-list'
-import { router } from 'expo-router'
+import { router, Tabs } from 'expo-router'
 import { useSQLiteContext } from 'expo-sqlite'
 import React from 'react'
-import { RefreshControl, View } from 'react-native'
-import { List, ProgressBar, Searchbar, Surface } from 'react-native-paper'
+import { RefreshControl } from 'react-native'
+import { List, ProgressBar, Surface } from 'react-native-paper'
 
-import { Database, Locales, TVerse, KVStore } from '@/lib'
+import { Database, Locales, TVerse, KVStore, TabsHeader } from '@/lib'
 
 const Search = () => {
   const db = useSQLiteContext()
@@ -22,7 +22,7 @@ const Search = () => {
       await KVStore.history.load((h) => (h ? setHistory(JSON.parse(h)) : {}))
       setLoading(false)
     })()
-  }, [])
+  }, [reload])
 
   // Search logic
   React.useEffect(() => {
@@ -37,21 +37,42 @@ const Search = () => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query, reload])
+  }, [reload])
 
   return (
     <Surface elevation={0} style={{ flex: 1 }}>
+      <Tabs.Screen
+        options={{
+          header: (props) => (
+            <TabsHeader
+              navProps={props}
+              children={undefined}
+              withSearchBar
+              searchBarProps={{
+                value: query,
+                loading: loading,
+                onChangeText: setQuery,
+                placeholder: Locales.t('search'),
+                onClearIconPress: () => setResults([]),
+                onIconPress: async () => {
+                  if (!history.includes(query)) {
+                    const newHistory = [...history, query]
+                    setHistory(newHistory)
+                    await KVStore.history.save(JSON.stringify(newHistory), () =>
+                      setReload(!reload),
+                    )
+                  }
+                  setReload(!reload)
+                },
+              }}
+            />
+          ),
+        }}
+      />
+
       <ProgressBar indeterminate={loading} />
 
-      <View style={{ gap: 16, padding: 16, paddingBottom: 0 }}>
-        <Searchbar
-          value={query}
-          onChangeText={setQuery}
-          placeholder={Locales.t('search')}
-        />
-      </View>
-
-      <List.Section style={{ flex: 1 }}>
+      <List.Section style={{ flex: 1, marginVertical: 0 }}>
         <AnimatedFlashList
           data={results}
           estimatedItemSize={100}
@@ -95,7 +116,6 @@ const Search = () => {
                   ))}
                   <List.Item
                     title={Locales.t('clear')}
-                    description={Locales.t('deleteHistory')}
                     left={(props) => (
                       <List.Icon {...props} icon="delete-clock" />
                     )}

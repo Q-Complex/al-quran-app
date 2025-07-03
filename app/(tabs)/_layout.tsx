@@ -26,6 +26,19 @@ const TabLayout = () => (
       }}
     />
     <Tabs.Screen
+      name="search"
+      options={{
+        title: Locales.t('search'),
+        tabBarIcon: (props) => (
+          <MaterialCommunityIcons
+            {...props}
+            size={24}
+            name={props.focused ? 'book-search' : 'book-search-outline'}
+          />
+        ),
+      }}
+    />
+    <Tabs.Screen
       name="bookmarks"
       options={{
         title: Locales.t('bookmarks'),
@@ -36,19 +49,6 @@ const TabLayout = () => (
             name={
               props.focused ? 'bookmark-multiple' : 'bookmark-multiple-outline'
             }
-          />
-        ),
-      }}
-    />
-    <Tabs.Screen
-      name="search"
-      options={{
-        title: Locales.t('search'),
-        tabBarIcon: (props) => (
-          <MaterialCommunityIcons
-            {...props}
-            size={24}
-            name={props.focused ? 'book-search' : 'book-search-outline'}
           />
         ),
       }}

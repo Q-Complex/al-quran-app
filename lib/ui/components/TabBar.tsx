@@ -5,7 +5,7 @@ import { BottomNavigation } from 'react-native-paper'
 
 const TabBar = (props: BottomTabBarProps) => (
   <BottomNavigation.Bar
-    shifting
+    labeled={false}
     navigationState={props.state}
     safeAreaInsets={props.insets}
     onTabPress={({ route, preventDefault }) => {

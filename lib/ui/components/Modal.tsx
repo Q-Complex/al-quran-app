@@ -26,21 +26,19 @@ const Modal = (props: {
     <BaseModal
       {...props.modalProps}
       contentContainerStyle={{
-        left: 0,
-        right: 0,
-        bottom: 0,
-        paddingTop: 8,
+        left: 8,
+        right: 8,
+        borderRadius: 24,
         position: 'absolute',
-        borderTopLeftRadius: 32,
-        borderTopRightRadius: 32,
         backgroundColor: props.theme.colors.background,
       }}
     >
       <View
         style={{
-          padding: 16,
+          paddingTop: 16,
           flexDirection: 'row',
           alignItems: 'center',
+          paddingHorizontal: 16,
           justifyContent: 'space-between',
         }}
       >

@@ -2,11 +2,20 @@ import { AnimatedFlashList } from '@shopify/flash-list'
 import { router } from 'expo-router'
 import React from 'react'
 import { RefreshControl } from 'react-native'
-import { IconButton, List, ProgressBar, Surface } from 'react-native-paper'
+import {
+  Icon,
+  IconButton,
+  List,
+  ProgressBar,
+  Surface,
+  Text,
+  useTheme,
+} from 'react-native-paper'
 
 import { KVStore, Locales, TVerse } from '@/lib'
 
 const Bookmarks = () => {
+  const theme = useTheme()
   const [reload, setReload] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const [bookmarks, setBookmarks] = React.useState<TVerse[]>([])
@@ -27,13 +36,10 @@ const Bookmarks = () => {
     <Surface elevation={0} style={{ flex: 1 }}>
       <ProgressBar indeterminate={loading} />
 
-      <List.Section style={{ flex: 1 }}>
+      <List.Section style={{ flex: 1, marginVertical: 0 }}>
         <AnimatedFlashList
           data={bookmarks}
           estimatedItemSize={100}
-          ListHeaderComponent={
-            <List.Subheader>{Locales.t('bookmarks')}</List.Subheader>
-          }
           refreshControl={
             <RefreshControl
               refreshing={false}
@@ -61,18 +67,46 @@ const Bookmarks = () => {
             />
           )}
           ListEmptyComponent={
-            <>
-              <List.Item
-                title={Locales.t('noBookmarks')}
-                left={(props) => (
-                  <List.Icon {...props} icon="bookmark-multiple" />
-                )}
+            <Surface
+              elevation={0}
+              style={{
+                flex: 1,
+                gap: 16,
+                paddingVertical: 96,
+                alignItems: 'center',
+                paddingHorizontal: 16,
+                justifyContent: 'center',
+              }}
+            >
+              <Icon
+                size={96}
+                source="bookmark-multiple"
+                color={theme.colors.primary}
               />
-              <List.Item
-                title={Locales.t('pressToBookmark')}
-                left={(props) => <List.Icon {...props} icon="plus" />}
-              />
-            </>
+
+              <Text variant="titleLarge">{Locales.t('noBookmarks')}</Text>
+
+              <Surface
+                elevation={0}
+                style={{
+                  gap: 8,
+                  padding: 16,
+                  borderRadius: 16,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  backgroundColor: theme.colors.primaryContainer,
+                }}
+              >
+                <Icon
+                  size={32}
+                  source="information"
+                  color={theme.colors.onPrimaryContainer}
+                />
+                <Text style={{ color: theme.colors.onPrimaryContainer }}>
+                  {Locales.t('pressToBookmark')}
+                </Text>
+              </Surface>
+            </Surface>
           }
         />
       </List.Section>

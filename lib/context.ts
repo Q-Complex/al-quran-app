@@ -12,4 +12,4 @@ const AppSettings = React.createContext<{
   onChange: (v: TSettings) => void
 }>({ settings: DefaultSettings, onChange: () => {} })
 
-export { AppSettings as QSettings }
+export { AppSettings }

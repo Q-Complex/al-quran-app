@@ -15,7 +15,7 @@ interface TabsHeaderProps extends AppbarProps {
 }
 
 const TabsHeader = (props: TabsHeaderProps) => {
-  const [query, setQuery] = React.useState('')
+  const [query, setQuery] = React.useState(props.searchBarProps?.value || '')
 
   React.useEffect(() => {
     if (props.searchBarProps?.onChangeText) {

@@ -23,8 +23,19 @@ import {
 } from '@/lib/types'
 
 import { Locales } from '../locales'
-import { QSettings } from '@/lib/context'
+import { AppSettings } from '@/lib/context'
 import { toMarker } from '@/lib/utils'
+
+const formatQuarterLabel = (quarter: number) => {
+  const group = Math.ceil(quarter / 4)
+  const posInGroup = quarter % 4
+
+  if (posInGroup === 0) {
+    return `${Locales.t('group')} ${group}`
+  }
+
+  return `${Locales.t(posInGroup + '/4')} ${Locales.t('group')} ${group}`
+}
 
 /**
  * Page container
@@ -86,7 +97,7 @@ const Container = (p: {
           <Button
             onPress={() => p.onNavButtonPress('quarters', p.data.quarter_id)}
           >
-            {Locales.t('quarter')} {p.data.quarter_id}
+            {formatQuarterLabel(p.data.quarter_id)}
           </Button>
         </Tooltip>
       </View>
@@ -142,7 +153,7 @@ const Content = (props: {
             fontFamily: props.font.family,
           }}
         >
-          {(props.font.family !== 'Indopak'
+          {(props.font.family === 'Uthmanic'
             ? toMarker(v.number.toString())
             : v.number) + ' '}
         </Text>
@@ -204,7 +215,7 @@ const Page = (props: {
   onVersePress: (v: TVerse) => void
   onNavButtonPress: (path: Slug, id: number) => void
 }) => {
-  const { settings } = React.useContext(QSettings)
+  const { settings } = React.useContext(AppSettings)
   const firstVerse = props.data.verses[0]
 
   // There is only one chapter

@@ -6,6 +6,17 @@ import { Chip, List, ProgressBar, Surface } from 'react-native-paper'
 
 import { Database, Locales, Slug, TItem, V } from '@/lib'
 
+const formatQuarterLabel = (quarter: number) => {
+  const group = Math.ceil(quarter / 4)
+  const posInGroup = quarter % 4
+
+  if (posInGroup === 0) {
+    return `${Locales.t('group')} ${group}`
+  }
+
+  return `${Locales.t(posInGroup + '/4')} ${Locales.t('group')} ${group}`
+}
+
 const ListHome = () => {
   const db = useSQLiteContext()
   const { slug } = useLocalSearchParams<{ slug: Slug }>()
@@ -37,7 +48,11 @@ const ListHome = () => {
         estimatedItemSize={100}
         renderItem={({ item }) => (
           <List.Item
-            title={`${Locales.t(slug.slice(0, slug.length - 1))} ${item.id}`}
+            title={
+              slug !== 'quarters'
+                ? `${Locales.t(slug.slice(0, slug.length - 1))} ${item.id}`
+                : formatQuarterLabel(item.id)
+            }
             descriptionNumberOfLines={1}
             description={`${item.verse_content}...`}
             onPress={() => router.push(`/${slug}/${item.id}`)}

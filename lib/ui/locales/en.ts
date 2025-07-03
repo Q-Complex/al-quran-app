@@ -71,6 +71,10 @@ const En = {
   pressToBookmark: 'Long press on a verse then select bookmark',
   share: 'Share',
   copy: 'Copy',
+  settingsSaved: 'Settings saved',
+  '1/4': '1/4',
+  '2/4': '2/4',
+  '3/4': '3/4',
 }
 
 export { En }
