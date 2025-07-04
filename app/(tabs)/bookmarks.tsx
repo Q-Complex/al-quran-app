@@ -7,6 +7,7 @@ import {
   IconButton,
   List,
   ProgressBar,
+  Snackbar,
   Surface,
   Text,
   useTheme,
@@ -85,31 +86,24 @@ const Bookmarks = () => {
               />
 
               <Text variant="titleLarge">{Locales.t('noBookmarks')}</Text>
-
-              <Surface
-                elevation={0}
-                style={{
-                  gap: 8,
-                  padding: 16,
-                  borderRadius: 16,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  backgroundColor: theme.colors.primaryContainer,
-                }}
-              >
-                <Icon
-                  size={32}
-                  source="information"
-                  color={theme.colors.onPrimaryContainer}
-                />
-                <Text style={{ color: theme.colors.onPrimaryContainer }}>
-                  {Locales.t('pressToBookmark')}
-                </Text>
-              </Surface>
             </Surface>
           }
         />
       </List.Section>
+
+      {bookmarks.length === 0 && (
+        <Snackbar
+          visible
+          icon="information"
+          onDismiss={() => {}}
+          onIconPress={() => {}}
+          style={{ backgroundColor: theme.colors.primaryContainer }}
+        >
+          <Text style={{ color: theme.colors.onPrimaryContainer }}>
+            {Locales.t('pressToBookmark')}
+          </Text>
+        </Snackbar>
+      )}
     </Surface>
   )
 }

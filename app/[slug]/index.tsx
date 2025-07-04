@@ -2,7 +2,7 @@ import { AnimatedFlashList } from '@shopify/flash-list'
 import { router, Stack, useLocalSearchParams } from 'expo-router'
 import { useSQLiteContext } from 'expo-sqlite'
 import React from 'react'
-import { Chip, List, ProgressBar, Surface } from 'react-native-paper'
+import { List, ProgressBar, Surface } from 'react-native-paper'
 
 import { Database, Locales, Slug, TItem, V } from '@/lib'
 
@@ -56,8 +56,7 @@ const ListHome = () => {
             descriptionNumberOfLines={1}
             description={`${item.verse_content}...`}
             onPress={() => router.push(`/${slug}/${item.id}`)}
-            left={(props) => <Chip {...props}>{item.id}</Chip>}
-            descriptionStyle={{ direction: 'rtl' }}
+            right={(props) => <List.Icon {...props} icon="chevron-right" />}
           />
         )}
       />
