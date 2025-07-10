@@ -4,6 +4,7 @@ import {
   Button,
   List,
   ProgressBar,
+  RadioButton,
   Snackbar,
   Surface,
   Text,
@@ -126,74 +127,48 @@ const Settings = () => {
           {content === 'font' ? (
             <List.AccordionGroup>
               <List.Accordion title={Locales.t('font')} id="1">
-                {Constants.font.families.map((f) => (
-                  <List.Item
-                    key={f}
-                    title={Locales.t(f)}
-                    onPress={() =>
-                      setSettings({
-                        ...settings,
-                        font: { ...settings.font, family: f as TFontFamily },
-                      })
-                    }
-                    titleStyle={{
-                      color:
-                        settings.font.family === f
-                          ? theme.colors.primary
-                          : theme.colors.onBackground,
-                    }}
-                    left={(props) => (
-                      <List.Icon
-                        {...props}
-                        color={
-                          settings.font.family === f
-                            ? theme.colors.primary
-                            : props.color
-                        }
-                        icon={
-                          settings.font.family === f
-                            ? 'checkbox-marked-circle'
-                            : 'checkbox-blank-circle-outline'
-                        }
-                      />
-                    )}
-                  />
-                ))}
+                <RadioButton.Group
+                  value={settings.font.family}
+                  onValueChange={(f) =>
+                    setSettings({
+                      ...settings,
+                      font: { ...settings.font, family: f as TFontFamily },
+                    })
+                  }
+                >
+                  {Constants.font.families.map((f) => (
+                    <RadioButton.Item
+                      labelVariant="bodySmall"
+                      key={f}
+                      label={Locales.t(f)}
+                      value={f}
+                    />
+                  ))}
+                </RadioButton.Group>
               </List.Accordion>
+
               <List.Accordion title={Locales.t('size')} id="2">
-                {Constants.font.sizes.map((s) => (
-                  <List.Item
-                    key={s.label}
-                    title={Locales.t(s.label)}
-                    onPress={() =>
-                      setSettings({
-                        ...settings,
-                        font: { ...settings.font, size: s as TFontSize },
-                      })
-                    }
-                    titleStyle={{
-                      color:
-                        settings.font.size.value === s.value
-                          ? theme.colors.primary
-                          : theme.colors.onBackground,
-                    }}
-                    left={(props) => (
-                      <List.Icon
-                        {...props}
-                        color={
-                          settings.font.size.value === s.value
-                            ? theme.colors.primary
-                            : props.color
-                        }
-                        icon={
-                          settings.font.size.value === s.value
-                            ? 'checkbox-marked-circle'
-                            : 'checkbox-blank-circle-outline'
-                        }
-                      />
-                    )}
-                  />
-                ))}
+                <RadioButton.Group
+                  value={JSON.stringify(settings.font.size)}
+                  onValueChange={(s) =>
+                    setSettings({
+                      ...settings,
+                      font: {
+                        ...settings.font,
+                        size: JSON.parse(s) as TFontSize,
+                      },
+                    })
+                  }
+                >
+                  {Constants.font.sizes.map((s) => (
+                    <RadioButton.Item
+                      labelVariant="bodySmall"
+                      key={s.label}
+                      label={Locales.t(s.label)}
+                      value={JSON.stringify(s)}
+                    />
+                  ))}
+                </RadioButton.Group>
               </List.Accordion>
 
               <List.Accordion title={Locales.t('preview')} id="3">
@@ -215,86 +190,40 @@ const Settings = () => {
               </List.Accordion>
             </List.AccordionGroup>
           ) : content === 'language' ? (
-            Constants.languages.map((l) => (
-              <List.Item
-                key={l}
-                title={Locales.t(l)}
-                onPress={() =>
-                  setSettings({ ...settings, language: l as TLanguage })
-                }
-                titleStyle={{
-                  color:
-                    settings.language === l
-                      ? theme.colors.primary
-                      : theme.colors.onBackground,
-                }}
-                left={(props) => (
-                  <List.Icon
-                    {...props}
-                    color={
-                      settings.language === l
-                        ? theme.colors.primary
-                        : props.color
-                    }
-                    icon={
-                      settings.language === l
-                        ? 'checkbox-marked-circle'
-                        : 'checkbox-blank-circle-outline'
-                    }
-                  />
-                )}
-                right={(props) => (
-                  <List.Icon
-                    {...props}
-                    icon={l === 'Arabic' ? 'abjad-arabic' : 'alphabet-latin'}
-                  />
-                )}
-              />
-            ))
+            <RadioButton.Group
+              value={settings.language}
+              onValueChange={(l) =>
+                setSettings({ ...settings, language: l as TLanguage })
+              }
+            >
+              {Constants.languages.map((l) => (
+                <RadioButton.Item
+                  labelVariant="bodySmall"
+                  key={l}
+                  label={Locales.t(l)}
+                  value={l}
+                />
+              ))}
+            </RadioButton.Group>
           ) : content === 'theme' ? (
-            Constants.themes.map((t) => (
-              <List.Item
-                key={t}
-                title={Locales.t(t)}
-                onPress={() =>
-                  setSettings({
-                    ...settings,
-                    theme: t as TTheme,
-                  })
-                }
-                titleStyle={{
-                  color:
-                    settings.theme === t
-                      ? theme.colors.primary
-                      : theme.colors.onBackground,
-                }}
-                left={(props) => (
-                  <List.Icon
-                    {...props}
-                    color={
-                      settings.theme === t ? theme.colors.primary : props.color
-                    }
-                    icon={
-                      settings.theme === t
-                        ? 'checkbox-marked-circle'
-                        : 'checkbox-blank-circle-outline'
-                    }
-                  />
-                )}
-                right={(props) => (
-                  <List.Icon
-                    {...props}
-                    icon={
-                      t === 'Auto'
-                        ? 'cellphone'
-                        : t === 'Dark'
-                          ? 'weather-night'
-                          : 'white-balance-sunny'
-                    }
-                  />
-                )}
-              />
-            ))
+            <RadioButton.Group
+              value={settings.theme}
+              onValueChange={(t) =>
+                setSettings({
+                  ...settings,
+                  theme: t as TTheme,
+                })
+              }
+            >
+              {Constants.themes.map((t) => (
+                <RadioButton.Item
+                  labelVariant="bodySmall"
+                  key={t}
+                  label={Locales.t(t)}
+                  value={t}
+                />
+              ))}
+            </RadioButton.Group>
           ) : undefined}
         </List.Section>
       </Modal>

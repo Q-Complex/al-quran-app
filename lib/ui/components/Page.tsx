@@ -4,7 +4,6 @@ import { View } from 'react-native'
 import {
   Button,
   Card,
-  Chip,
   Divider,
   MD3Theme,
   Surface,
@@ -24,7 +23,7 @@ import {
 
 import { Locales } from '../locales'
 import { AppSettings } from '@/lib/context'
-import { toMarker } from '@/lib/utils'
+import { toMarker } from '../../utils'
 
 const formatQuarterLabel = (quarter: number) => {
   const group = Math.ceil(quarter / 4)
@@ -57,17 +56,22 @@ const Container = (p: {
       }}
     >
       <Tooltip title={Locales.t('read')}>
-        <Button
+        <Text
+          variant="bodySmall"
+          style={{ lineHeight: 20 }}
           onPress={() => p.onNavButtonPress('chapters', p.data.chapter_id)}
         >
           سُورَةُ {p.data.chapter_name}
-        </Button>
+        </Text>
       </Tooltip>
 
       <Tooltip title={Locales.t('read')}>
-        <Button onPress={() => p.onNavButtonPress('parts', p.data.part_id)}>
+        <Text
+          variant="bodySmall"
+          onPress={() => p.onNavButtonPress('parts', p.data.part_id)}
+        >
           {Locales.t('part')} {p.data.part_id}
-        </Button>
+        </Text>
       </Tooltip>
     </View>
 
@@ -78,27 +82,32 @@ const Container = (p: {
         style={{
           flexDirection: 'row',
           paddingHorizontal: 16,
+          alignItems: 'center',
           justifyContent: 'space-between',
         }}
       >
         <Tooltip title={Locales.t('read')}>
-          <Button onPress={() => p.onNavButtonPress('groups', p.data.group_id)}>
+          <Text
+            variant="bodySmall"
+            onPress={() => p.onNavButtonPress('groups', p.data.group_id)}
+          >
             {Locales.t('group')} {p.data.group_id}
-          </Button>
+          </Text>
         </Tooltip>
 
         <Tooltip title={Locales.t('pNum')}>
-          <Chip onPress={() => p.onNavButtonPress('pages', p.data.id)}>
+          <Button onPress={() => p.onNavButtonPress('pages', p.data.id)}>
             {p.data.id}
-          </Chip>
+          </Button>
         </Tooltip>
 
         <Tooltip title={Locales.t('read')}>
-          <Button
+          <Text
+            variant="bodySmall"
             onPress={() => p.onNavButtonPress('quarters', p.data.quarter_id)}
           >
             {formatQuarterLabel(p.data.quarter_id)}
-          </Button>
+          </Text>
         </Tooltip>
       </View>
 
@@ -187,7 +196,7 @@ const Header = (props: {
       }}
     >
       <Tooltip title={Locales.t('chapter')}>
-        <Chip mode="outlined">{props.chapter.id}</Chip>
+        <Text variant="bodySmall">ترتيبها {props.chapter.id}</Text>
       </Tooltip>
 
       <Text
@@ -201,7 +210,7 @@ const Header = (props: {
       >{`سُورَةُ ${props.chapter.name}`}</Text>
 
       <Tooltip title={Locales.t('vCount')}>
-        <Chip mode="outlined">{props.chapter.verse_count}</Chip>
+        <Text variant="bodySmall">آيلتها {props.chapter.verse_count}</Text>
       </Tooltip>
     </Card.Content>
   </Card>

@@ -5,17 +5,7 @@ import React from 'react'
 import { List, ProgressBar, Surface } from 'react-native-paper'
 
 import { Database, Locales, Slug, TItem, V } from '@/lib'
-
-const formatQuarterLabel = (quarter: number) => {
-  const group = Math.ceil(quarter / 4)
-  const posInGroup = quarter % 4
-
-  if (posInGroup === 0) {
-    return `${Locales.t('group')} ${group}`
-  }
-
-  return `${Locales.t(posInGroup + '/4')} ${Locales.t('group')} ${group}`
-}
+import { formatQuarterLabel } from '@/lib/utils/text'
 
 const ListHome = () => {
   const db = useSQLiteContext()

@@ -1,4 +1,8 @@
 import { ThemeProvider } from '@react-navigation/native'
+import {
+  useFonts,
+  NotoKufiArabic_400Regular,
+} from '@expo-google-fonts/noto-kufi-arabic'
 import { Stack } from 'expo-router'
 import { SQLiteProvider } from 'expo-sqlite'
 import { StatusBar, StatusBarStyle } from 'expo-status-bar'
@@ -27,6 +31,7 @@ export const unstable_settings = { initialRouteName: '(tabs)' }
 
 const RootLayout = () => {
   const colorScheme = useColorScheme()
+  const x = useFonts({ NotoKufiArabic_400Regular })
   const [settings, setSettings] = React.useState<TSettings>(DefaultSettings)
 
   // Load settings

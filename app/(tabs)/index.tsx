@@ -94,15 +94,18 @@ const Home = () => {
             </Surface>
           }
           renderItem={({ item: c }: { item: TChapter }) => (
-            <List.Item
-              title={`سُورَةُ ${c.name}`}
-              titleStyle={{ color: theme.colors.primary }}
-              onPress={() => router.push(`/chapters/${c.id}`)}
-              left={(props) => <Chip {...props}>{c.id}</Chip>}
-              right={(props) => (
-                <List.Icon {...props} icon={c.type ? 'cube' : 'mosque'} />
-              )}
-            />
+            <Tooltip title={Locales.t(c.type ? 'meccan' : 'medinan')}>
+              <List.Item
+                title={`سُورَةُ ${c.name}`}
+                description={`${c.verse_count} ${Locales.t('verses')}`}
+                titleStyle={{ color: theme.colors.primary, lineHeight: 32 }}
+                onPress={() => router.push(`/chapters/${c.id}`)}
+                left={(props) => <Chip {...props}>{c.id}</Chip>}
+                right={(props) => (
+                  <List.Icon {...props} icon={c.type ? 'cube' : 'mosque'} />
+                )}
+              />
+            </Tooltip>
           )}
         />
       </List.Section>

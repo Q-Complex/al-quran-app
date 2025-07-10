@@ -10,10 +10,7 @@ import {
   adaptNavigationTheme,
 } from 'react-native-paper'
 
-const fontConfig = {
-  lineHeight: 32,
-  fontFamily: 'NotoKufiArabic_400Regular',
-}
+const fontConfig = { fontFamily: 'NotoKufiArabic_400Regular' }
 
 const AppLightTheme = {
   ...MD3LightTheme,

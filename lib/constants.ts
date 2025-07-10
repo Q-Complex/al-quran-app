@@ -8,11 +8,9 @@ const Constants = {
   font: {
     families: ['NotoKufiArabic_400Regular', 'Uthmanic', 'Indopak'],
     sizes: [
-      { label: 'Extra Small', value: 'bodyMedium', lineHeight: 32 },
       { label: 'Small', value: 'bodyLarge', lineHeight: 38 },
       { label: 'Medium', value: 'titleLarge', lineHeight: 48 },
-      { label: 'Large', value: 'headlineMedium', lineHeight: 56 },
-      { label: 'Extra Large', value: 'headlineLarge', lineHeight: 64 },
+      { label: 'Large', value: 'headlineLarge', lineHeight: 64 },
     ],
   },
   languages: ['System', 'Arabic', 'English', 'Turkish'],

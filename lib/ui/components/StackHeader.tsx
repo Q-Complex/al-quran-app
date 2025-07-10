@@ -53,7 +53,10 @@ const StackHeader = (props: StackHeaderProps) => {
           props.navProps.options,
           props.navProps.route.name,
         )}
-        titleStyle={props.navProps.options.headerTitleStyle}
+        titleStyle={[
+          props.navProps.options.headerTitleStyle,
+          { lineHeight: 36 },
+        ]}
       />
 
       {props.navProps.options.headerRight

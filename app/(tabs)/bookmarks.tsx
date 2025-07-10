@@ -94,9 +94,7 @@ const Bookmarks = () => {
       {bookmarks.length === 0 && (
         <Snackbar
           visible
-          icon="information"
           onDismiss={() => {}}
-          onIconPress={() => {}}
           style={{ backgroundColor: theme.colors.primaryContainer }}
         >
           <Text style={{ color: theme.colors.onPrimaryContainer }}>

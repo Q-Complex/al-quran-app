@@ -28,6 +28,7 @@ import {
   TQuarter,
   TVerse,
 } from '@/lib'
+import { formatQuarterLabel } from '@/lib/utils/text'
 
 const Details = () => {
   const theme = useTheme()
@@ -75,16 +76,20 @@ const Details = () => {
     })()
   }, [])
 
-  const single = path.slice(0, slug.length - 1)
+  const single = path.replace('s', '')
 
   return (
     <Surface elevation={0} style={{ flex: 1 }}>
       <Stack.Screen
         options={{
           title:
-            path === 'chapters' && item
-              ? item.name
-              : `${Locales.t(single)} ${ID}`,
+            path !== 'chapters'
+              ? path === 'quarters'
+                ? formatQuarterLabel(ID)
+                : `${Locales.t(single)} ${ID}`
+              : item
+                ? item.name
+                : '',
           headerRight: (props) => (
             <>
               <Tooltip title={Locales.t('prev')}>
