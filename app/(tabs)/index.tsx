@@ -3,8 +3,8 @@ import { router, Tabs } from 'expo-router'
 import { useSQLiteContext } from 'expo-sqlite'
 import React from 'react'
 import {
+  Appbar,
   Chip,
-  IconButton,
   List,
   ProgressBar,
   Surface,
@@ -13,19 +13,19 @@ import {
   useTheme,
 } from 'react-native-paper'
 
-import { Database, Locales, Modal, TabsHeader, TChapter } from '@/lib'
+import { AppTheme, Database, Locales, Modal, TabsHeader, TChapter } from '@/lib'
 import { RefreshControl } from 'react-native'
 
 const Home = () => {
-  const theme = useTheme()
   const db = useSQLiteContext()
+  const theme = useTheme<AppTheme>()
   const [reload, setReload] = React.useState(false)
   const [query, setQuery] = React.useState<string>('')
   const [visible, setVisible] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const [chapters, setChapters] = React.useState<TChapter[]>([])
 
-  // Data loading
+  // Load chapters
   React.useEffect(() => {
     setLoading(true)
     ;(async () => {
@@ -49,14 +49,23 @@ const Home = () => {
                 value: query,
                 loading: loading,
                 onChangeText: setQuery,
-                placeholder: Locales.t('search'),
+                right:
+                  query === ''
+                    ? (props) => (
+                        <Appbar.Action
+                          {...props}
+                          icon="dots-vertical"
+                          onPress={() => setVisible(true)}
+                        />
+                      )
+                    : undefined,
               }}
             />
           ),
         }}
       />
 
-      <ProgressBar indeterminate={loading} />
+      <ProgressBar indeterminate={loading} color={theme.colors.success} />
 
       <List.Section style={{ flex: 1, marginVertical: 0 }}>
         <AnimatedFlashList
@@ -68,39 +77,32 @@ const Home = () => {
               onRefresh={() => setReload(!reload)}
             />
           }
-          ListHeaderComponent={
-            <Surface
-              elevation={0}
-              style={{
-                gap: 16,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}
-            >
-              <List.Subheader>
-                {query === ''
-                  ? Locales.t('chapters')
-                  : Locales.t('results') + ` ${chapters.length}`}
-              </List.Subheader>
-
-              <Tooltip title={Locales.t('read')}>
-                <IconButton
-                  icon="dots-vertical"
-                  style={{ marginHorizontal: 16 }}
-                  onPress={() => setVisible(true)}
-                />
-              </Tooltip>
-            </Surface>
-          }
           renderItem={({ item: c }: { item: TChapter }) => (
             <Tooltip title={Locales.t(c.type ? 'meccan' : 'medinan')}>
               <List.Item
                 title={`سُورَةُ ${c.name}`}
-                description={`${c.verse_count} ${Locales.t('verses')}`}
-                titleStyle={{ color: theme.colors.primary, lineHeight: 32 }}
                 onPress={() => router.push(`/chapters/${c.id}`)}
-                left={(props) => <Chip {...props}>{c.id}</Chip>}
+                description={`${c.verse_count} ${Locales.t('verses')}`}
+                titleStyle={{
+                  lineHeight: 32,
+                  color: theme.colors.success,
+                  fontFamily: 'NotoKufiArabic_700Bold',
+                }}
+                left={(props) => (
+                  <Chip
+                    {...props}
+                    textStyle={{
+                      color: theme.colors.onInfo,
+                      fontFamily: 'NotoKufiArabic_700Bold',
+                    }}
+                    style={{
+                      ...props.style,
+                      backgroundColor: theme.colors.info,
+                    }}
+                  >
+                    {c.id}
+                  </Chip>
+                )}
                 right={(props) => (
                   <List.Icon {...props} icon={c.type ? 'cube' : 'mosque'} />
                 )}

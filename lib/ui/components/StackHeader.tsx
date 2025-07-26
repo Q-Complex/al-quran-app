@@ -34,6 +34,10 @@ const StackHeader = (props: StackHeaderProps) => {
         onChangeText={setQuery}
         style={{ margin: 8, marginBottom: 16 }}
         onIconPress={() => props.navProps.navigation.goBack()}
+        placeholder={getHeaderTitle(
+          props.navProps.options,
+          props.navProps.route.name,
+        )}
       />
     </Appbar.Header>
   ) : (
@@ -55,7 +59,7 @@ const StackHeader = (props: StackHeaderProps) => {
         )}
         titleStyle={[
           props.navProps.options.headerTitleStyle,
-          { lineHeight: 36 },
+          { lineHeight: 36, fontFamily: 'NotoKufiArabic_700Bold' },
         ]}
       />
 

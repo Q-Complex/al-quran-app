@@ -30,11 +30,7 @@ const TabLayout = () => (
       options={{
         title: Locales.t('search'),
         tabBarIcon: (props) => (
-          <MaterialCommunityIcons
-            {...props}
-            size={24}
-            name={props.focused ? 'book-search' : 'book-search-outline'}
-          />
+          <MaterialCommunityIcons {...props} size={24} name="magnify" />
         ),
       }}
     />

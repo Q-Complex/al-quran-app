@@ -13,34 +13,31 @@ import {
 
 import {
   Constants,
-  DefaultSettings,
   KVStore,
   Locales,
   Modal,
-  AppSettings,
   TFontFamily,
   TFontSize,
   TLanguage,
   toMarker,
-  TSettings,
   TTheme,
+  DefaultSettings,
+  AppTheme,
 } from '@/lib'
 
 const Settings = () => {
-  const theme = useTheme()
-  const { onChange } = React.useContext(AppSettings)
+  const theme = useTheme<AppTheme>()
   const [loading, setLoading] = React.useState(false)
   const [visible, setVisible] = React.useState(false)
   const [content, setContent] = React.useState('font')
+  const [settings, setSettings] = React.useState(DefaultSettings)
   const [message, setMessage] = React.useState({ visible: false, content: '' })
-  const [settings, setSettings] = React.useState<TSettings>(DefaultSettings)
 
   React.useEffect(() => {
     setLoading(true)
-    ;(async () => {
-      await KVStore.settings.load((v) => (v ? setSettings(JSON.parse(v)) : {}))
-      setLoading(false)
-    })()
+
+    KVStore.settings.load((v) => (v ? setSettings(JSON.parse(v)) : {}))
+    setLoading(false)
   }, [])
 
   const showModal = (content: string) => {
@@ -50,10 +47,14 @@ const Settings = () => {
 
   return (
     <Surface elevation={0} style={{ flex: 1 }}>
-      <ProgressBar indeterminate={loading} />
+      <ProgressBar indeterminate={loading} color={theme.colors.success} />
 
       <List.AccordionGroup>
-        <List.Accordion id={1} title={Locales.t('appearance')}>
+        <List.Accordion
+          id={1}
+          title={Locales.t('appearance')}
+          titleStyle={{ fontFamily: 'NotoKufiArabic_700Bold' }}
+        >
           <List.Item
             title={Locales.t('language')}
             description={Locales.t(settings.language)}
@@ -70,7 +71,11 @@ const Settings = () => {
           />
         </List.Accordion>
 
-        <List.Accordion id={2} title={Locales.t('quran')}>
+        <List.Accordion
+          id={2}
+          title={Locales.t('quran')}
+          titleStyle={{ fontFamily: 'NotoKufiArabic_700Bold' }}
+        >
           <List.Item
             title={Locales.t('font')}
             description={Locales.t(settings.font.family)}
@@ -88,24 +93,96 @@ const Settings = () => {
             right={(props) => <List.Icon {...props} icon="chevron-right" />}
           />
         </List.Accordion>
+
+        <List.Section
+          title={Locales.t('preview')}
+          style={{ marginVertical: 0 }}
+        >
+          <View style={{ paddingHorizontal: 16 }}>
+            <Text
+              variant={settings.font.size.value}
+              style={{
+                direction: 'rtl',
+                textAlign: 'center',
+                fontFamily: settings.font.family,
+                lineHeight: settings.font.size.lineHeight,
+              }}
+            >
+              إِنَّآ أَنزَلْنَـٰهُ قُرْءَٰنًا عَرَبِيًّا لَّعَلَّكُمْ
+              تَعْقِلُونَ{' '}
+              <Text
+                style={{
+                  color: theme.colors.success,
+                  fontFamily: settings.font.family,
+                }}
+              >
+                {settings.font.family === 'Uthmanic' ? toMarker('2') : 2}
+              </Text>
+            </Text>
+          </View>
+        </List.Section>
       </List.AccordionGroup>
 
-      <View style={{ padding: 16 }}>
+      <View
+        style={{
+          gap: 8,
+          padding: 8,
+          marginTop: 'auto',
+          flexDirection: 'row',
+        }}
+      >
         <Button
           mode="contained"
+          style={{ flexGrow: 1 }}
+          buttonColor={theme.colors.success}
+          textColor={theme.colors.onSuccess}
+          rippleColor={theme.colors.success}
+          labelStyle={{ fontFamily: 'NotoKufiArabic_700Bold' }}
           onPress={async () =>
             await KVStore.settings.save(JSON.stringify(settings), () => {
-              onChange(settings)
-              setMessage({ visible: true, content: Locales.t('settingsSaved') })
+              setMessage({
+                visible: true,
+                content: Locales.t('settingsSaved'),
+              })
             })
           }
         >
           {Locales.t('save')}
         </Button>
+
+        {settings !== DefaultSettings && (
+          <Button
+            mode="contained"
+            style={{ flexGrow: 1 }}
+            buttonColor={theme.colors.error}
+            textColor={theme.colors.onError}
+            rippleColor={theme.colors.error}
+            labelStyle={{ fontFamily: 'NotoKufiArabic_700Bold' }}
+            onPress={async () =>
+              await KVStore.settings.save(
+                JSON.stringify(DefaultSettings),
+                () => {
+                  setSettings(DefaultSettings)
+                  setMessage({
+                    visible: true,
+                    content: Locales.t('settingsSaved'),
+                  })
+                },
+              )
+            }
+          >
+            {Locales.t('reset')}
+          </Button>
+        )}
       </View>
 
       <Modal
         theme={theme}
+        modalProps={{
+          visible,
+          children: undefined,
+          onDismiss: () => setVisible(false),
+        }}
         title={
           content === 'font'
             ? Locales.t('font')
@@ -117,16 +194,11 @@ const Settings = () => {
                   ? Locales.t('theme')
                   : 'Title'
         }
-        modalProps={{
-          visible,
-          children: undefined,
-          onDismiss: () => setVisible(false),
-        }}
       >
         <List.Section style={{ flex: 1, marginVertical: 0 }}>
           {content === 'font' ? (
             <List.AccordionGroup>
-              <List.Accordion title={Locales.t('font')} id="1">
+              <List.Accordion title={Locales.t('font')} id={2}>
                 <RadioButton.Group
                   value={settings.font.family}
                   onValueChange={(f) =>
@@ -147,7 +219,7 @@ const Settings = () => {
                 </RadioButton.Group>
               </List.Accordion>
 
-              <List.Accordion title={Locales.t('size')} id="2">
+              <List.Accordion title={Locales.t('size')} id={3}>
                 <RadioButton.Group
                   value={JSON.stringify(settings.font.size)}
                   onValueChange={(s) =>
@@ -169,24 +241,6 @@ const Settings = () => {
                     />
                   ))}
                 </RadioButton.Group>
-              </List.Accordion>
-
-              <List.Accordion title={Locales.t('preview')} id="3">
-                <View style={{ paddingHorizontal: 16 }}>
-                  <Text
-                    variant={settings.font.size.value}
-                    style={{
-                      direction: 'rtl',
-                      textAlign: 'center',
-                      fontFamily: settings.font.family,
-                      lineHeight: settings.font.size.lineHeight,
-                    }}
-                  >
-                    إِنَّآ أَنزَلْنَـٰهُ قُرْءَٰنًا عَرَبِيًّا لَّعَلَّكُمْ
-                    تَعْقِلُونَ{' '}
-                    {settings.font.family === 'Uthmanic' ? toMarker('2') : 2}
-                  </Text>
-                </View>
               </List.Accordion>
             </List.AccordionGroup>
           ) : content === 'language' ? (
@@ -230,12 +284,11 @@ const Settings = () => {
 
       <Snackbar
         visible={message.visible}
+        style={{ backgroundColor: theme.colors.success }}
         onDismiss={() => setMessage({ visible: false, content: '' })}
-        style={{ backgroundColor: theme.colors.primaryContainer }}
+        onIconPress={() => setMessage({ visible: false, content: '' })}
       >
-        <Text style={{ color: theme.colors.onPrimaryContainer }}>
-          {message.content}
-        </Text>
+        <Text style={{ color: theme.colors.onSuccess }}>{message.content}</Text>
       </Snackbar>
     </Surface>
   )

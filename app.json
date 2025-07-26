@@ -2,7 +2,7 @@
   "expo": {
     "name": "Al-Quran",
     "slug": "al-quran",
-    "version": "1.1.1",
+    "version": "1.2.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "description": "Al Quran is a modern application designed to provide users with a seamless and customizable Quran reading experience.",
@@ -47,7 +47,7 @@
             "image": "./assets/images/splash-icon-dark.png",
             "backgroundColor": "#09090b"
           },
-          "imageWidth": 200
+          "imageWidth": 400
         }
       ],
       "expo-sqlite",
@@ -58,8 +58,8 @@
           "fonts": [
             "./assets/fonts/Indopak.ttf",
             "./assets/fonts/Uthmanic.ttf",
-            "node_modules/@expo-google-fonts/noto-sans/400Regular/NotoSans_400Regular.ttf",
-            "node_modules/@expo-google-fonts/noto-kufi-arabic/400Regular/NotoKufiArabic_400Regular.ttf"
+            "node_modules/@expo-google-fonts/noto-kufi-arabic/400Regular/NotoKufiArabic_400Regular.ttf",
+            "node_modules/@expo-google-fonts/noto-kufi-arabic/700Bold/NotoKufiArabic_700Bold.ttf"
           ]
         }
       ],

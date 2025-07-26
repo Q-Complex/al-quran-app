@@ -1,49 +1,47 @@
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs'
 import { CommonActions } from '@react-navigation/native'
 import React from 'react'
-import { BottomNavigation } from 'react-native-paper'
+import { BottomNavigation, useTheme } from 'react-native-paper'
 
-const TabBar = (props: BottomTabBarProps) => (
-  <BottomNavigation.Bar
-    labeled={false}
-    navigationState={props.state}
-    safeAreaInsets={props.insets}
-    onTabPress={({ route, preventDefault }) => {
-      const event = props.navigation.emit({
-        type: 'tabPress',
-        target: route.key,
-        canPreventDefault: true,
-      })
+import { AppTheme } from '../styles'
 
-      if (event.defaultPrevented) {
-        preventDefault()
-      } else {
-        props.navigation.dispatch({
-          ...CommonActions.navigate(route.name, route.params),
-          target: props.state.key,
+const TabBar = (props: BottomTabBarProps) => {
+  const theme = useTheme<AppTheme>()
+
+  return (
+    <BottomNavigation.Bar
+      labeled={false}
+      navigationState={props.state}
+      safeAreaInsets={props.insets}
+      activeColor={theme.colors.onSuccess}
+      activeIndicatorStyle={{ backgroundColor: theme.colors.success }}
+      renderIcon={({ route, focused, color }) => {
+        const { options } = props.descriptors[route.key]
+
+        if (options.tabBarIcon) {
+          return options.tabBarIcon({ focused, color, size: 24 })
+        }
+
+        return null
+      }}
+      onTabPress={({ route, preventDefault }) => {
+        const event = props.navigation.emit({
+          type: 'tabPress',
+          target: route.key,
+          canPreventDefault: true,
         })
-      }
-    }}
-    renderIcon={({ route, focused, color }) => {
-      const { options } = props.descriptors[route.key]
-      if (options.tabBarIcon) {
-        return options.tabBarIcon({ focused, color, size: 24 })
-      }
 
-      return null
-    }}
-    getLabelText={({ route }) => {
-      const { options } = props.descriptors[route.key]
-      const label =
-        options.tabBarLabel !== undefined
-          ? options.tabBarLabel
-          : options.title !== undefined
-            ? options.title
-            : route.title
-
-      return label
-    }}
-  />
-)
+        if (event.defaultPrevented) {
+          preventDefault()
+        } else {
+          props.navigation.dispatch({
+            ...CommonActions.navigate(route.name, route.params),
+            target: props.state.key,
+          })
+        }
+      }}
+    />
+  )
+}
 
 export default TabBar

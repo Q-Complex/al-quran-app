@@ -2,13 +2,20 @@ import { AnimatedFlashList } from '@shopify/flash-list'
 import { router, Tabs } from 'expo-router'
 import { useSQLiteContext } from 'expo-sqlite'
 import React from 'react'
-import { RefreshControl } from 'react-native'
-import { List, ProgressBar, Surface } from 'react-native-paper'
+import { RefreshControl, View } from 'react-native'
+import {
+  Button,
+  List,
+  ProgressBar,
+  Surface,
+  useTheme,
+} from 'react-native-paper'
 
-import { Database, Locales, TVerse, KVStore, TabsHeader } from '@/lib'
+import { Database, Locales, TVerse, KVStore, TabsHeader, AppTheme } from '@/lib'
 
 const Search = () => {
   const db = useSQLiteContext()
+  const theme = useTheme<AppTheme>()
   const [query, setQuery] = React.useState('')
   const [reload, setReload] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
@@ -52,25 +59,14 @@ const Search = () => {
                 value: query,
                 loading: loading,
                 onChangeText: setQuery,
-                placeholder: Locales.t('search'),
                 onClearIconPress: () => setResults([]),
-                onIconPress: async () => {
-                  if (!history.includes(query)) {
-                    const newHistory = [...history, query]
-                    setHistory(newHistory)
-                    await KVStore.history.save(JSON.stringify(newHistory), () =>
-                      setReload(!reload),
-                    )
-                  }
-                  setReload(!reload)
-                },
               }}
             />
           ),
         }}
       />
 
-      <ProgressBar indeterminate={loading} />
+      <ProgressBar indeterminate={loading} color={theme.colors.success} />
 
       <List.Section style={{ flex: 1, marginVertical: 0 }}>
         <AnimatedFlashList
@@ -83,7 +79,7 @@ const Search = () => {
             />
           }
           ListHeaderComponent={
-            <List.Subheader>
+            <List.Subheader style={{ fontFamily: 'NotoKufiArabic_700Bold' }}>
               {query === ''
                 ? Locales.t('history')
                 : Locales.t('results') + ` ${results.length}`}
@@ -91,49 +87,101 @@ const Search = () => {
           }
           renderItem={({ item }: { item: TVerse }) => (
             <List.Item
-              description={item.content}
-              descriptionNumberOfLines={1}
-              descriptionStyle={{ direction: 'rtl' }}
+              title={item.content}
               onPress={() => router.push(`/pages/${item.page_id}`)}
               right={(props) => <List.Icon {...props} icon="chevron-right" />}
-              title={`${Locales.t('verse')} ${item.chapter_id}:${item.number}`}
+              description={`${Locales.t('verse')} ${item.chapter_id}:${item.number}`}
+              titleStyle={{
+                direction: 'rtl',
+                color: theme.colors.success,
+                fontFamily: 'NotoKufiArabic_700Bold',
+              }}
             />
           )}
           ListEmptyComponent={
-            <>
-              {history.length > 0 ? (
-                <>
-                  {history.map((i) => (
-                    <List.Item
-                      key={i}
-                      title={i}
-                      onPress={() => setQuery(i)}
-                      left={(props) => <List.Icon {...props} icon="history" />}
-                      right={(props) => (
-                        <List.Icon {...props} icon="chevron-right" />
-                      )}
-                    />
-                  ))}
+            history.length > 0 ? (
+              <>
+                {history.map((i) => (
                   <List.Item
-                    title={Locales.t('clear')}
-                    left={(props) => (
-                      <List.Icon {...props} icon="delete-clock" />
-                    )}
-                    onPress={async () =>
-                      await KVStore.history.delete(() => setHistory([]))
-                    }
+                    key={i}
+                    title={i}
+                    onPress={() => setQuery(i)}
+                    left={(props) => <List.Icon {...props} icon="history" />}
+                    right={(props) => <List.Icon {...props} icon="magnify" />}
                   />
-                </>
-              ) : (
+                ))}
                 <List.Item
-                  title={Locales.t('noSearches')}
-                  left={(props) => <List.Icon {...props} icon="history" />}
+                  title={Locales.t('clear')}
+                  rippleColor={theme.colors.error}
+                  onPress={async () =>
+                    await KVStore.history.delete(() => setHistory([]))
+                  }
+                  left={(props) => (
+                    <List.Icon
+                      {...props}
+                      icon="delete-clock"
+                      color={theme.colors.error}
+                    />
+                  )}
+                  titleStyle={{
+                    color: theme.colors.error,
+                    fontFamily: 'NotoKufiArabic_700Bold',
+                  }}
                 />
-              )}
-            </>
+              </>
+            ) : (
+              <List.Item
+                title={Locales.t('noSearches')}
+                left={(props) => <List.Icon {...props} icon="history" />}
+              />
+            )
           }
         />
       </List.Section>
+
+      <View
+        style={{
+          gap: 8,
+          padding: 8,
+          marginTop: 'auto',
+          flexDirection: 'row',
+        }}
+      >
+        <Button
+          mode="contained"
+          style={{ flexGrow: 1 }}
+          buttonColor={theme.colors.success}
+          textColor={theme.colors.onSuccess}
+          rippleColor={theme.colors.success}
+          labelStyle={{ fontFamily: 'NotoKufiArabic_700Bold' }}
+          onPress={async () => {
+            if (!history.includes(query)) {
+              const newHistory = [...history, query]
+              setHistory(newHistory)
+              await KVStore.history.save(JSON.stringify(newHistory), () =>
+                setReload(!reload),
+              )
+            }
+            setReload(!reload)
+          }}
+        >
+          {Locales.t('search')}
+        </Button>
+
+        {results.length !== 0 && (
+          <Button
+            mode="contained"
+            style={{ flexGrow: 1 }}
+            buttonColor={theme.colors.error}
+            textColor={theme.colors.onError}
+            rippleColor={theme.colors.error}
+            labelStyle={{ fontFamily: 'NotoKufiArabic_700Bold' }}
+            onPress={() => setResults([])}
+          >
+            {Locales.t('clear')}
+          </Button>
+        )}
+      </View>
     </Surface>
   )
 }

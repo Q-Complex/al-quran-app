@@ -1,7 +1,7 @@
 import { AnimatedFlashList } from '@shopify/flash-list'
 import { router } from 'expo-router'
 import React from 'react'
-import { RefreshControl } from 'react-native'
+import { RefreshControl, View } from 'react-native'
 import {
   Icon,
   IconButton,
@@ -13,10 +13,10 @@ import {
   useTheme,
 } from 'react-native-paper'
 
-import { KVStore, Locales, TVerse } from '@/lib'
+import { AppTheme, KVStore, Locales, TVerse } from '@/lib'
 
 const Bookmarks = () => {
-  const theme = useTheme()
+  const theme = useTheme<AppTheme>()
   const [reload, setReload] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const [bookmarks, setBookmarks] = React.useState<TVerse[]>([])
@@ -35,7 +35,7 @@ const Bookmarks = () => {
 
   return (
     <Surface elevation={0} style={{ flex: 1 }}>
-      <ProgressBar indeterminate={loading} />
+      <ProgressBar indeterminate={loading} color={theme.colors.success} />
 
       <List.Section style={{ flex: 1, marginVertical: 0 }}>
         <AnimatedFlashList
@@ -49,14 +49,20 @@ const Bookmarks = () => {
           }
           renderItem={({ item }: { item: TVerse }) => (
             <List.Item
-              descriptionNumberOfLines={1}
-              description={item.content}
-              title={`${Locales.t('verse')} ${item.chapter_id}:${item.number}`}
+              title={item.content}
               onPress={() => router.push(`/pages/${item.page_id}`)}
+              description={`${Locales.t('verse')} ${item.chapter_id}:${item.number}`}
+              titleStyle={{
+                direction: 'rtl',
+                color: theme.colors.success,
+                fontFamily: 'NotoKufiArabic_700Bold',
+              }}
               right={(props) => (
                 <IconButton
                   {...props}
-                  icon="close"
+                  icon="delete"
+                  iconColor={theme.colors.error}
+                  rippleColor={theme.colors.error}
                   onPress={async () =>
                     await KVStore.bookmarks.remove(item, bookmarks, (v) =>
                       setBookmarks(JSON.parse(v)),
@@ -64,12 +70,10 @@ const Bookmarks = () => {
                   }
                 />
               )}
-              descriptionStyle={{ direction: 'rtl' }}
             />
           )}
           ListEmptyComponent={
-            <Surface
-              elevation={0}
+            <View
               style={{
                 flex: 1,
                 gap: 16,
@@ -79,14 +83,10 @@ const Bookmarks = () => {
                 justifyContent: 'center',
               }}
             >
-              <Icon
-                size={96}
-                source="bookmark-multiple"
-                color={theme.colors.primary}
-              />
+              <Icon size={96} source="bookmark-multiple" />
 
               <Text variant="titleLarge">{Locales.t('noBookmarks')}</Text>
-            </Surface>
+            </View>
           }
         />
       </List.Section>
@@ -95,9 +95,9 @@ const Bookmarks = () => {
         <Snackbar
           visible
           onDismiss={() => {}}
-          style={{ backgroundColor: theme.colors.primaryContainer }}
+          style={{ backgroundColor: theme.colors.success }}
         >
-          <Text style={{ color: theme.colors.onPrimaryContainer }}>
+          <Text style={{ color: theme.colors.onSuccess }}>
             {Locales.t('pressToBookmark')}
           </Text>
         </Snackbar>

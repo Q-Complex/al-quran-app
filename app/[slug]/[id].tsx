@@ -1,6 +1,6 @@
 import { AnimatedFlashList } from '@shopify/flash-list'
 import * as Clipboard from 'expo-clipboard'
-import { router, Stack, useLocalSearchParams } from 'expo-router'
+import { Stack, useLocalSearchParams } from 'expo-router'
 import { useSQLiteContext } from 'expo-sqlite'
 import React from 'react'
 import {
@@ -14,7 +14,9 @@ import {
 } from 'react-native-paper'
 
 import {
+  AppTheme,
   Database,
+  DefaultSettings,
   KVStore,
   Locales,
   Modal,
@@ -31,8 +33,9 @@ import {
 import { formatQuarterLabel } from '@/lib/utils/text'
 
 const Details = () => {
-  const theme = useTheme()
   const db = useSQLiteContext()
+  const theme = useTheme<AppTheme>()
+  const [settings, setSettings] = React.useState(DefaultSettings)
   const { id, slug } = useLocalSearchParams<{ id: string; slug: Slug }>()
   const [ID, setID] = React.useState(parseInt(id, 10))
   const [path, setPath] = React.useState(slug)
@@ -53,9 +56,15 @@ const Details = () => {
   React.useEffect(() => {
     setLoading(true)
     ;(async () => {
+      // Load settings
+      await KVStore.settings.load((v) => (v ? setSettings(JSON.parse(v)) : {}))
+
       setPages(await Database.extract(db, ID, path))
       setItem(
         (await db.getFirstAsync(`SELECT * FROM "${path}" WHERE "id" = ?`, ID))!,
+      )
+      await KVStore.bookmarks.load((v) =>
+        v ? setBookmarks(JSON.parse(v)) : {},
       )
 
       setLoading(false)
@@ -63,18 +72,6 @@ const Details = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ID, path])
-
-  // Load bookmarks
-  React.useEffect(() => {
-    setLoading(true)
-    ;(async () => {
-      await KVStore.bookmarks.load((v) =>
-        v ? setBookmarks(JSON.parse(v)) : {},
-      )
-
-      setLoading(false)
-    })()
-  }, [])
 
   const single = path.replace('s', '')
 
@@ -112,6 +109,8 @@ const Details = () => {
                 <Appbar.Action
                   {...props}
                   icon="information"
+                  iconColor={theme.colors.info}
+                  rippleColor={theme.colors.info}
                   onPress={() => setVisible({ ...visible, details: true })}
                 />
               </Tooltip>
@@ -120,7 +119,7 @@ const Details = () => {
         }}
       />
 
-      <ProgressBar indeterminate={loading} />
+      <ProgressBar indeterminate={loading} color={theme.colors.success} />
 
       <AnimatedFlashList
         data={pages}
@@ -131,6 +130,7 @@ const Details = () => {
             data={item}
             path={path}
             theme={theme}
+            settings={settings}
             onNavButtonPress={(s, i) => {
               setPath(s)
               setID(i)
@@ -249,12 +249,6 @@ const Details = () => {
             title={Locales.t('vCount')}
             right={(props) => <Text {...props}>{item?.verse_count}</Text>}
             left={(props) => <List.Icon {...props} icon="book-open" />}
-          />
-          <List.Item
-            title={Locales.t('settings')}
-            onPress={() => router.push('/settings')}
-            left={(props) => <List.Icon {...props} icon="cog" />}
-            right={(props) => <List.Icon {...props} icon="chevron-right" />}
           />
         </List.Section>
       </Modal>

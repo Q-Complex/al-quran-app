@@ -1,4 +1,9 @@
 import { ThemeProvider } from '@react-navigation/native'
+import {
+  useFonts,
+  NotoKufiArabic_400Regular,
+  NotoKufiArabic_700Bold,
+} from '@expo-google-fonts/noto-kufi-arabic'
 import { Stack } from 'expo-router'
 import { SQLiteProvider } from 'expo-sqlite'
 import { StatusBar, StatusBarStyle } from 'expo-status-bar'
@@ -14,7 +19,6 @@ import {
   Locales,
   NavDarkTheme,
   NavLightTheme,
-  AppSettings,
   StackHeader,
   TSettings,
 } from '@/lib'
@@ -27,30 +31,34 @@ export const unstable_settings = { initialRouteName: '(tabs)' }
 
 const RootLayout = () => {
   const colorScheme = useColorScheme()
-  const [settings, setSettings] = React.useState<TSettings>(DefaultSettings)
+  const [s, setS] = React.useState<TSettings>(DefaultSettings)
+
+  // Dev only
+  useFonts({
+    NotoKufiArabic_400Regular,
+    NotoKufiArabic_700Bold,
+    Uthmanic: require('@/assets/fonts/Uthmanic.ttf'),
+    Indopak: require('@/assets/fonts/Indopak.ttf'),
+  })
 
   // Load settings
   React.useEffect(() => {
-    ;(async () => {
-      await KVStore.settings.load((v) => (v ? setSettings(JSON.parse(v)) : {}))
-    })()
+    KVStore.settings.load((v) => (v ? setS(JSON.parse(v)) : {}))
   }, [])
 
-  if (settings.language !== 'System') {
+  if (s.language !== 'System') {
     Locales.locale =
-      settings.language !== 'Turkish'
-        ? settings.language.slice(0, 2).toLowerCase()
-        : 'tr'
+      s.language !== 'Turkish' ? s.language.slice(0, 2).toLowerCase() : 'tr'
   }
 
   const [navTheme, appTheme, status] =
-    settings.theme === 'System'
+    s.theme === 'System'
       ? colorScheme === 'light'
         ? [NavLightTheme, AppLightTheme, 'auto']
         : [NavDarkTheme, AppDarkTheme, 'auto']
-      : settings.theme === 'Light'
-        ? [NavLightTheme, AppLightTheme, 'light']
-        : [NavDarkTheme, AppDarkTheme, 'dark']
+      : s.theme === 'Light'
+        ? [NavLightTheme, AppLightTheme, 'dark']
+        : [NavDarkTheme, AppDarkTheme, 'light']
 
   return (
     <ThemeProvider value={navTheme}>
@@ -59,22 +67,17 @@ const RootLayout = () => {
           databaseName="quran.db"
           assetSource={{ assetId: require('@/assets/data/quran.db') }}
         >
-          <AppSettings.Provider
-            value={{ settings, onChange: (v) => setSettings(v) }}
+          <Stack
+            screenOptions={{
+              header: (props) => (
+                <StackHeader navProps={props} children={undefined} />
+              ),
+            }}
           >
-            <Stack
-              screenOptions={{
-                animation: 'fade_from_bottom',
-                header: (props) => (
-                  <StackHeader navProps={props} children={undefined} />
-                ),
-              }}
-            >
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name="[slug]/index" />
-              <Stack.Screen name="[slug]/[id]" />
-            </Stack>
-          </AppSettings.Provider>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="[slug]/index" />
+            <Stack.Screen name="[slug]/[id]" />
+          </Stack>
         </SQLiteProvider>
       </PaperProvider>
 

@@ -32,6 +32,10 @@ const TabsHeader = (props: TabsHeaderProps) => {
         value={query}
         onChangeText={setQuery}
         style={{ margin: 8, marginBottom: 16 }}
+        placeholder={getHeaderTitle(
+          props.navProps.options,
+          props.navProps.route.name,
+        )}
       />
     </Appbar.Header>
   ) : (
@@ -45,6 +49,10 @@ const TabsHeader = (props: TabsHeaderProps) => {
           props.navProps.options,
           props.navProps.route.name,
         )}
+        titleStyle={{
+          lineHeight: 36,
+          fontFamily: 'NotoKufiArabic_700Bold',
+        }}
       />
 
       {props.navProps.options.headerRight

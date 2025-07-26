@@ -14,7 +14,6 @@ const fontConfig = { fontFamily: 'NotoKufiArabic_400Regular' }
 
 const AppLightTheme = {
   ...MD3LightTheme,
-  roundness: 8,
   fonts: configureFonts({ config: fontConfig }),
   colors: {
     primary: '#1c1c29',
@@ -34,11 +33,11 @@ const AppLightTheme = {
     errorContainer: '#ff7b7a',
     onErrorContainer: '#79000c',
     background: '#f7f5f3',
-    onBackground: '#4b4743',
+    onBackground: '#1c1c29',
     surface: '#f7f5f3',
-    onSurface: '#4b4743',
+    onSurface: '#1c1c29',
     surfaceVariant: '#f3ede9',
-    onSurfaceVariant: '#4b4743',
+    onSurfaceVariant: '#1c1c29',
     outline: '#e2ddd9',
     outlineVariant: '#f3ede9',
     shadow: '#4b4743',
@@ -81,10 +80,10 @@ const AppLightTheme = {
     onInfo: '#00325c',
     infoContainer: '#78c8ff',
     onInfoContainer: '#00325c',
-    success: '#afd89e',
-    onSuccess: '#052800',
-    successContainer: '#afd89e',
-    onSuccessContainer: '#052800',
+    success: '#87d03a',
+    onSuccess: '#061001',
+    successContainer: '#87d03a',
+    onSuccessContainer: '#061001',
     warning: '#efc375',
     onWarning: '#714900',
     warningContainer: '#efc375',
@@ -94,7 +93,6 @@ const AppLightTheme = {
 
 const AppDarkTheme = {
   ...MD3DarkTheme,
-  roundness: 8,
   fonts: configureFonts({ config: fontConfig }),
   colors: {
     primary: '#ffffff',
@@ -115,11 +113,11 @@ const AppDarkTheme = {
     errorContainer: '#ff6f6f',
     onErrorContainer: '#160404',
     background: '#09090b',
-    onBackground: '#dca54d',
+    onBackground: '#ffffff',
     surface: '#09090b',
-    onSurface: '#dca54d',
+    onSurface: '#ffffff',
     surfaceVariant: '#171618',
-    onSurfaceVariant: '#dca54d',
+    onSurfaceVariant: '#ffffff',
     outline: '#1e1d1f',
     outlineVariant: '#171618',
     shadow: '#09090b',
@@ -180,4 +178,6 @@ const { LightTheme: NavLightTheme, DarkTheme: NavDarkTheme } =
     materialLight: AppLightTheme,
   })
 
-export { AppLightTheme, AppDarkTheme, NavDarkTheme, NavLightTheme }
+type AppTheme = typeof AppDarkTheme
+
+export { AppTheme, AppLightTheme, AppDarkTheme, NavDarkTheme, NavLightTheme }

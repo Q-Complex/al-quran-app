@@ -1,23 +1,25 @@
 import React from 'react'
-import { ScrollView, View } from 'react-native'
+import { ScrollView, useColorScheme, View } from 'react-native'
 import {
   Modal as BaseModal,
   Button,
   IconButton,
-  MD3Theme,
   ModalProps,
   Text,
   Tooltip,
 } from 'react-native-paper'
 
 import { Locales } from '../locales'
+import { AppTheme } from '../styles'
 
 const Modal = (props: {
   title: string
   children: React.ReactNode | React.ReactNode[]
-  theme: MD3Theme
+  theme: AppTheme
   modalProps: ModalProps
 }) => {
+  const colorScheme = useColorScheme()
+
   // Close action
   const close = () =>
     props.modalProps.onDismiss ? props.modalProps.onDismiss() : undefined
@@ -30,7 +32,10 @@ const Modal = (props: {
         right: 8,
         borderRadius: 24,
         position: 'absolute',
-        backgroundColor: props.theme.colors.background,
+        backgroundColor:
+          colorScheme === 'dark'
+            ? props.theme.colors.base300
+            : props.theme.colors.base100,
       }}
     >
       <View
@@ -42,10 +47,21 @@ const Modal = (props: {
           justifyContent: 'space-between',
         }}
       >
-        <Text variant="titleLarge">{props.title}</Text>
+        <Text
+          variant="titleLarge"
+          style={{ fontFamily: 'NotoKufiArabic_700Bold' }}
+        >
+          {props.title}
+        </Text>
 
         <Tooltip title={Locales.t('close')}>
-          <IconButton size={24} icon="close" onPress={close} />
+          <IconButton
+            size={24}
+            icon="close"
+            onPress={close}
+            iconColor={props.theme.colors.error}
+            rippleColor={props.theme.colors.error}
+          />
         </Tooltip>
       </View>
 
@@ -54,7 +70,14 @@ const Modal = (props: {
       </ScrollView>
 
       <View style={{ padding: 16 }}>
-        <Button mode="contained" onPress={close}>
+        <Button
+          mode="contained"
+          onPress={close}
+          buttonColor={props.theme.colors.error}
+          textColor={props.theme.colors.onError}
+          rippleColor={props.theme.colors.error}
+          labelStyle={{ fontFamily: 'NotoKufiArabic_700Bold' }}
+        >
           {Locales.t('close')}
         </Button>
       </View>

@@ -5,25 +5,16 @@ import {
   Button,
   Card,
   Divider,
-  MD3Theme,
   Surface,
   Text,
   Tooltip,
 } from 'react-native-paper'
 
-import {
-  Slug,
-  TChapter,
-  TCName,
-  TFontFamily,
-  TFontSize,
-  TPage,
-  TVerse,
-} from '@/lib/types'
+import { Slug, TChapter, TCName, TPage, TSettings, TVerse } from '@/lib/types'
 
 import { Locales } from '../locales'
-import { AppSettings } from '@/lib/context'
 import { toMarker } from '../../utils'
+import { AppTheme } from '../styles'
 
 const formatQuarterLabel = (quarter: number) => {
   const group = Math.ceil(quarter / 4)
@@ -42,9 +33,10 @@ const formatQuarterLabel = (quarter: number) => {
  * @returns React.ReactNode
  */
 const Container = (p: {
+  theme: AppTheme
   data: TCName & TPage
-  onNavButtonPress: (path: Slug, id: number) => void
   children: React.ReactNode | React.ReactNode[]
+  onNavButtonPress: (path: Slug, id: number) => void
 }) => (
   <Surface elevation={0} style={{ gap: 16 }}>
     <View
@@ -58,7 +50,11 @@ const Container = (p: {
       <Tooltip title={Locales.t('read')}>
         <Text
           variant="bodySmall"
-          style={{ lineHeight: 20 }}
+          style={{
+            lineHeight: 20,
+            color: p.theme.colors.info,
+            fontFamily: 'NotoKufiArabic_700Bold',
+          }}
           onPress={() => p.onNavButtonPress('chapters', p.data.chapter_id)}
         >
           سُورَةُ {p.data.chapter_name}
@@ -68,6 +64,10 @@ const Container = (p: {
       <Tooltip title={Locales.t('read')}>
         <Text
           variant="bodySmall"
+          style={{
+            color: p.theme.colors.info,
+            fontFamily: 'NotoKufiArabic_700Bold',
+          }}
           onPress={() => p.onNavButtonPress('parts', p.data.part_id)}
         >
           {Locales.t('part')} {p.data.part_id}
@@ -89,6 +89,10 @@ const Container = (p: {
         <Tooltip title={Locales.t('read')}>
           <Text
             variant="bodySmall"
+            style={{
+              color: p.theme.colors.info,
+              fontFamily: 'NotoKufiArabic_700Bold',
+            }}
             onPress={() => p.onNavButtonPress('groups', p.data.group_id)}
           >
             {Locales.t('group')} {p.data.group_id}
@@ -96,7 +100,10 @@ const Container = (p: {
         </Tooltip>
 
         <Tooltip title={Locales.t('pNum')}>
-          <Button onPress={() => p.onNavButtonPress('pages', p.data.id)}>
+          <Button
+            onPress={() => p.onNavButtonPress('pages', p.data.id)}
+            labelStyle={{ fontFamily: 'NotoKufiArabic_700Bold' }}
+          >
             {p.data.id}
           </Button>
         </Tooltip>
@@ -104,6 +111,10 @@ const Container = (p: {
         <Tooltip title={Locales.t('read')}>
           <Text
             variant="bodySmall"
+            style={{
+              color: p.theme.colors.info,
+              fontFamily: 'NotoKufiArabic_700Bold',
+            }}
             onPress={() => p.onNavButtonPress('quarters', p.data.quarter_id)}
           >
             {formatQuarterLabel(p.data.quarter_id)}
@@ -122,8 +133,8 @@ const Container = (p: {
  * @returns React.ReactNode
  */
 const Content = (props: {
-  color: string
-  font: { family: TFontFamily; size: TFontSize }
+  theme: AppTheme
+  settings: TSettings
   verses: TVerse[]
   onVerseLongPress: (v: TVerse) => void
 }) => (
@@ -131,12 +142,12 @@ const Content = (props: {
     {props.verses.map((v) => (
       <Text
         key={v.id}
-        variant={props.font.size.value}
+        variant={props.settings.font.size.value}
         onLongPress={() => props.onVerseLongPress(v)}
         style={{
           textAlign: 'center',
-          fontFamily: props.font.family,
-          lineHeight: props.font.size.lineHeight,
+          fontFamily: props.settings.font.family,
+          lineHeight: props.settings.font.size.lineHeight,
         }}
       >
         {v.number !== 1 ? (
@@ -146,8 +157,8 @@ const Content = (props: {
             <Text
               style={{
                 textAlign: 'center',
-                color: props.color,
-                fontFamily: props.font.family,
+                color: props.theme.colors.success,
+                fontFamily: props.settings.font.family,
               }}
             >
               {v.content.slice(0, 39) + '\n'}
@@ -158,11 +169,11 @@ const Content = (props: {
 
         <Text
           style={{
-            color: props.color,
-            fontFamily: props.font.family,
+            fontFamily: props.settings.font.family,
+            color: props.theme.colors.success,
           }}
         >
-          {(props.font.family === 'Uthmanic'
+          {(props.settings.font.family === 'Uthmanic'
             ? toMarker(v.number.toString())
             : v.number) + ' '}
         </Text>
@@ -177,15 +188,15 @@ const Content = (props: {
  * @returns React.ReactNode
  */
 const Header = (props: {
-  color: string
+  theme: AppTheme
   chapter: TChapter
-  font: TFontFamily
-  onBavButtonPress: (path: Slug, id: number) => void
+  settings: TSettings
+  onNavButtonPress: (path: Slug, id: number) => void
 }) => (
   <Card
-    mode="outlined"
+    mode="contained"
     style={{ marginHorizontal: 16 }}
-    onPress={() => props.onBavButtonPress('chapters', props.chapter.id)}
+    onPress={() => props.onNavButtonPress('chapters', props.chapter.id)}
   >
     <Card.Content
       style={{
@@ -202,10 +213,10 @@ const Header = (props: {
       <Text
         variant="bodyLarge"
         style={{
-          textAlign: 'center',
           lineHeight: 32,
-          color: props.color,
-          fontFamily: props.font,
+          textAlign: 'center',
+          color: props.theme.colors.success,
+          fontFamily: 'NotoKufiArabic_700Bold',
         }}
       >{`سُورَةُ ${props.chapter.name}`}</Text>
 
@@ -217,14 +228,14 @@ const Header = (props: {
 )
 
 const Page = (props: {
-  db: SQLiteDatabase
   path: Slug
-  data: TCName & TPage & { verses: TVerse[] }
-  theme: MD3Theme
+  theme: AppTheme
+  db: SQLiteDatabase
+  settings: TSettings
   onVersePress: (v: TVerse) => void
+  data: TCName & TPage & { verses: TVerse[] }
   onNavButtonPress: (path: Slug, id: number) => void
 }) => {
-  const { settings } = React.useContext(AppSettings)
   const firstVerse = props.data.verses[0]
 
   // There is only one chapter
@@ -239,21 +250,25 @@ const Page = (props: {
     }
 
     return (
-      <Container data={props.data} onNavButtonPress={props.onNavButtonPress}>
+      <Container
+        theme={props.theme}
+        data={props.data}
+        onNavButtonPress={props.onNavButtonPress}
+      >
         {chapter && (
           <Header
             chapter={chapter}
-            font={settings.font.family}
-            color={props.theme.colors.primary}
-            onBavButtonPress={props.onNavButtonPress}
+            theme={props.theme}
+            settings={props.settings}
+            onNavButtonPress={props.onNavButtonPress}
           />
         )}
 
         <Text style={{ direction: 'rtl', paddingHorizontal: 16 }}>
           <Content
+            theme={props.theme}
+            settings={props.settings}
             verses={props.data.verses}
-            font={settings.font}
-            color={props.theme.colors.primary}
             onVerseLongPress={(v: TVerse) => props.onVersePress(v)}
           />
         </Text>
@@ -278,23 +293,23 @@ const Page = (props: {
   }
 
   return (
-    <Container data={props.data} onNavButtonPress={props.onNavButtonPress}>
+    <Container {...props}>
       {chapters.map((c) => (
         <View key={c.id} style={{ gap: 16 }}>
           {/* Check if the chapter verses includes 1st verse */}
           {c.verses.find((v) => v.number === 1) && (
             <Header
               chapter={c}
-              font={settings.font.family}
-              color={props.theme.colors.primary}
-              onBavButtonPress={props.onNavButtonPress}
+              theme={props.theme}
+              settings={props.settings}
+              onNavButtonPress={props.onNavButtonPress}
             />
           )}
 
           <Content
             verses={c.verses}
-            font={settings.font}
-            color={props.theme.colors.primary}
+            theme={props.theme}
+            settings={props.settings}
             onVerseLongPress={(v: TVerse) => props.onVersePress(v)}
           />
         </View>
