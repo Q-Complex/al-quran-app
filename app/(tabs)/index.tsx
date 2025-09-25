@@ -9,7 +9,6 @@ import {
   ProgressBar,
   Surface,
   Text,
-  Tooltip,
   useTheme,
 } from 'react-native-paper'
 
@@ -70,7 +69,6 @@ const Home = () => {
       <List.Section style={{ flex: 1, marginVertical: 0 }}>
         <AnimatedFlashList
           data={chapters}
-          estimatedItemSize={100}
           refreshControl={
             <RefreshControl
               refreshing={false}
@@ -78,36 +76,26 @@ const Home = () => {
             />
           }
           renderItem={({ item: c }: { item: TChapter }) => (
-            <Tooltip title={Locales.t(c.type ? 'meccan' : 'medinan')}>
-              <List.Item
-                title={`سُورَةُ ${c.name}`}
-                onPress={() => router.push(`/chapters/${c.id}`)}
-                description={`${c.verse_count} ${Locales.t('verses')}`}
-                titleStyle={{
-                  lineHeight: 32,
-                  color: theme.colors.success,
-                  fontFamily: 'NotoKufiArabic_700Bold',
-                }}
-                left={(props) => (
-                  <Chip
-                    {...props}
-                    textStyle={{
-                      color: theme.colors.onInfo,
-                      fontFamily: 'NotoKufiArabic_700Bold',
-                    }}
-                    style={{
-                      ...props.style,
-                      backgroundColor: theme.colors.info,
-                    }}
-                  >
-                    {c.id}
-                  </Chip>
-                )}
-                right={(props) => (
-                  <List.Icon {...props} icon={c.type ? 'cube' : 'mosque'} />
-                )}
-              />
-            </Tooltip>
+            <List.Item
+              title={`سُورَةُ ${c.name}`}
+              onPress={() => router.push(`/chapters/${c.id}`)}
+              description={`${c.verse_count} ${Locales.t('verses')}`}
+              left={(props) => (
+                <Chip
+                  {...props}
+                  style={{
+                    ...props.style,
+                    backgroundColor: theme.colors.primary,
+                  }}
+                  textStyle={{ color: theme.colors.onPrimary }}
+                >
+                  {c.id}
+                </Chip>
+              )}
+              right={(props) => (
+                <List.Icon {...props} icon={c.type ? 'cube' : 'mosque'} />
+              )}
+            />
           )}
         />
       </List.Section>

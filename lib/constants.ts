@@ -19,7 +19,7 @@ const Constants = {
 
 const DefaultSettings: TSettings = {
   font: {
-    family: Constants.font.families[0] as TFontFamily,
+    family: Constants.font.families[1] as TFontFamily,
     size: Constants.font.sizes[0] as TFontSize,
   },
   language: 'System',

@@ -1,10 +1,12 @@
 import { AnimatedFlashList } from '@shopify/flash-list'
 import * as Clipboard from 'expo-clipboard'
+import * as Constants from 'expo-constants'
 import { Stack, useLocalSearchParams } from 'expo-router'
 import { useSQLiteContext } from 'expo-sqlite'
 import React from 'react'
 import {
   Appbar,
+  FAB,
   List,
   ProgressBar,
   Surface,
@@ -44,6 +46,7 @@ const Details = () => {
   const [bookmarks, setBookmarks] = React.useState<TVerse[]>([])
   const [pressedVerse, setPVerse] = React.useState<TVerse>()
   const [loading, setLoading] = React.useState(false)
+  const [headerShown, setHeaderShown] = React.useState(true)
   const [visible, setVisible] = React.useState({
     details: false,
     actions: false,
@@ -76,9 +79,18 @@ const Details = () => {
   const single = path.replace('s', '')
 
   return (
-    <Surface elevation={0} style={{ flex: 1 }}>
+    <Surface
+      elevation={0}
+      style={{
+        flex: 1,
+        paddingTop: !headerShown
+          ? Constants.default.statusBarHeight
+          : undefined,
+      }}
+    >
       <Stack.Screen
         options={{
+          headerShown,
           title:
             path !== 'chapters'
               ? path === 'quarters'
@@ -89,6 +101,13 @@ const Details = () => {
                 : '',
           headerRight: (props) => (
             <>
+              <Tooltip title={Locales.t('fullscreen')}>
+                <Appbar.Action
+                  {...props}
+                  icon="fullscreen"
+                  onPress={() => setHeaderShown(!headerShown)}
+                />
+              </Tooltip>
               <Tooltip title={Locales.t('prev')}>
                 <Appbar.Action
                   {...props}
@@ -123,7 +142,6 @@ const Details = () => {
 
       <AnimatedFlashList
         data={pages}
-        estimatedItemSize={100}
         renderItem={({ item }) => (
           <Page
             db={db}
@@ -141,6 +159,14 @@ const Details = () => {
             }}
           />
         )}
+      />
+
+      <FAB
+        size="small"
+        visible={!headerShown}
+        icon="fullscreen-exit"
+        onPress={() => setHeaderShown(!headerShown)}
+        style={{ position: 'absolute', margin: 16, right: 0, bottom: 0 }}
       />
 
       <Modal

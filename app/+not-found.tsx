@@ -15,11 +15,7 @@ const NotFound = () => (
 
     <Text variant="bodyLarge">{Locales.t('notFoundMessage')}</Text>
 
-    <Button
-      mode="contained"
-      onPress={() => router.back()}
-      labelStyle={{ fontFamily: 'NotoKufiArabic_700Bold' }}
-    >
+    <Button mode="contained" onPress={() => router.back()}>
       {Locales.t('title')}
     </Button>
   </Surface>

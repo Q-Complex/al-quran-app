@@ -59,7 +59,7 @@ const StackHeader = (props: StackHeaderProps) => {
         )}
         titleStyle={[
           props.navProps.options.headerTitleStyle,
-          { lineHeight: 36, fontFamily: 'NotoKufiArabic_700Bold' },
+          { lineHeight: 36 },
         ]}
       />
 

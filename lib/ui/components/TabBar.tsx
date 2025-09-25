@@ -2,7 +2,6 @@ import { BottomTabBarProps } from '@react-navigation/bottom-tabs'
 import { CommonActions } from '@react-navigation/native'
 import React from 'react'
 import { BottomNavigation, useTheme } from 'react-native-paper'
-
 import { AppTheme } from '../styles'
 
 const TabBar = (props: BottomTabBarProps) => {
@@ -13,8 +12,8 @@ const TabBar = (props: BottomTabBarProps) => {
       labeled={false}
       navigationState={props.state}
       safeAreaInsets={props.insets}
-      activeColor={theme.colors.onSuccess}
-      activeIndicatorStyle={{ backgroundColor: theme.colors.success }}
+      activeColor={theme.colors.onPrimaryContainer}
+      activeIndicatorStyle={{ backgroundColor: theme.colors.primaryContainer }}
       renderIcon={({ route, focused, color }) => {
         const { options } = props.descriptors[route.key]
 

@@ -50,11 +50,7 @@ const Settings = () => {
       <ProgressBar indeterminate={loading} color={theme.colors.success} />
 
       <List.AccordionGroup>
-        <List.Accordion
-          id={1}
-          title={Locales.t('appearance')}
-          titleStyle={{ fontFamily: 'NotoKufiArabic_700Bold' }}
-        >
+        <List.Accordion id={1} title={Locales.t('appearance')}>
           <List.Item
             title={Locales.t('language')}
             description={Locales.t(settings.language)}
@@ -71,11 +67,7 @@ const Settings = () => {
           />
         </List.Accordion>
 
-        <List.Accordion
-          id={2}
-          title={Locales.t('quran')}
-          titleStyle={{ fontFamily: 'NotoKufiArabic_700Bold' }}
-        >
+        <List.Accordion id={2} title={Locales.t('quran')}>
           <List.Item
             title={Locales.t('font')}
             description={Locales.t(settings.font.family)}
@@ -134,10 +126,6 @@ const Settings = () => {
         <Button
           mode="contained"
           style={{ flexGrow: 1 }}
-          buttonColor={theme.colors.success}
-          textColor={theme.colors.onSuccess}
-          rippleColor={theme.colors.success}
-          labelStyle={{ fontFamily: 'NotoKufiArabic_700Bold' }}
           onPress={async () =>
             await KVStore.settings.save(JSON.stringify(settings), () => {
               setMessage({
@@ -150,30 +138,24 @@ const Settings = () => {
           {Locales.t('save')}
         </Button>
 
-        {settings !== DefaultSettings && (
-          <Button
-            mode="contained"
-            style={{ flexGrow: 1 }}
-            buttonColor={theme.colors.error}
-            textColor={theme.colors.onError}
-            rippleColor={theme.colors.error}
-            labelStyle={{ fontFamily: 'NotoKufiArabic_700Bold' }}
-            onPress={async () =>
-              await KVStore.settings.save(
-                JSON.stringify(DefaultSettings),
-                () => {
-                  setSettings(DefaultSettings)
-                  setMessage({
-                    visible: true,
-                    content: Locales.t('settingsSaved'),
-                  })
-                },
-              )
-            }
-          >
-            {Locales.t('reset')}
-          </Button>
-        )}
+        <Button
+          mode="contained"
+          style={{ flexGrow: 1 }}
+          buttonColor={theme.colors.error}
+          textColor={theme.colors.onError}
+          rippleColor={theme.colors.error}
+          onPress={async () =>
+            await KVStore.settings.save(JSON.stringify(DefaultSettings), () => {
+              setSettings(DefaultSettings)
+              setMessage({
+                visible: true,
+                content: Locales.t('settingsSaved'),
+              })
+            })
+          }
+        >
+          {Locales.t('reset')}
+        </Button>
       </View>
 
       <Modal
@@ -284,11 +266,13 @@ const Settings = () => {
 
       <Snackbar
         visible={message.visible}
-        style={{ backgroundColor: theme.colors.success }}
+        style={{ backgroundColor: theme.colors.primaryContainer }}
         onDismiss={() => setMessage({ visible: false, content: '' })}
         onIconPress={() => setMessage({ visible: false, content: '' })}
       >
-        <Text style={{ color: theme.colors.onSuccess }}>{message.content}</Text>
+        <Text style={{ color: theme.colors.onPrimaryContainer }}>
+          {message.content}
+        </Text>
       </Snackbar>
     </Surface>
   )

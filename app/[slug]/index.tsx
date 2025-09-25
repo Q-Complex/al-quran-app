@@ -36,17 +36,12 @@ const ListHome = () => {
 
       <AnimatedFlashList
         data={data}
-        estimatedItemSize={100}
         renderItem={({ item }) => (
           <List.Item
             descriptionNumberOfLines={1}
             description={`${item.verse_content}...`}
             onPress={() => router.push(`/${slug}/${item.id}`)}
             right={(props) => <List.Icon {...props} icon="chevron-right" />}
-            titleStyle={{
-              color: theme.colors.success,
-              fontFamily: 'NotoKufiArabic_700Bold',
-            }}
             title={
               slug !== 'quarters'
                 ? `${Locales.t(slug.slice(0, slug.length - 1))} ${item.id}`

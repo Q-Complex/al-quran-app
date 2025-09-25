@@ -71,7 +71,6 @@ const Search = () => {
       <List.Section style={{ flex: 1, marginVertical: 0 }}>
         <AnimatedFlashList
           data={results}
-          estimatedItemSize={100}
           refreshControl={
             <RefreshControl
               refreshing={false}
@@ -79,7 +78,7 @@ const Search = () => {
             />
           }
           ListHeaderComponent={
-            <List.Subheader style={{ fontFamily: 'NotoKufiArabic_700Bold' }}>
+            <List.Subheader>
               {query === ''
                 ? Locales.t('history')
                 : Locales.t('results') + ` ${results.length}`}
@@ -87,15 +86,11 @@ const Search = () => {
           }
           renderItem={({ item }: { item: TVerse }) => (
             <List.Item
-              title={item.content}
+              description={item.content}
+              descriptionNumberOfLines={1}
               onPress={() => router.push(`/pages/${item.page_id}`)}
               right={(props) => <List.Icon {...props} icon="chevron-right" />}
-              description={`${Locales.t('verse')} ${item.chapter_id}:${item.number}`}
-              titleStyle={{
-                direction: 'rtl',
-                color: theme.colors.success,
-                fontFamily: 'NotoKufiArabic_700Bold',
-              }}
+              title={`${Locales.t('verse')} ${item.chapter_id}:${item.number}`}
             />
           )}
           ListEmptyComponent={
@@ -113,6 +108,7 @@ const Search = () => {
                 <List.Item
                   title={Locales.t('clear')}
                   rippleColor={theme.colors.error}
+                  titleStyle={{ color: theme.colors.error }}
                   onPress={async () =>
                     await KVStore.history.delete(() => setHistory([]))
                   }
@@ -123,10 +119,6 @@ const Search = () => {
                       color={theme.colors.error}
                     />
                   )}
-                  titleStyle={{
-                    color: theme.colors.error,
-                    fontFamily: 'NotoKufiArabic_700Bold',
-                  }}
                 />
               </>
             ) : (
@@ -150,10 +142,6 @@ const Search = () => {
         <Button
           mode="contained"
           style={{ flexGrow: 1 }}
-          buttonColor={theme.colors.success}
-          textColor={theme.colors.onSuccess}
-          rippleColor={theme.colors.success}
-          labelStyle={{ fontFamily: 'NotoKufiArabic_700Bold' }}
           onPress={async () => {
             if (!history.includes(query)) {
               const newHistory = [...history, query]
@@ -175,7 +163,6 @@ const Search = () => {
             buttonColor={theme.colors.error}
             textColor={theme.colors.onError}
             rippleColor={theme.colors.error}
-            labelStyle={{ fontFamily: 'NotoKufiArabic_700Bold' }}
             onPress={() => setResults([])}
           >
             {Locales.t('clear')}

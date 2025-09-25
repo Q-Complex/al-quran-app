@@ -47,21 +47,10 @@ const Modal = (props: {
           justifyContent: 'space-between',
         }}
       >
-        <Text
-          variant="titleLarge"
-          style={{ fontFamily: 'NotoKufiArabic_700Bold' }}
-        >
-          {props.title}
-        </Text>
+        <Text variant="titleLarge">{props.title}</Text>
 
         <Tooltip title={Locales.t('close')}>
-          <IconButton
-            size={24}
-            icon="close"
-            onPress={close}
-            iconColor={props.theme.colors.error}
-            rippleColor={props.theme.colors.error}
-          />
+          <IconButton size={24} icon="close" onPress={close} />
         </Tooltip>
       </View>
 
@@ -70,14 +59,7 @@ const Modal = (props: {
       </ScrollView>
 
       <View style={{ padding: 16 }}>
-        <Button
-          mode="contained"
-          onPress={close}
-          buttonColor={props.theme.colors.error}
-          textColor={props.theme.colors.onError}
-          rippleColor={props.theme.colors.error}
-          labelStyle={{ fontFamily: 'NotoKufiArabic_700Bold' }}
-        >
+        <Button mode="contained" onPress={close}>
           {Locales.t('close')}
         </Button>
       </View>

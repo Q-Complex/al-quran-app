@@ -52,8 +52,7 @@ const Container = (p: {
           variant="bodySmall"
           style={{
             lineHeight: 20,
-            color: p.theme.colors.info,
-            fontFamily: 'NotoKufiArabic_700Bold',
+            color: p.theme.colors.baseContent,
           }}
           onPress={() => p.onNavButtonPress('chapters', p.data.chapter_id)}
         >
@@ -64,10 +63,7 @@ const Container = (p: {
       <Tooltip title={Locales.t('read')}>
         <Text
           variant="bodySmall"
-          style={{
-            color: p.theme.colors.info,
-            fontFamily: 'NotoKufiArabic_700Bold',
-          }}
+          style={{ color: p.theme.colors.baseContent }}
           onPress={() => p.onNavButtonPress('parts', p.data.part_id)}
         >
           {Locales.t('part')} {p.data.part_id}
@@ -89,10 +85,7 @@ const Container = (p: {
         <Tooltip title={Locales.t('read')}>
           <Text
             variant="bodySmall"
-            style={{
-              color: p.theme.colors.info,
-              fontFamily: 'NotoKufiArabic_700Bold',
-            }}
+            style={{ color: p.theme.colors.baseContent }}
             onPress={() => p.onNavButtonPress('groups', p.data.group_id)}
           >
             {Locales.t('group')} {p.data.group_id}
@@ -100,10 +93,7 @@ const Container = (p: {
         </Tooltip>
 
         <Tooltip title={Locales.t('pNum')}>
-          <Button
-            onPress={() => p.onNavButtonPress('pages', p.data.id)}
-            labelStyle={{ fontFamily: 'NotoKufiArabic_700Bold' }}
-          >
+          <Button onPress={() => p.onNavButtonPress('pages', p.data.id)}>
             {p.data.id}
           </Button>
         </Tooltip>
@@ -111,10 +101,7 @@ const Container = (p: {
         <Tooltip title={Locales.t('read')}>
           <Text
             variant="bodySmall"
-            style={{
-              color: p.theme.colors.info,
-              fontFamily: 'NotoKufiArabic_700Bold',
-            }}
+            style={{ color: p.theme.colors.baseContent }}
             onPress={() => p.onNavButtonPress('quarters', p.data.quarter_id)}
           >
             {formatQuarterLabel(p.data.quarter_id)}
@@ -138,7 +125,7 @@ const Content = (props: {
   verses: TVerse[]
   onVerseLongPress: (v: TVerse) => void
 }) => (
-  <Text style={{ direction: 'rtl', paddingHorizontal: 16 }}>
+  <Text style={{ direction: 'rtl', paddingHorizontal: 8 }}>
     {props.verses.map((v) => (
       <Text
         key={v.id}
@@ -167,15 +154,8 @@ const Content = (props: {
           </>
         )}
 
-        <Text
-          style={{
-            fontFamily: props.settings.font.family,
-            color: props.theme.colors.success,
-          }}
-        >
-          {(props.settings.font.family === 'Uthmanic'
-            ? toMarker(v.number.toString())
-            : v.number) + ' '}
+        <Text style={{ fontFamily: 'Uthmanic' }}>
+          {toMarker(v.number.toString()) + ' '}
         </Text>
       </Text>
     ))}
@@ -212,16 +192,11 @@ const Header = (props: {
 
       <Text
         variant="bodyLarge"
-        style={{
-          lineHeight: 32,
-          textAlign: 'center',
-          color: props.theme.colors.success,
-          fontFamily: 'NotoKufiArabic_700Bold',
-        }}
+        style={{ lineHeight: 32, textAlign: 'center' }}
       >{`سُورَةُ ${props.chapter.name}`}</Text>
 
       <Tooltip title={Locales.t('vCount')}>
-        <Text variant="bodySmall">آيلتها {props.chapter.verse_count}</Text>
+        <Text variant="bodySmall">آياتها {props.chapter.verse_count}</Text>
       </Tooltip>
     </Card.Content>
   </Card>

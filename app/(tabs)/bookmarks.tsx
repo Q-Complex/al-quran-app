@@ -40,7 +40,6 @@ const Bookmarks = () => {
       <List.Section style={{ flex: 1, marginVertical: 0 }}>
         <AnimatedFlashList
           data={bookmarks}
-          estimatedItemSize={100}
           refreshControl={
             <RefreshControl
               refreshing={false}
@@ -49,18 +48,14 @@ const Bookmarks = () => {
           }
           renderItem={({ item }: { item: TVerse }) => (
             <List.Item
-              title={item.content}
+              description={item.content}
+              descriptionNumberOfLines={1}
               onPress={() => router.push(`/pages/${item.page_id}`)}
-              description={`${Locales.t('verse')} ${item.chapter_id}:${item.number}`}
-              titleStyle={{
-                direction: 'rtl',
-                color: theme.colors.success,
-                fontFamily: 'NotoKufiArabic_700Bold',
-              }}
+              title={`${Locales.t('verse')} ${item.chapter_id}:${item.number}`}
               right={(props) => (
                 <IconButton
                   {...props}
-                  icon="delete"
+                  icon="close"
                   iconColor={theme.colors.error}
                   rippleColor={theme.colors.error}
                   onPress={async () =>
@@ -95,9 +90,9 @@ const Bookmarks = () => {
         <Snackbar
           visible
           onDismiss={() => {}}
-          style={{ backgroundColor: theme.colors.success }}
+          style={{ backgroundColor: theme.colors.primaryContainer }}
         >
-          <Text style={{ color: theme.colors.onSuccess }}>
+          <Text style={{ color: theme.colors.onPrimaryContainer }}>
             {Locales.t('pressToBookmark')}
           </Text>
         </Snackbar>

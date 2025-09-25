@@ -49,10 +49,6 @@ const TabsHeader = (props: TabsHeaderProps) => {
           props.navProps.options,
           props.navProps.route.name,
         )}
-        titleStyle={{
-          lineHeight: 36,
-          fontFamily: 'NotoKufiArabic_700Bold',
-        }}
       />
 
       {props.navProps.options.headerRight

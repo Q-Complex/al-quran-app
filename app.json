@@ -47,7 +47,7 @@
             "image": "./assets/images/splash-icon-dark.png",
             "backgroundColor": "#09090b"
           },
-          "imageWidth": 400
+          "imageWidth": 300
         }
       ],
       "expo-sqlite",
@@ -58,8 +58,7 @@
           "fonts": [
             "./assets/fonts/Indopak.ttf",
             "./assets/fonts/Uthmanic.ttf",
-            "node_modules/@expo-google-fonts/noto-kufi-arabic/400Regular/NotoKufiArabic_400Regular.ttf",
-            "node_modules/@expo-google-fonts/noto-kufi-arabic/700Bold/NotoKufiArabic_700Bold.ttf"
+            "node_modules/@expo-google-fonts/noto-kufi-arabic/400Regular/NotoKufiArabic_400Regular.ttf"
           ]
         }
       ],
