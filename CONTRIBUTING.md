@@ -43,7 +43,7 @@ Ensure you have the following software installed:
 
 ### Setting Up the Development Environment
 
-1. **Fork the Repository**: Click the **Fork** button at the top-right corner of the [GitHub page](https://github.com/youzarsiph/quran).
+1. **Fork the Repository**: Click the **Fork** button at the top-right corner of the [GitHub page](https://github.com/Q-Complex/al-quran-app).
 
 2. **Clone the Repository**: Clone your forked repository to your local machine.
 
@@ -158,7 +158,7 @@ git push origin feature/YourFeatureName
 
 If you discover a bug, please follow these steps:
 
-1. **Search Existing Issues**: Before reporting a new bug, search the [Issues](https://github.com/youzarsiph/quran/issues) tab to ensure the issue hasn't already been reported.
+1. **Search Existing Issues**: Before reporting a new bug, search the [Issues](https://github.com/Q-Complex/al-quran-app/issues) tab to ensure the issue hasn't already been reported.
 
 2. **Create a New Issue**: If the bug isn't reported, create a new issue with the following details:
    - **Title**: A clear and concise description of the issue.
@@ -170,7 +170,7 @@ If you discover a bug, please follow these steps:
 
 If you have an idea for a new feature, follow these steps:
 
-1. **Search Existing Issues**: Check the [Issues](https://github.com/youzarsiph/quran/issues) tab to ensure the feature hasn't already been requested.
+1. **Search Existing Issues**: Check the [Issues](https://github.com/Q-Complex/al-quran-app/issues) tab to ensure the feature hasn't already been requested.
 
 2. **Create a New Issue**: Create a new issue with the following details:
    - **Title**: A clear and concise description of the new feature.

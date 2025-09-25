@@ -1,11 +1,11 @@
-# Quran Application
+# Al-Quran App
 
-[![EAS Build](https://github.com/youzarsiph/quran/actions/workflows/eas-build.yml/badge.svg)](https://github.com/youzarsiph/quran/actions/workflows/eas-build.yml)
-[![EAS Review](https://github.com/youzarsiph/quran/actions/workflows/eas-reviews.yml/badge.svg)](https://github.com/youzarsiph/quran/actions/workflows/eas-reviews.yml)
-[![EAS Update](https://github.com/youzarsiph/quran/actions/workflows/eas-update.yml/badge.svg)](https://github.com/youzarsiph/quran/actions/workflows/eas-update.yml)
-[![CodeQL](https://github.com/youzarsiph/quran/actions/workflows/codeql.yml/badge.svg)](https://github.com/youzarsiph/quran/actions/workflows/codeql.yml)
-[![ESLint](https://github.com/youzarsiph/quran/actions/workflows/eslint.yml/badge.svg)](https://github.com/youzarsiph/quran/actions/workflows/eslint.yml)
-[![Prettier](https://github.com/youzarsiph/quran/actions/workflows/prettier.yml/badge.svg)](https://github.com/youzarsiph/quran/actions/workflows/prettier.yml)
+[![EAS Build](https://github.com/Q-Complex/al-quran-app/actions/workflows/eas-build.yml/badge.svg)](https://github.com/Q-Complex/al-quran-app/actions/workflows/eas-build.yml)
+[![EAS Review](https://github.com/Q-Complex/al-quran-app/actions/workflows/eas-reviews.yml/badge.svg)](https://github.com/Q-Complex/al-quran-app/actions/workflows/eas-reviews.yml)
+[![EAS Update](https://github.com/Q-Complex/al-quran-app/actions/workflows/eas-update.yml/badge.svg)](https://github.com/Q-Complex/al-quran-app/actions/workflows/eas-update.yml)
+[![CodeQL](https://github.com/Q-Complex/al-quran-app/actions/workflows/codeql.yml/badge.svg)](https://github.com/Q-Complex/al-quran-app/actions/workflows/codeql.yml)
+[![ESLint](https://github.com/Q-Complex/al-quran-app/actions/workflows/eslint.yml/badge.svg)](https://github.com/Q-Complex/al-quran-app/actions/workflows/eslint.yml)
+[![Prettier](https://github.com/Q-Complex/al-quran-app/actions/workflows/prettier.yml/badge.svg)](https://github.com/Q-Complex/al-quran-app/actions/workflows/prettier.yml)
 
 ## Overview
 
@@ -37,7 +37,6 @@ The Quran Application is a modern, cross-platform mobile and web application des
 
 ## Supported Platforms
 
-- **Web**
 - **iOS**
 - **Android**
 
@@ -57,7 +56,7 @@ Ensure you have the following software installed:
 Clone the repository and install the necessary dependencies:
 
 ```bash
-git clone https://github.com/youzarsiph/quran.git
+git clone https://github.com/Q-Complex/al-quran-app.git
 cd quran
 npm install
 ```
@@ -65,7 +64,7 @@ npm install
 or if using Yarn:
 
 ```bash
-git clone https://github.com/youzarsiph/quran.git
+git clone https://github.com/Q-Complex/al-quran-app.git
 cd quran
 yarn install
 ```
@@ -122,6 +121,6 @@ This project is licensed under the MIT License. For more details, please refer t
 For any inquiries or feedback, please reach out to:
 
 - **Maintainer**: Yousuf Abu Shanab
-- **GitHub Issues**: [https://github.com/youzarsiph/quran/issues](https://github.com/youzarsiph/quran/issues)
+- **GitHub Issues**: [https://github.com/Q-Complex/al-quran-app/issues](https://github.com/Q-Complex/al-quran-app/issues)
 
 We appreciate your interest and contributions to the Quran Application. Together, we can continue to enhance the accessibility and user experience of Quranic teachings.
