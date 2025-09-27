@@ -24,7 +24,7 @@
       "supportsRTL": true,
       "router": {},
       "eas": {
-        "projectId": "a6444652-d5c0-4f1f-8cfd-2e2070b65e6b"
+        "projectId": "7145e1cd-bdd2-4d96-995f-e610f81b7772"
       }
     },
     "android": {
@@ -66,6 +66,7 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "owner": "youzarsiph"
   }
 }
