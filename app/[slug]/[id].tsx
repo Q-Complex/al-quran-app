@@ -214,7 +214,7 @@ const Details = () => {
                 )}
               />
               <List.Item
-                title={Locales.t('chronoOrder')}
+                title={Locales.t('order')}
                 right={(props) => (
                   <Text {...props}>{(item as TChapter)?.order}</Text>
                 )}

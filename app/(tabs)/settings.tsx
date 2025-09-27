@@ -102,14 +102,7 @@ const Settings = () => {
             >
               إِنَّآ أَنزَلْنَـٰهُ قُرْءَٰنًا عَرَبِيًّا لَّعَلَّكُمْ
               تَعْقِلُونَ{' '}
-              <Text
-                style={{
-                  color: theme.colors.success,
-                  fontFamily: settings.font.family,
-                }}
-              >
-                {settings.font.family === 'Uthmanic' ? toMarker('2') : 2}
-              </Text>
+              <Text style={{ fontFamily: 'Uthmanic' }}>{toMarker('2')}</Text>
             </Text>
           </View>
         </List.Section>

@@ -23,11 +23,12 @@ const Database = {
   ): Promise<(TItem & V)[]> => {
     // No need to join the tables
     if (table === 'chapters') {
-      let statement = 'SELECT * FROM "chapters"'
+      let statement =
+        'SELECT "id", "name", "type", "verse_count" FROM "chapters"'
 
       if (search) {
         statement = `
-        SELECT * FROM (SELECT *,
+        SELECT * FROM (SELECT "id", "name", "type", "verse_count",
           REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE("name", 'ۜ', ''), 'ۥ', ''), 'ۦ', ''), 'ۚ', ''), 'ٍ', ''), 'ٌ', ''), 'ً', ''), 'ۢ', ''), '۟', ''), 'ۗ', ''), 'ۖ', ''), 'ۭ', ''), 'ۛ', ''), 'ٱ', 'ا'), 'ٰ', ''), 'ٓ', ''), 'ّ', ''), 'ْ', ''), 'ِ', ''), 'ُ', ''), 'َ', '') as "unaccent_name"
         FROM "chapters") WHERE "name" LIKE '%${search}%' OR "unaccent_name" LIKE '%${search}%'`
       }
@@ -40,6 +41,7 @@ const Database = {
       SELECT
         "${table}"."id",
         "${table}"."name",
+        "${table}"."verse_count",
         "verses"."chapter_id" as "verse_c_id",
         "verses"."number" as "verse_number",
         substr("verses"."content", 0, 50) as "verse_content"

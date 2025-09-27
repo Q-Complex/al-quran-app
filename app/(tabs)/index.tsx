@@ -9,11 +9,20 @@ import {
   ProgressBar,
   Surface,
   Text,
+  Tooltip,
   useTheme,
 } from 'react-native-paper'
 
-import { AppTheme, Database, Locales, Modal, TabsHeader, TChapter } from '@/lib'
-import { RefreshControl } from 'react-native'
+import {
+  AppTheme,
+  Database,
+  Locales,
+  Modal,
+  Slug,
+  TabsHeader,
+  TChapter,
+} from '@/lib'
+import { RefreshControl, View } from 'react-native'
 
 const Home = () => {
   const db = useSQLiteContext()
@@ -79,7 +88,6 @@ const Home = () => {
             <List.Item
               title={`سُورَةُ ${c.name}`}
               onPress={() => router.push(`/chapters/${c.id}`)}
-              description={`${c.verse_count} ${Locales.t('verses')}`}
               left={(props) => (
                 <Chip
                   {...props}
@@ -93,7 +101,24 @@ const Home = () => {
                 </Chip>
               )}
               right={(props) => (
-                <List.Icon {...props} icon={c.type ? 'cube' : 'mosque'} />
+                <View
+                  style={{
+                    gap: 8,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    height: '100%',
+                    ...props.style,
+                  }}
+                >
+                  <Text variant="bodySmall">{c.verse_count}</Text>
+                  <Tooltip title={Locales.t(c.type ? 'meccan' : 'medinan')}>
+                    <List.Icon
+                      color={props.color}
+                      icon={c.type ? 'cube' : 'mosque'}
+                    />
+                  </Tooltip>
+                  <List.Icon color={props.color} icon="chevron-right" />
+                </View>
               )}
             />
           )}
@@ -110,26 +135,25 @@ const Home = () => {
         }}
       >
         <List.Section>
-          <List.Item
-            title={Locales.t('parts')}
-            onPress={() => router.push('/parts')}
-            right={(props) => <Text {...props}>30</Text>}
-          />
-          <List.Item
-            title={Locales.t('groups')}
-            onPress={() => router.push('/groups')}
-            right={(props) => <Text {...props}>60</Text>}
-          />
-          <List.Item
-            title={Locales.t('quarters')}
-            onPress={() => router.push('/quarters')}
-            right={(props) => <Text {...props}>240</Text>}
-          />
-          <List.Item
-            title={Locales.t('pages')}
-            onPress={() => router.push('/pages')}
-            right={(props) => <Text {...props}>604</Text>}
-          />
+          {['parts', 'groups', 'quarters', 'pages'].map((i) => (
+            <List.Item
+              key={i}
+              title={Locales.t(i)}
+              onPress={() => router.push(`/${i}`)}
+              right={(props) => (
+                <View
+                  style={{
+                    ...props.style,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Text variant="bodySmall">{Database.count(i as Slug)}</Text>
+                  <List.Icon color={props.color} icon="chevron-right" />
+                </View>
+              )}
+            />
+          ))}
         </List.Section>
       </Modal>
     </Surface>

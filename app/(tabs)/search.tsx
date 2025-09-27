@@ -1,17 +1,17 @@
 import { AnimatedFlashList } from '@shopify/flash-list'
-import { router, Tabs } from 'expo-router'
+import { router } from 'expo-router'
 import { useSQLiteContext } from 'expo-sqlite'
 import React from 'react'
 import { RefreshControl, View } from 'react-native'
 import {
-  Button,
   List,
   ProgressBar,
+  Searchbar,
   Surface,
   useTheme,
 } from 'react-native-paper'
 
-import { Database, Locales, TVerse, KVStore, TabsHeader, AppTheme } from '@/lib'
+import { Database, Locales, TVerse, KVStore, AppTheme } from '@/lib'
 
 const Search = () => {
   const db = useSQLiteContext()
@@ -37,35 +37,17 @@ const Search = () => {
       setLoading(true)
       ;(async () => {
         setResults(await Database.search(db, query))
+        setLoading(false)
       })()
-      setLoading(false)
     } else {
       setResults([])
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reload])
+  }, [reload, query])
 
   return (
     <Surface elevation={0} style={{ flex: 1 }}>
-      <Tabs.Screen
-        options={{
-          header: (props) => (
-            <TabsHeader
-              navProps={props}
-              children={undefined}
-              withSearchBar
-              searchBarProps={{
-                value: query,
-                loading: loading,
-                onChangeText: setQuery,
-                onClearIconPress: () => setResults([]),
-              }}
-            />
-          ),
-        }}
-      />
-
       <ProgressBar indeterminate={loading} color={theme.colors.success} />
 
       <List.Section style={{ flex: 1, marginVertical: 0 }}>
@@ -78,15 +60,38 @@ const Search = () => {
             />
           }
           ListHeaderComponent={
-            <List.Subheader>
-              {query === ''
-                ? Locales.t('history')
-                : Locales.t('results') + ` ${results.length}`}
-            </List.Subheader>
+            <View style={{ paddingTop: 16 }}>
+              <View style={{ paddingHorizontal: 16 }}>
+                <Searchbar
+                  value={query}
+                  onChangeText={(v) => setQuery(v)}
+                  placeholder={Locales.t('search')}
+                  onBlur={async () => {
+                    if (query !== '' && !history.includes(query)) {
+                      const newHistory = [...history, query]
+
+                      setHistory(newHistory)
+
+                      await KVStore.history.save(
+                        JSON.stringify(newHistory),
+                        () => setReload(!reload),
+                      )
+                      setReload(!reload)
+                    }
+                  }}
+                />
+              </View>
+
+              <List.Subheader>
+                {query === ''
+                  ? Locales.t('history')
+                  : Locales.t('results') + ` ${results.length}`}
+              </List.Subheader>
+            </View>
           }
           renderItem={({ item }: { item: TVerse }) => (
             <List.Item
-              description={item.content}
+              description={item.content + '...'}
               descriptionNumberOfLines={1}
               onPress={() => router.push(`/pages/${item.page_id}`)}
               right={(props) => <List.Icon {...props} icon="chevron-right" />}
@@ -130,45 +135,6 @@ const Search = () => {
           }
         />
       </List.Section>
-
-      <View
-        style={{
-          gap: 8,
-          padding: 8,
-          marginTop: 'auto',
-          flexDirection: 'row',
-        }}
-      >
-        <Button
-          mode="contained"
-          style={{ flexGrow: 1 }}
-          onPress={async () => {
-            if (!history.includes(query)) {
-              const newHistory = [...history, query]
-              setHistory(newHistory)
-              await KVStore.history.save(JSON.stringify(newHistory), () =>
-                setReload(!reload),
-              )
-            }
-            setReload(!reload)
-          }}
-        >
-          {Locales.t('search')}
-        </Button>
-
-        {results.length !== 0 && (
-          <Button
-            mode="contained"
-            style={{ flexGrow: 1 }}
-            buttonColor={theme.colors.error}
-            textColor={theme.colors.onError}
-            rippleColor={theme.colors.error}
-            onPress={() => setResults([])}
-          >
-            {Locales.t('clear')}
-          </Button>
-        )}
-      </View>
     </Surface>
   )
 }

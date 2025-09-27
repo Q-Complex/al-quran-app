@@ -9,7 +9,7 @@
 
 ## Overview
 
-The Quran Application is a modern, cross-platform mobile and web application designed to provide users with a seamless and customizable Quran reading experience. Utilizing advanced technologies and industry-standard best practices, the application supports multiple languages, customizable themes, and text directions. Our mission is to make the Quran accessible and understandable to a global audience.
+The Quran Application is a modern, cross-platform mobile application designed to provide users with a seamless and customizable Quran reading experience. Utilizing advanced technologies and industry-standard best practices, the application supports multiple languages, customizable themes, and text directions. Our mission is to make the Quran accessible and understandable to a global audience.
 
 ## Screenshots
 

@@ -40,7 +40,7 @@ const Tr = {
   details: 'Ayrıntılar',
   name: 'İsim',
   type: 'Tip',
-  chronoOrder: 'Kronolojik Sıra',
+  order: 'Kronolojik Sıra',
   pCount: 'Sayfa Sayısı',
   vCount: 'Ayet Sayısı',
   notFound: 'Bulunamadı',

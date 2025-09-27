@@ -40,7 +40,7 @@ const Ar = {
   details: 'التفاصيل',
   name: 'الاسم',
   type: 'النوع',
-  chronoOrder: 'الترتيب الزمني',
+  order: 'ترتيب النزول',
   pCount: 'عدد الصفحات',
   vCount: 'عدد الآيات',
   notFound: 'غير موجود',

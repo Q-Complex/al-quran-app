@@ -40,7 +40,7 @@ const En = {
   details: 'Details',
   name: 'Name',
   type: 'Type',
-  chronoOrder: 'Chronological order',
+  order: 'Chronological order',
   pCount: 'Page count',
   vCount: 'Verse count',
   notFound: 'Not found',
