@@ -76,6 +76,8 @@ const En = {
   '2/4': '2/4',
   '3/4': '3/4',
   reset: 'Reset',
+  fullscreen: 'Fullscreen',
+  more: 'More',
 }
 
 export { En }

@@ -50,10 +50,7 @@ const Container = (p: {
       <Tooltip title={Locales.t('read')}>
         <Text
           variant="bodySmall"
-          style={{
-            lineHeight: 20,
-            color: p.theme.colors.baseContent,
-          }}
+          style={{ lineHeight: 20 }}
           onPress={() => p.onNavButtonPress('chapters', p.data.chapter_id)}
         >
           سُورَةُ {p.data.chapter_name}
@@ -63,7 +60,6 @@ const Container = (p: {
       <Tooltip title={Locales.t('read')}>
         <Text
           variant="bodySmall"
-          style={{ color: p.theme.colors.baseContent }}
           onPress={() => p.onNavButtonPress('parts', p.data.part_id)}
         >
           {Locales.t('part')} {p.data.part_id}
@@ -85,7 +81,6 @@ const Container = (p: {
         <Tooltip title={Locales.t('read')}>
           <Text
             variant="bodySmall"
-            style={{ color: p.theme.colors.baseContent }}
             onPress={() => p.onNavButtonPress('groups', p.data.group_id)}
           >
             {Locales.t('group')} {p.data.group_id}
@@ -101,7 +96,6 @@ const Container = (p: {
         <Tooltip title={Locales.t('read')}>
           <Text
             variant="bodySmall"
-            style={{ color: p.theme.colors.baseContent }}
             onPress={() => p.onNavButtonPress('quarters', p.data.quarter_id)}
           >
             {formatQuarterLabel(p.data.quarter_id)}

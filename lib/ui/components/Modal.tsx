@@ -2,7 +2,6 @@ import React from 'react'
 import { ScrollView, useColorScheme, View } from 'react-native'
 import {
   Modal as BaseModal,
-  Button,
   IconButton,
   ModalProps,
   Text,
@@ -31,6 +30,7 @@ const Modal = (props: {
         left: 8,
         right: 8,
         borderRadius: 24,
+        paddingBottom: 24,
         position: 'absolute',
         backgroundColor:
           colorScheme === 'dark'
@@ -40,10 +40,10 @@ const Modal = (props: {
     >
       <View
         style={{
-          paddingTop: 16,
+          padding: 16,
+          paddingBottom: 0,
           flexDirection: 'row',
           alignItems: 'center',
-          paddingHorizontal: 16,
           justifyContent: 'space-between',
         }}
       >
@@ -57,12 +57,6 @@ const Modal = (props: {
       <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
         {props.children}
       </ScrollView>
-
-      <View style={{ padding: 16 }}>
-        <Button mode="contained" onPress={close}>
-          {Locales.t('close')}
-        </Button>
-      </View>
     </BaseModal>
   )
 }

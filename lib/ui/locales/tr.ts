@@ -76,6 +76,8 @@ const Tr = {
   '2/4': '2/4',
   '3/4': '3/4',
   reset: 'Sıfırla',
+  fullscreen: 'Tam Ekran',
+  more: 'Daha Fazla',
 }
 
 export { Tr }

@@ -60,11 +60,13 @@ const Home = () => {
                 right:
                   query === ''
                     ? (props) => (
-                        <Appbar.Action
-                          {...props}
-                          icon="dots-vertical"
-                          onPress={() => setVisible(true)}
-                        />
+                        <Tooltip title={Locales.t('more')}>
+                          <Appbar.Action
+                            {...props}
+                            icon="dots-vertical"
+                            onPress={() => setVisible(true)}
+                          />
+                        </Tooltip>
                       )
                     : undefined,
               }}
