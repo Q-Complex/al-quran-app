@@ -35,33 +35,43 @@ const ListHome = () => {
 
       <ProgressBar indeterminate={loading} color={theme.colors.success} />
 
-      <AnimatedFlashList
-        data={data}
-        renderItem={({ item }) => (
-          <List.Item
-            descriptionNumberOfLines={1}
-            description={`${item.verse_content}...`}
-            onPress={() => router.push(`/${slug}/${item.id}`)}
-            title={
-              slug !== 'quarters'
-                ? `${Locales.t(slug.slice(0, slug.length - 1))} ${item.id}`
-                : formatQuarterLabel(item.id)
-            }
-            right={(props) => (
-              <View
-                style={{
-                  ...props.style,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}
-              >
-                <Text variant="bodySmall">{item.verse_count}</Text>
-                <List.Icon color={props.color} icon="chevron-right" />
-              </View>
-            )}
-          />
-        )}
-      />
+      <List.Section style={{ flex: 1, marginVertical: 0 }}>
+        <AnimatedFlashList
+          data={data}
+          ListFooterComponent={
+            <List.Item
+              title={Locales.t('prayer')}
+              onPress={() => router.push('/prayer')}
+              left={(props) => <List.Icon {...props} icon="hands-pray" />}
+              right={(props) => <List.Icon {...props} icon="chevron-right" />}
+            />
+          }
+          renderItem={({ item }) => (
+            <List.Item
+              descriptionNumberOfLines={1}
+              description={`${item.verse_content}...`}
+              onPress={() => router.push(`/${slug}/${item.id}`)}
+              title={
+                slug !== 'quarters'
+                  ? `${Locales.t(slug.slice(0, slug.length - 1))} ${item.id}`
+                  : formatQuarterLabel(item.id)
+              }
+              right={(props) => (
+                <View
+                  style={{
+                    ...props.style,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Text variant="bodySmall">{item.verse_count}</Text>
+                  <List.Icon color={props.color} icon="chevron-right" />
+                </View>
+              )}
+            />
+          )}
+        />
+      </List.Section>
     </Surface>
   )
 }
