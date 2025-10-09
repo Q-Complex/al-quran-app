@@ -64,6 +64,10 @@ const RootLayout = () => {
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="[slug]/index" />
             <Stack.Screen name="[slug]/[id]" />
+            <Stack.Screen
+              name="prayer"
+              options={{ title: Locales.t('prayer') }}
+            />
           </Stack>
         </SQLiteProvider>
       </PaperProvider>

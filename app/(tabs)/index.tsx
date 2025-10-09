@@ -86,6 +86,14 @@ const Home = () => {
               onRefresh={() => setReload(!reload)}
             />
           }
+          ListFooterComponent={
+            <List.Item
+              title={Locales.t('prayer')}
+              onPress={() => router.push('/prayer')}
+              left={(props) => <List.Icon {...props} icon="hands-pray" />}
+              right={(props) => <List.Icon {...props} icon="chevron-right" />}
+            />
+          }
           renderItem={({ item: c }: { item: TChapter }) => (
             <List.Item
               title={`سُورَةُ ${c.name}`}

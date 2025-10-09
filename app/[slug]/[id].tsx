@@ -1,11 +1,12 @@
 import { AnimatedFlashList } from '@shopify/flash-list'
 import * as Clipboard from 'expo-clipboard'
 import * as Constants from 'expo-constants'
-import { Stack, useLocalSearchParams } from 'expo-router'
+import { router, Stack, useLocalSearchParams } from 'expo-router'
 import { useSQLiteContext } from 'expo-sqlite'
 import React from 'react'
 import {
   Appbar,
+  Button,
   FAB,
   List,
   ProgressBar,
@@ -33,6 +34,7 @@ import {
   TVerse,
 } from '@/lib'
 import { formatQuarterLabel } from '@/lib/utils/text'
+import { View } from 'react-native'
 
 const Details = () => {
   const db = useSQLiteContext()
@@ -52,7 +54,7 @@ const Details = () => {
     actions: false,
   })
 
-  const count = Database.count(slug)
+  const count = Database.count(path)
   const types = ['chapters', 'parts', 'groups', 'quarters', 'pages']
 
   // Data loading
@@ -142,6 +144,21 @@ const Details = () => {
 
       <AnimatedFlashList
         data={pages}
+        ListFooterComponent={
+          ID === count ? (
+            <View style={{ padding: 16 }}>
+              <Button
+                mode="contained"
+                icon="hands-pray"
+                buttonColor={theme.colors.success}
+                onPress={() => router.push('/prayer')}
+                textColor={theme.colors.successContent}
+              >
+                {Locales.t('prayer')}
+              </Button>
+            </View>
+          ) : undefined
+        }
         renderItem={({ item }) => (
           <Page
             db={db}

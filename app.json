@@ -2,7 +2,7 @@
   "expo": {
     "name": "Al-Quran",
     "slug": "al-quran",
-    "version": "1.2.0",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "description": "Al Quran is a modern application designed to provide users with a seamless and customizable Quran reading experience.",
@@ -68,6 +68,12 @@
     "experiments": {
       "typedRoutes": true
     },
-    "owner": "youzarsiph"
+    "owner": "youzarsiph",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/7145e1cd-bdd2-4d96-995f-e610f81b7772"
+    }
   }
 }

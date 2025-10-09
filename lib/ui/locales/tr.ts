@@ -78,6 +78,7 @@ const Tr = {
   reset: 'Sıfırla',
   fullscreen: 'Tam Ekran',
   more: 'Daha Fazla',
+  prayer: "Kuranı Kerim'i Tamamlama Duası",
 }
 
 export { Tr }
