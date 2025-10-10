@@ -90,7 +90,9 @@ const Home = () => {
             <List.Item
               title={Locales.t('prayer')}
               onPress={() => router.push('/prayer')}
-              left={(props) => <List.Icon {...props} icon="hands-pray" />}
+              left={(props) => (
+                <List.Icon {...props} icon="hand-heart-outline" />
+              )}
               right={(props) => <List.Icon {...props} icon="chevron-right" />}
             />
           }

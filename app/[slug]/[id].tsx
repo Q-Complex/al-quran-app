@@ -132,7 +132,9 @@ const Details = () => {
                   icon="information"
                   iconColor={theme.colors.info}
                   rippleColor={theme.colors.info}
-                  onPress={() => setVisible({ ...visible, details: true })}
+                  onPress={() =>
+                    setVisible({ ...visible, details: !visible.details })
+                  }
                 />
               </Tooltip>
             </>
@@ -149,7 +151,7 @@ const Details = () => {
             <View style={{ padding: 16 }}>
               <Button
                 mode="contained"
-                icon="hands-pray"
+                icon="hand-heart-outline"
                 buttonColor={theme.colors.success}
                 onPress={() => router.push('/prayer')}
                 textColor={theme.colors.successContent}
