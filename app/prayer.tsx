@@ -5,7 +5,7 @@ import { Surface, Text } from 'react-native-paper'
 const Prayer = () => (
   <ScrollView showsVerticalScrollIndicator={false}>
     <Surface elevation={0} style={{ flex: 1, padding: 16, direction: 'rtl' }}>
-      <Text variant="bodyLarge">
+      <Text variant="bodyLarge" style={{ textAlign: 'center', lineHeight: 32 }}>
         اللَّهُمَّ ارْحَمْنِي بالقُرْءَانِ وَاجْعَلهُ لِي إِمَاماً وَنُوراً
         وَهُدًى وَرَحْمَةً ۞ اللَّهُمَّ ذَكِّرْنِي مِنْهُ مَانَسِيتُ
         وَعَلِّمْنِي مِنْهُ مَاجَهِلْتُ وَارْزُقْنِي تِلاَوَتَهُ آنَاءَ
