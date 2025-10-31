@@ -16,17 +16,6 @@ import { Locales } from '../locales'
 import { toMarker } from '../../utils'
 import { AppTheme } from '../styles'
 
-const formatQuarterLabel = (quarter: number) => {
-  const group = Math.ceil(quarter / 4)
-  const posInGroup = quarter % 4
-
-  if (posInGroup === 0) {
-    return `${Locales.t('group')} ${group}`
-  }
-
-  return `${Locales.t(posInGroup + '/4')} ${Locales.t('group')} ${group}`
-}
-
 /**
  * Page container
  * @param p properties
@@ -75,31 +64,13 @@ const Container = (p: {
           flexDirection: 'row',
           paddingHorizontal: 16,
           alignItems: 'center',
-          justifyContent: 'space-between',
+          justifyContent: 'center',
         }}
       >
-        <Tooltip title={Locales.t('read')}>
-          <Text
-            variant="bodySmall"
-            onPress={() => p.onNavButtonPress('groups', p.data.group_id)}
-          >
-            {Locales.t('group')} {p.data.group_id}
-          </Text>
-        </Tooltip>
-
         <Tooltip title={Locales.t('pNum')}>
           <Button onPress={() => p.onNavButtonPress('pages', p.data.id)}>
             {p.data.id}
           </Button>
-        </Tooltip>
-
-        <Tooltip title={Locales.t('read')}>
-          <Text
-            variant="bodySmall"
-            onPress={() => p.onNavButtonPress('quarters', p.data.quarter_id)}
-          >
-            {formatQuarterLabel(p.data.quarter_id)}
-          </Text>
         </Tooltip>
       </View>
 
