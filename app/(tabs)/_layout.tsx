@@ -9,6 +9,7 @@ const TabLayout = () => (
     tabBar={(props) => <TabBar {...props} />}
     screenOptions={{
       tabBarHideOnKeyboard: true,
+      // eslint-disable-next-line react/no-children-prop
       header: (props) => <TabsHeader navProps={props} children={undefined} />,
     }}
   >

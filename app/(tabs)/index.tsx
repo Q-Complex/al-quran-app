@@ -51,6 +51,7 @@ const Home = () => {
           header: (props) => (
             <TabsHeader
               navProps={props}
+              // eslint-disable-next-line react/no-children-prop
               children={undefined}
               withSearchBar
               searchBarProps={{

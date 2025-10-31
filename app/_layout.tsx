@@ -57,6 +57,7 @@ const RootLayout = () => {
           <Stack
             screenOptions={{
               header: (props) => (
+                // eslint-disable-next-line react/no-children-prop
                 <StackHeader navProps={props} children={undefined} />
               ),
             }}
