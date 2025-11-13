@@ -79,6 +79,8 @@ const Ar = {
   fullscreen: 'ملء الشاشة',
   more: 'المزيد',
   prayer: 'دعاء ختم القرآن',
+  continue: 'أكمل',
+  back: 'رجوع',
 }
 
 export { Ar }

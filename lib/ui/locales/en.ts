@@ -79,6 +79,8 @@ const En = {
   fullscreen: 'Fullscreen',
   more: 'More',
   prayer: 'Quran Completion Prayer',
+  continue: 'Continue',
+  back: 'Back',
 }
 
 export { En }

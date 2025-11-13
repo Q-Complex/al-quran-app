@@ -1,11 +1,19 @@
+import { Locales } from '@/lib'
+import { router } from 'expo-router'
 import React from 'react'
 import { ScrollView } from 'react-native'
-import { Surface, Text } from 'react-native-paper'
+import { Button, Surface, Text } from 'react-native-paper'
 
 const Prayer = () => (
   <ScrollView showsVerticalScrollIndicator={false}>
-    <Surface elevation={0} style={{ flex: 1, padding: 16, direction: 'rtl' }}>
-      <Text variant="bodyLarge" style={{ textAlign: 'center', lineHeight: 32 }}>
+    <Surface
+      elevation={0}
+      style={{ flex: 1, gap: 16, padding: 16, direction: 'rtl' }}
+    >
+      <Text
+        variant="bodyLarge"
+        style={{ flex: 1, textAlign: 'justify', lineHeight: 32 }}
+      >
         اللَّهُمَّ ارْحَمْنِي بالقُرْءَانِ وَاجْعَلهُ لِي إِمَاماً وَنُوراً
         وَهُدًى وَرَحْمَةً ۞ اللَّهُمَّ ذَكِّرْنِي مِنْهُ مَانَسِيتُ
         وَعَلِّمْنِي مِنْهُ مَاجَهِلْتُ وَارْزُقْنِي تِلاَوَتَهُ آنَاءَ
@@ -42,6 +50,10 @@ const Prayer = () => (
         اللهُ عَلَى سَيِّدِنَا وَنَبِيِّنَا مُحَمَّدٍ وَعَلَى آلِهِ
         وَأَصْحَابِهِ الأَخْيَارِ وَسَلَّمَ تَسْلِيمًا كَثِيراً.
       </Text>
+
+      <Button mode="contained" onPress={() => router.replace('/chapters/1')}>
+        {Locales.t('continue')}
+      </Button>
     </Surface>
   </ScrollView>
 )

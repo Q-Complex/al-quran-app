@@ -149,13 +149,7 @@ const Details = () => {
         ListFooterComponent={
           ID === count ? (
             <View style={{ padding: 16 }}>
-              <Button
-                mode="contained"
-                icon="hand-heart-outline"
-                buttonColor={theme.colors.success}
-                onPress={() => router.push('/prayer')}
-                textColor={theme.colors.successContent}
-              >
+              <Button mode="contained" onPress={() => router.push('/prayer')}>
                 {Locales.t('prayer')}
               </Button>
             </View>

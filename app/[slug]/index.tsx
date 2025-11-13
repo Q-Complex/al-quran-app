@@ -2,7 +2,14 @@ import { AnimatedFlashList } from '@shopify/flash-list'
 import { router, Stack, useLocalSearchParams } from 'expo-router'
 import { useSQLiteContext } from 'expo-sqlite'
 import React from 'react'
-import { List, ProgressBar, Surface, Text, useTheme } from 'react-native-paper'
+import {
+  Button,
+  List,
+  ProgressBar,
+  Surface,
+  Text,
+  useTheme,
+} from 'react-native-paper'
 
 import { AppTheme, Database, Locales, Slug, TItem, V } from '@/lib'
 import { formatQuarterLabel } from '@/lib/utils/text'
@@ -39,14 +46,11 @@ const ListHome = () => {
         <AnimatedFlashList
           data={data}
           ListFooterComponent={
-            <List.Item
-              title={Locales.t('prayer')}
-              onPress={() => router.push('/prayer')}
-              left={(props) => (
-                <List.Icon {...props} icon="hand-heart-outline" />
-              )}
-              right={(props) => <List.Icon {...props} icon="chevron-right" />}
-            />
+            <View style={{ padding: 16 }}>
+              <Button mode="contained" onPress={() => router.push('/prayer')}>
+                {Locales.t('prayer')}
+              </Button>
+            </View>
           }
           renderItem={({ item }) => (
             <List.Item

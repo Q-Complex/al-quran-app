@@ -6,7 +6,9 @@ import {
   AppbarProps,
   Searchbar,
   SearchbarProps,
+  Tooltip,
 } from 'react-native-paper'
+import { Locales } from '../locales'
 
 interface StackHeaderProps extends AppbarProps {
   navProps: NativeStackHeaderProps
@@ -49,7 +51,9 @@ const StackHeader = (props: StackHeaderProps) => {
         : undefined}
 
       {props.navProps.back ? (
-        <Appbar.BackAction onPress={props.navProps.navigation.goBack} />
+        <Tooltip title={Locales.t('back')}>
+          <Appbar.BackAction onPress={props.navProps.navigation.goBack} />
+        </Tooltip>
       ) : null}
 
       <Appbar.Content

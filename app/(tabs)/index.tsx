@@ -4,6 +4,7 @@ import { useSQLiteContext } from 'expo-sqlite'
 import React from 'react'
 import {
   Appbar,
+  Button,
   Chip,
   List,
   ProgressBar,
@@ -88,14 +89,11 @@ const Home = () => {
             />
           }
           ListFooterComponent={
-            <List.Item
-              title={Locales.t('prayer')}
-              onPress={() => router.push('/prayer')}
-              left={(props) => (
-                <List.Icon {...props} icon="hand-heart-outline" />
-              )}
-              right={(props) => <List.Icon {...props} icon="chevron-right" />}
-            />
+            <View style={{ padding: 16 }}>
+              <Button mode="contained" onPress={() => router.push('/prayer')}>
+                {Locales.t('prayer')}
+              </Button>
+            </View>
           }
           renderItem={({ item: c }: { item: TChapter }) => (
             <List.Item

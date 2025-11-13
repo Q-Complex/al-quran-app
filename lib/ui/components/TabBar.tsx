@@ -9,6 +9,8 @@ const TabBar = (props: BottomTabBarProps) => {
 
   return (
     <BottomNavigation.Bar
+      compact
+      shifting
       labeled={false}
       navigationState={props.state}
       safeAreaInsets={props.insets}

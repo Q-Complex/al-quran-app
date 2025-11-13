@@ -2,23 +2,27 @@ import { AnimatedFlashList } from '@shopify/flash-list'
 import { router } from 'expo-router'
 import { useSQLiteContext } from 'expo-sqlite'
 import React from 'react'
-import { RefreshControl, View } from 'react-native'
+import { RefreshControl, ScrollView, View } from 'react-native'
 import {
+  Button,
   List,
   ProgressBar,
   Searchbar,
   Surface,
+  Text,
   useTheme,
 } from 'react-native-paper'
 
-import { Database, Locales, TVerse, KVStore, AppTheme } from '@/lib'
+import { Database, Locales, TVerse, KVStore, AppTheme, Modal } from '@/lib'
 
 const Search = () => {
   const db = useSQLiteContext()
   const theme = useTheme<AppTheme>()
   const [query, setQuery] = React.useState('')
   const [reload, setReload] = React.useState(false)
+  const [verse, setVerse] = React.useState<TVerse>()
   const [loading, setLoading] = React.useState(false)
+  const [visible, setVisible] = React.useState(false)
   const [history, setHistory] = React.useState<string[]>([])
   const [results, setResults] = React.useState<TVerse[]>([])
 
@@ -91,11 +95,14 @@ const Search = () => {
           }
           renderItem={({ item }: { item: TVerse }) => (
             <List.Item
-              description={item.content + '...'}
               descriptionNumberOfLines={1}
-              onPress={() => router.push(`/pages/${item.page_id}`)}
+              description={item.content.substring(0, 60) + '...'}
               right={(props) => <List.Icon {...props} icon="chevron-right" />}
               title={`${Locales.t('verse')} ${item.chapter_id}:${item.number}`}
+              onPress={() => {
+                setVerse(item)
+                setVisible(true)
+              }}
             />
           )}
           ListEmptyComponent={
@@ -135,6 +142,35 @@ const Search = () => {
           }
         />
       </List.Section>
+
+      <Modal
+        theme={theme}
+        title={`${Locales.t('verse')} ${verse?.chapter_id}:${verse?.number}`}
+        modalProps={{
+          visible,
+          children: undefined,
+          onDismiss: () => setVisible(false),
+        }}
+      >
+        <ScrollView
+          style={{ maxHeight: 320 }}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ gap: 16, padding: 16 }}
+        >
+          <Text
+            style={{ direction: 'rtl', lineHeight: 32, textAlign: 'justify' }}
+          >
+            {verse?.content}
+          </Text>
+
+          <Button
+            mode="contained"
+            onPress={() => router.push(`/pages/${verse?.page_id}`)}
+          >
+            {Locales.t('read')}
+          </Button>
+        </ScrollView>
+      </Modal>
     </Surface>
   )
 }

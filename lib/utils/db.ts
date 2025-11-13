@@ -153,7 +153,7 @@ const Database = {
         "number",
         "chapter_id",
         "page_id",
-        SUBSTR("content", 0, 60) as "content"
+        "content"
       FROM (
         SELECT *,
           REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE("content", 'ۜ', ''), 'ۥ', ''), 'ۦ', ''), 'ۚ', ''), 'ٍ', ''), 'ٌ', ''), 'ً', ''), 'ۢ', ''), '۟', ''), 'ۗ', ''), 'ۖ', ''), 'ۭ', ''), 'ۛ', ''), 'ٱ', 'ا'), 'ٰ', ''), 'ٓ', ''), 'ّ', ''), 'ْ', ''), 'ِ', ''), 'ُ', ''), 'َ', '') as "unaccent_content"
