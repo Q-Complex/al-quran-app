@@ -81,6 +81,7 @@ const Ar = {
   prayer: 'دعاء ختم القرآن',
   continue: 'أكمل',
   back: 'رجوع',
+  remove: 'إزالة',
 }
 
 export { Ar }

@@ -165,6 +165,22 @@ const Home = () => {
               )}
             />
           ))}
+          <List.Item
+            title={Locales.t('prayer')}
+            onPress={() => router.push('/prayer')}
+            right={(props) => (
+              <View
+                style={{
+                  ...props.style,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}
+              >
+                <Text variant="bodySmall">10</Text>
+                <List.Icon color={props.color} icon="chevron-right" />
+              </View>
+            )}
+          />
         </List.Section>
       </Modal>
     </Surface>

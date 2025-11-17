@@ -81,6 +81,7 @@ const Tr = {
   prayer: "Kuranı Kerim'i Tamamlama Duası",
   continue: 'Devam et',
   back: 'Geri',
+  remove: 'Sil',
 }
 
 export { Tr }

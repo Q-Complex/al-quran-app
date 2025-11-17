@@ -1,10 +1,10 @@
 import { AnimatedFlashList } from '@shopify/flash-list'
 import { router } from 'expo-router'
 import React from 'react'
-import { RefreshControl, View } from 'react-native'
+import { RefreshControl, ScrollView, View } from 'react-native'
 import {
+  Button,
   Icon,
-  IconButton,
   List,
   ProgressBar,
   Snackbar,
@@ -13,12 +13,14 @@ import {
   useTheme,
 } from 'react-native-paper'
 
-import { AppTheme, KVStore, Locales, TVerse } from '@/lib'
+import { AppTheme, KVStore, Locales, Modal, TVerse } from '@/lib'
 
 const Bookmarks = () => {
   const theme = useTheme<AppTheme>()
   const [reload, setReload] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
+  const [verse, setVerse] = React.useState<TVerse>()
+  const [visible, setVisible] = React.useState(false)
   const [bookmarks, setBookmarks] = React.useState<TVerse[]>([])
 
   // Search bookmarks data
@@ -48,23 +50,14 @@ const Bookmarks = () => {
           }
           renderItem={({ item }: { item: TVerse }) => (
             <List.Item
-              description={item.content}
               descriptionNumberOfLines={1}
-              onPress={() => router.push(`/pages/${item.page_id}`)}
+              description={item.content.substring(0, 60) + '...'}
+              right={(props) => <List.Icon {...props} icon="chevron-right" />}
               title={`${Locales.t('verse')} ${item.chapter_id}:${item.number}`}
-              right={(props) => (
-                <IconButton
-                  {...props}
-                  icon="close"
-                  iconColor={theme.colors.error}
-                  rippleColor={theme.colors.error}
-                  onPress={async () =>
-                    await KVStore.bookmarks.remove(item, bookmarks, (v) =>
-                      setBookmarks(JSON.parse(v)),
-                    )
-                  }
-                />
-              )}
+              onPress={() => {
+                setVerse(item)
+                setVisible(true)
+              }}
             />
           )}
           ListEmptyComponent={
@@ -85,6 +78,53 @@ const Bookmarks = () => {
           }
         />
       </List.Section>
+
+      <Modal
+        theme={theme}
+        title={`${Locales.t('verse')} ${verse?.chapter_id}:${verse?.number}`}
+        modalProps={{
+          visible,
+          children: undefined,
+          onDismiss: () => setVisible(false),
+        }}
+      >
+        <ScrollView
+          style={{ maxHeight: 320 }}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ gap: 16, padding: 16 }}
+        >
+          <Text
+            style={{ direction: 'rtl', lineHeight: 32, textAlign: 'justify' }}
+          >
+            {verse?.content}
+          </Text>
+
+          <View style={{ gap: 16, flexDirection: 'row' }}>
+            <Button
+              style={{ flexGrow: 1 }}
+              mode="contained"
+              buttonColor={theme.colors.error}
+              textColor={theme.colors.onError}
+              onPress={async () => {
+                await KVStore.bookmarks.remove(verse!, bookmarks, (v) =>
+                  setBookmarks(JSON.parse(v)),
+                )
+                setVisible(false)
+              }}
+            >
+              {Locales.t('remove')}
+            </Button>
+
+            <Button
+              style={{ flexGrow: 1 }}
+              mode="contained"
+              onPress={() => router.push(`/pages/${verse?.page_id}`)}
+            >
+              {Locales.t('read')}
+            </Button>
+          </View>
+        </ScrollView>
+      </Modal>
 
       {bookmarks.length === 0 && (
         <Snackbar

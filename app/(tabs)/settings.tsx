@@ -1,5 +1,5 @@
 import React from 'react'
-import { View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import {
   Button,
   List,
@@ -15,7 +15,6 @@ import {
   Constants,
   KVStore,
   Locales,
-  Modal,
   TFontFamily,
   TFontSize,
   TLanguage,
@@ -28,8 +27,6 @@ import {
 const Settings = () => {
   const theme = useTheme<AppTheme>()
   const [loading, setLoading] = React.useState(false)
-  const [visible, setVisible] = React.useState(false)
-  const [content, setContent] = React.useState('font')
   const [settings, setSettings] = React.useState(DefaultSettings)
   const [message, setMessage] = React.useState({ visible: false, content: '' })
 
@@ -40,185 +37,34 @@ const Settings = () => {
     setLoading(false)
   }, [])
 
-  const showModal = (content: string) => {
-    setContent(content)
-    setVisible(true)
-  }
-
   return (
     <Surface elevation={0} style={{ flex: 1 }}>
       <ProgressBar indeterminate={loading} color={theme.colors.success} />
+      <ScrollView>
+        <List.Section style={{ marginVertical: 0 }}>
+          <List.Accordion title={Locales.t('preview')}>
+            <View style={{ paddingHorizontal: 16 }}>
+              <Text
+                variant={settings.font.size.value}
+                style={{
+                  direction: 'rtl',
+                  textAlign: 'center',
+                  fontFamily: settings.font.family,
+                  lineHeight: settings.font.size.lineHeight,
+                }}
+              >
+                إِنَّآ أَنزَلْنَـٰهُ قُرْءَٰنًا عَرَبِيًّا لَّعَلَّكُمْ
+                تَعْقِلُونَ{' '}
+                <Text style={{ fontFamily: 'Uthmanic' }}>{toMarker('2')}</Text>
+              </Text>
+            </View>
+          </List.Accordion>
 
-      <List.AccordionGroup>
-        <List.Accordion id={1} title={Locales.t('appearance')}>
-          <List.Item
+          <List.Subheader>{Locales.t('appearance')}</List.Subheader>
+          <List.Accordion
             title={Locales.t('language')}
-            description={Locales.t(settings.language)}
-            onPress={() => showModal('language')}
             left={(props) => <List.Icon {...props} icon="translate" />}
-            right={(props) => <List.Icon {...props} icon="chevron-right" />}
-          />
-          <List.Item
-            title={Locales.t('theme')}
-            description={Locales.t(settings.theme)}
-            onPress={() => showModal('theme')}
-            left={(props) => <List.Icon {...props} icon="theme-light-dark" />}
-            right={(props) => <List.Icon {...props} icon="chevron-right" />}
-          />
-        </List.Accordion>
-
-        <List.Accordion id={2} title={Locales.t('quran')}>
-          <List.Item
-            title={Locales.t('font')}
-            description={Locales.t(settings.font.family)}
-            onPress={() => showModal('font')}
-            left={(props) => <List.Icon {...props} icon="format-font" />}
-            right={(props) => <List.Icon {...props} icon="chevron-right" />}
-          />
-          <List.Item
-            title={Locales.t('size')}
-            description={Locales.t(settings.font.size.label)}
-            onPress={() => showModal('font')}
-            left={(props) => (
-              <List.Icon {...props} icon="format-font-size-increase" />
-            )}
-            right={(props) => <List.Icon {...props} icon="chevron-right" />}
-          />
-        </List.Accordion>
-
-        <List.Section
-          title={Locales.t('preview')}
-          style={{ marginVertical: 0 }}
-        >
-          <View style={{ paddingHorizontal: 16 }}>
-            <Text
-              variant={settings.font.size.value}
-              style={{
-                direction: 'rtl',
-                textAlign: 'center',
-                fontFamily: settings.font.family,
-                lineHeight: settings.font.size.lineHeight,
-              }}
-            >
-              إِنَّآ أَنزَلْنَـٰهُ قُرْءَٰنًا عَرَبِيًّا لَّعَلَّكُمْ
-              تَعْقِلُونَ{' '}
-              <Text style={{ fontFamily: 'Uthmanic' }}>{toMarker('2')}</Text>
-            </Text>
-          </View>
-        </List.Section>
-      </List.AccordionGroup>
-
-      <View
-        style={{
-          gap: 8,
-          padding: 8,
-          marginTop: 'auto',
-          flexDirection: 'row',
-        }}
-      >
-        <Button
-          mode="contained"
-          style={{ flexGrow: 1 }}
-          onPress={async () =>
-            await KVStore.settings.save(JSON.stringify(settings), () => {
-              setMessage({
-                visible: true,
-                content: Locales.t('settingsSaved'),
-              })
-            })
-          }
-        >
-          {Locales.t('save')}
-        </Button>
-
-        <Button
-          mode="contained"
-          style={{ flexGrow: 1 }}
-          buttonColor={theme.colors.error}
-          textColor={theme.colors.onError}
-          rippleColor={theme.colors.error}
-          onPress={async () =>
-            await KVStore.settings.save(JSON.stringify(DefaultSettings), () => {
-              setSettings(DefaultSettings)
-              setMessage({
-                visible: true,
-                content: Locales.t('settingsSaved'),
-              })
-            })
-          }
-        >
-          {Locales.t('reset')}
-        </Button>
-      </View>
-
-      <Modal
-        theme={theme}
-        modalProps={{
-          visible,
-          children: undefined,
-          onDismiss: () => setVisible(false),
-        }}
-        title={
-          content === 'font'
-            ? Locales.t('font')
-            : content === 'language'
-              ? Locales.t('language')
-              : content === 'size'
-                ? Locales.t('size')
-                : content === 'theme'
-                  ? Locales.t('theme')
-                  : 'Title'
-        }
-      >
-        <List.Section style={{ flex: 1, marginVertical: 0 }}>
-          {content === 'font' ? (
-            <List.AccordionGroup>
-              <List.Accordion title={Locales.t('font')} id={2}>
-                <RadioButton.Group
-                  value={settings.font.family}
-                  onValueChange={(f) =>
-                    setSettings({
-                      ...settings,
-                      font: { ...settings.font, family: f as TFontFamily },
-                    })
-                  }
-                >
-                  {Constants.font.families.map((f) => (
-                    <RadioButton.Item
-                      labelVariant="bodySmall"
-                      key={f}
-                      label={Locales.t(f)}
-                      value={f}
-                    />
-                  ))}
-                </RadioButton.Group>
-              </List.Accordion>
-
-              <List.Accordion title={Locales.t('size')} id={3}>
-                <RadioButton.Group
-                  value={JSON.stringify(settings.font.size)}
-                  onValueChange={(s) =>
-                    setSettings({
-                      ...settings,
-                      font: {
-                        ...settings.font,
-                        size: JSON.parse(s) as TFontSize,
-                      },
-                    })
-                  }
-                >
-                  {Constants.font.sizes.map((s) => (
-                    <RadioButton.Item
-                      labelVariant="bodySmall"
-                      key={s.label}
-                      label={Locales.t(s.label)}
-                      value={JSON.stringify(s)}
-                    />
-                  ))}
-                </RadioButton.Group>
-              </List.Accordion>
-            </List.AccordionGroup>
-          ) : content === 'language' ? (
+          >
             <RadioButton.Group
               value={settings.language}
               onValueChange={(l) =>
@@ -234,7 +80,11 @@ const Settings = () => {
                 />
               ))}
             </RadioButton.Group>
-          ) : content === 'theme' ? (
+          </List.Accordion>
+          <List.Accordion
+            title={Locales.t('theme')}
+            left={(props) => <List.Icon {...props} icon="theme-light-dark" />}
+          >
             <RadioButton.Group
               value={settings.theme}
               onValueChange={(t) =>
@@ -253,9 +103,100 @@ const Settings = () => {
                 />
               ))}
             </RadioButton.Group>
-          ) : undefined}
+          </List.Accordion>
+
+          <List.Subheader>{Locales.t('quran')}</List.Subheader>
+          <List.Accordion title={Locales.t('font')}>
+            <RadioButton.Group
+              value={settings.font.family}
+              onValueChange={(f) =>
+                setSettings({
+                  ...settings,
+                  font: { ...settings.font, family: f as TFontFamily },
+                })
+              }
+            >
+              {Constants.font.families.map((f) => (
+                <RadioButton.Item
+                  labelVariant="bodySmall"
+                  key={f}
+                  label={Locales.t(f)}
+                  value={f}
+                />
+              ))}
+            </RadioButton.Group>
+          </List.Accordion>
+          <List.Accordion title={Locales.t('size')}>
+            <RadioButton.Group
+              value={JSON.stringify(settings.font.size)}
+              onValueChange={(s) =>
+                setSettings({
+                  ...settings,
+                  font: {
+                    ...settings.font,
+                    size: JSON.parse(s) as TFontSize,
+                  },
+                })
+              }
+            >
+              {Constants.font.sizes.map((s) => (
+                <RadioButton.Item
+                  labelVariant="bodySmall"
+                  key={s.label}
+                  label={Locales.t(s.label)}
+                  value={JSON.stringify(s)}
+                />
+              ))}
+            </RadioButton.Group>
+          </List.Accordion>
         </List.Section>
-      </Modal>
+
+        <View
+          style={{
+            gap: 8,
+            padding: 8,
+            marginTop: 'auto',
+            flexDirection: 'row',
+          }}
+        >
+          <Button
+            mode="contained"
+            style={{ flexGrow: 1 }}
+            onPress={async () =>
+              await KVStore.settings.save(JSON.stringify(settings), () => {
+                setMessage({
+                  visible: true,
+                  content: Locales.t('settingsSaved'),
+                })
+              })
+            }
+          >
+            {Locales.t('save')}
+          </Button>
+
+          <Button
+            mode="contained"
+            style={{ flexGrow: 1 }}
+            buttonColor={theme.colors.error}
+            textColor={theme.colors.onError}
+            rippleColor={theme.colors.error}
+            onPress={async () =>
+              await KVStore.settings.save(
+                JSON.stringify(DefaultSettings),
+                () => {
+                  setSettings(DefaultSettings)
+                  setMessage({
+                    visible: true,
+                    content: Locales.t('settingsSaved'),
+                  })
+                },
+              )
+            }
+          >
+            {Locales.t('reset')}
+          </Button>
+        </View>
+      </ScrollView>
 
       <Snackbar
         visible={message.visible}

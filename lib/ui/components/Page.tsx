@@ -89,40 +89,49 @@ const Content = (props: {
   settings: TSettings
   verses: TVerse[]
   onVerseLongPress: (v: TVerse) => void
-}) =>
-  props.verses.map((v) => (
-    <Text
-      key={v.id}
-      variant={props.settings.font.size.value}
-      onLongPress={() => props.onVerseLongPress(v)}
-      style={{
-        textAlign: 'center',
-        fontFamily: props.settings.font.family,
-        lineHeight: props.settings.font.size.lineHeight,
-      }}
-    >
-      {v.number !== 1 ? (
-        v.content + ' '
-      ) : (
-        <>
-          <Text
-            style={{
-              textAlign: 'center',
-              color: props.theme.colors.success,
-              fontFamily: props.settings.font.family,
-            }}
-          >
-            {v.content.slice(0, 39) + '\n'}
-          </Text>
-          {v.content.slice(39) + ' '}
-        </>
-      )}
+}) => (
+  <Text
+    style={{
+      direction: 'rtl',
+      textAlign: 'justify',
+      paddingHorizontal: 16,
+    }}
+  >
+    {props.verses.map((v) => (
+      <Text
+        key={v.id}
+        variant={props.settings.font.size.value}
+        onLongPress={() => props.onVerseLongPress(v)}
+        style={{
+          textAlign: 'center',
+          fontFamily: props.settings.font.family,
+          lineHeight: props.settings.font.size.lineHeight,
+        }}
+      >
+        {v.number !== 1 ? (
+          v.content + ' '
+        ) : (
+          <>
+            <Text
+              style={{
+                textAlign: 'center',
+                color: props.theme.colors.success,
+                fontFamily: props.settings.font.family,
+              }}
+            >
+              {v.content.slice(0, 39) + '\n'}
+            </Text>
+            {v.content.slice(39) + ' '}
+          </>
+        )}
 
-      <Text style={{ fontFamily: 'Uthmanic' }}>
-        {toMarker(v.number.toString()) + ' '}
+        <Text style={{ fontFamily: 'Uthmanic' }}>
+          {toMarker(v.number.toString()) + ' '}
+        </Text>
       </Text>
-    </Text>
-  ))
+    ))}
+  </Text>
+)
 
 /**
  * Chapter header
@@ -201,20 +210,12 @@ const Page = (props: {
           />
         )}
 
-        <Text
-          style={{
-            direction: 'rtl',
-            textAlign: 'justify',
-            paddingHorizontal: 16,
-          }}
-        >
-          <Content
-            theme={props.theme}
-            settings={props.settings}
-            verses={props.data.verses}
-            onVerseLongPress={(v: TVerse) => props.onVersePress(v)}
-          />
-        </Text>
+        <Content
+          theme={props.theme}
+          settings={props.settings}
+          verses={props.data.verses}
+          onVerseLongPress={(v: TVerse) => props.onVersePress(v)}
+        />
       </Container>
     )
   }

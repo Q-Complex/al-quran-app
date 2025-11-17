@@ -81,6 +81,7 @@ const En = {
   prayer: 'Quran Completion Prayer',
   continue: 'Continue',
   back: 'Back',
+  remove: 'Remove',
 }
 
 export { En }

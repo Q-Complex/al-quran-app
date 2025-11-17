@@ -8,6 +8,7 @@ import {
   Appbar,
   Button,
   FAB,
+  IconButton,
   List,
   ProgressBar,
   Surface,
@@ -79,6 +80,14 @@ const Details = () => {
   }, [ID, path])
 
   const single = path.replace('s', '')
+  const title =
+    path !== 'chapters'
+      ? path === 'quarters'
+        ? formatQuarterLabel(ID)
+        : `${Locales.t(single)} ${ID}`
+      : item
+        ? item.name
+        : ''
 
   return (
     <Surface
@@ -92,15 +101,8 @@ const Details = () => {
     >
       <Stack.Screen
         options={{
+          title,
           headerShown,
-          title:
-            path !== 'chapters'
-              ? path === 'quarters'
-                ? formatQuarterLabel(ID)
-                : `${Locales.t(single)} ${ID}`
-              : item
-                ? item.name
-                : '',
           headerRight: (props) => (
             <>
               <Tooltip title={Locales.t('fullscreen')}>
@@ -146,12 +148,110 @@ const Details = () => {
 
       <AnimatedFlashList
         data={pages}
+        ListHeaderComponent={
+          !headerShown ? (
+            <View
+              style={{
+                gap: 16,
+                padding: 16,
+                flexWrap: 'wrap',
+                flexDirection: 'row',
+                paddingHorizontal: 8,
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <View
+                style={{
+                  gap: 8,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}
+              >
+                <Tooltip title={Locales.t('back')}>
+                  <IconButton
+                    mode="contained"
+                    icon="arrow-left"
+                    onPress={() => router.back()}
+                    disabled={!router.canGoBack()}
+                  />
+                </Tooltip>
+
+                <Text variant="titleLarge" style={{ lineHeight: 48 }}>
+                  {title}
+                </Text>
+              </View>
+
+              <View
+                style={{
+                  gap: 4,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}
+              >
+                <Tooltip title={Locales.t('fullscreen')}>
+                  <IconButton
+                    mode="contained"
+                    icon="fullscreen-exit"
+                    onPress={() => setHeaderShown(!headerShown)}
+                  />
+                </Tooltip>
+
+                <Tooltip title={Locales.t('prev')}>
+                  <IconButton
+                    mode="contained"
+                    icon="chevron-left"
+                    disabled={ID === 1}
+                    onPress={() => setID(ID - 1)}
+                  />
+                </Tooltip>
+
+                <Tooltip title={Locales.t('next')}>
+                  <IconButton
+                    mode="contained"
+                    icon="chevron-right"
+                    disabled={ID === count}
+                    onPress={() => setID(ID + 1)}
+                  />
+                </Tooltip>
+              </View>
+            </View>
+          ) : undefined
+        }
         ListFooterComponent={
-          ID === count ? (
-            <View style={{ padding: 16 }}>
-              <Button mode="contained" onPress={() => router.push('/prayer')}>
-                {Locales.t('prayer')}
-              </Button>
+          !headerShown ? (
+            <View style={{ gap: 16, padding: 16, paddingBottom: 64 }}>
+              <View
+                style={{
+                  gap: 16,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Tooltip title={Locales.t('prev')}>
+                  <IconButton
+                    mode="contained"
+                    icon="chevron-left"
+                    disabled={ID === 1}
+                    onPress={() => setID(ID - 1)}
+                  />
+                </Tooltip>
+                <Tooltip title={Locales.t('next')}>
+                  <IconButton
+                    mode="contained"
+                    icon="chevron-right"
+                    disabled={ID === count}
+                    onPress={() => setID(ID + 1)}
+                  />
+                </Tooltip>
+              </View>
+
+              {ID === count ? (
+                <Button mode="contained" onPress={() => router.push('/prayer')}>
+                  {Locales.t('prayer')}
+                </Button>
+              ) : undefined}
             </View>
           ) : undefined
         }
