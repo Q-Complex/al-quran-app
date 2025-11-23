@@ -1,6 +1,6 @@
+import { NativeStackHeaderRightProps } from '@react-navigation/native-stack'
 import { AnimatedFlashList } from '@shopify/flash-list'
 import * as Clipboard from 'expo-clipboard'
-import * as Constants from 'expo-constants'
 import { router, Stack, useLocalSearchParams } from 'expo-router'
 import { useSQLiteContext } from 'expo-sqlite'
 import React from 'react'
@@ -8,7 +8,6 @@ import {
   Appbar,
   Button,
   FAB,
-  IconButton,
   List,
   ProgressBar,
   Surface,
@@ -35,7 +34,7 @@ import {
   TVerse,
 } from '@/lib'
 import { formatQuarterLabel } from '@/lib/utils/text'
-import { View } from 'react-native'
+import { StatusBar } from 'expo-status-bar'
 
 const Details = () => {
   const db = useSQLiteContext()
@@ -89,58 +88,49 @@ const Details = () => {
         ? item.name
         : ''
 
+  const HeaderRight = (props: NativeStackHeaderRightProps) => (
+    <>
+      <Tooltip title={Locales.t('fullscreen')}>
+        <Appbar.Action
+          {...props}
+          icon="fullscreen"
+          onPress={() => setHeaderShown(!headerShown)}
+        />
+      </Tooltip>
+      <Tooltip title={Locales.t('prev')}>
+        <Appbar.Action
+          {...props}
+          icon="chevron-left"
+          disabled={ID === 1}
+          onPress={() => setID(ID - 1)}
+        />
+      </Tooltip>
+      <Tooltip title={Locales.t('next')}>
+        <Appbar.Action
+          {...props}
+          icon="chevron-right"
+          disabled={ID === count}
+          onPress={() => setID(ID + 1)}
+        />
+      </Tooltip>
+      <Tooltip title={Locales.t('info')}>
+        <Appbar.Action
+          {...props}
+          icon="information"
+          onPress={() => setVisible({ ...visible, details: !visible.details })}
+        />
+      </Tooltip>
+    </>
+  )
+
   return (
-    <Surface
-      elevation={0}
-      style={{
-        flex: 1,
-        paddingTop: !headerShown
-          ? Constants.default.statusBarHeight
-          : undefined,
-      }}
-    >
+    <Surface elevation={0} style={{ flex: 1 }}>
+      <StatusBar animated hidden={!headerShown} />
       <Stack.Screen
         options={{
           title,
           headerShown,
-          headerRight: (props) => (
-            <>
-              <Tooltip title={Locales.t('fullscreen')}>
-                <Appbar.Action
-                  {...props}
-                  icon="fullscreen"
-                  onPress={() => setHeaderShown(!headerShown)}
-                />
-              </Tooltip>
-              <Tooltip title={Locales.t('prev')}>
-                <Appbar.Action
-                  {...props}
-                  icon="chevron-left"
-                  disabled={ID === 1}
-                  onPress={() => setID(ID - 1)}
-                />
-              </Tooltip>
-              <Tooltip title={Locales.t('next')}>
-                <Appbar.Action
-                  {...props}
-                  icon="chevron-right"
-                  disabled={ID === count}
-                  onPress={() => setID(ID + 1)}
-                />
-              </Tooltip>
-              <Tooltip title={Locales.t('info')}>
-                <Appbar.Action
-                  {...props}
-                  icon="information"
-                  iconColor={theme.colors.info}
-                  rippleColor={theme.colors.info}
-                  onPress={() =>
-                    setVisible({ ...visible, details: !visible.details })
-                  }
-                />
-              </Tooltip>
-            </>
-          ),
+          headerRight: (props) => <HeaderRight {...props} />,
         }}
       />
 
@@ -150,109 +140,52 @@ const Details = () => {
         data={pages}
         ListHeaderComponent={
           !headerShown ? (
-            <View
-              style={{
-                gap: 16,
-                padding: 16,
-                flexWrap: 'wrap',
-                flexDirection: 'row',
-                paddingHorizontal: 8,
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}
-            >
-              <View
-                style={{
-                  gap: 8,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}
-              >
-                <Tooltip title={Locales.t('back')}>
-                  <IconButton
-                    mode="contained"
-                    icon="arrow-left"
-                    onPress={() => router.back()}
-                    disabled={!router.canGoBack()}
-                  />
-                </Tooltip>
-
-                <Text variant="titleLarge" style={{ lineHeight: 48 }}>
-                  {title}
-                </Text>
-              </View>
-
-              <View
-                style={{
-                  gap: 4,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}
-              >
-                <Tooltip title={Locales.t('fullscreen')}>
-                  <IconButton
-                    mode="contained"
-                    icon="fullscreen-exit"
-                    onPress={() => setHeaderShown(!headerShown)}
-                  />
-                </Tooltip>
-
-                <Tooltip title={Locales.t('prev')}>
-                  <IconButton
-                    mode="contained"
-                    icon="chevron-left"
-                    disabled={ID === 1}
-                    onPress={() => setID(ID - 1)}
-                  />
-                </Tooltip>
-
-                <Tooltip title={Locales.t('next')}>
-                  <IconButton
-                    mode="contained"
-                    icon="chevron-right"
-                    disabled={ID === count}
-                    onPress={() => setID(ID + 1)}
-                  />
-                </Tooltip>
-              </View>
-            </View>
+            <Appbar.Header>
+              <Appbar.BackAction
+                onPress={() => router.back()}
+                disabled={!router.canGoBack()}
+              />
+              <Appbar.Content title={title} titleStyle={{ lineHeight: 48 }} />
+              <HeaderRight />
+            </Appbar.Header>
           ) : undefined
         }
         ListFooterComponent={
           !headerShown ? (
-            <View style={{ gap: 16, padding: 16, paddingBottom: 64 }}>
-              <View
-                style={{
-                  gap: 16,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Tooltip title={Locales.t('prev')}>
-                  <IconButton
-                    mode="contained"
-                    icon="chevron-left"
-                    disabled={ID === 1}
-                    onPress={() => setID(ID - 1)}
+            <Appbar
+              style={{ marginBottom: 64, justifyContent: 'space-between' }}
+            >
+              <Tooltip title={Locales.t('prev')}>
+                <Appbar.Action
+                  icon="chevron-left"
+                  disabled={ID === 1}
+                  onPress={() => setID(ID - 1)}
+                />
+              </Tooltip>
+
+              {ID === count ? (
+                <Tooltip title={Locales.t('prayer')}>
+                  <Appbar.Action
+                    icon="chevron-right"
+                    onPress={() => router.push('/prayer')}
                   />
                 </Tooltip>
+              ) : (
                 <Tooltip title={Locales.t('next')}>
-                  <IconButton
-                    mode="contained"
+                  <Appbar.Action
                     icon="chevron-right"
                     disabled={ID === count}
                     onPress={() => setID(ID + 1)}
                   />
                 </Tooltip>
-              </View>
-
-              {ID === count ? (
-                <Button mode="contained" onPress={() => router.push('/prayer')}>
-                  {Locales.t('prayer')}
-                </Button>
-              ) : undefined}
-            </View>
+              )}
+            </Appbar>
+          ) : ID === count ? (
+            <Surface elevation={0} style={{ padding: 16 }}>
+              <Button mode="contained" onPress={() => router.push('/prayer')}>
+                {Locales.t('prayer')}
+              </Button>
+            </Surface>
           ) : undefined
         }
         renderItem={({ item }) => (

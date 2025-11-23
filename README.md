@@ -11,19 +11,6 @@
 
 The Quran Application is a modern, cross-platform mobile application designed to provide users with a seamless and customizable Quran reading experience. Utilizing advanced technologies and industry-standard best practices, the application supports multiple languages, customizable themes, and text directions. Our mission is to make the Quran accessible and understandable to a global audience.
 
-## Screenshots
-
-![Home](screenshots/home.png)
-![Chapter](screenshots/chapter.png)
-![More](screenshots/more.png)
-![Chapter details](screenshots/chapter-details.png)
-![Chapter light](screenshots/chapter-light.png)
-![Search](screenshots/serach.png)
-![Bookmarks](screenshots/bookmarks.png)
-![Settings App](screenshots/settings-app.png)
-![Settings App Light](screenshots/settings-light.png)
-![Settings Quran](screenshots/settings-quran.png)
-
 ## Key Features
 
 - **Expo Framework**: Facilitates rapid development and streamlines project initialization.

@@ -78,7 +78,7 @@ const Ar = {
   reset: 'إعادة الضبط',
   fullscreen: 'ملء الشاشة',
   more: 'المزيد',
-  prayer: 'دعاء ختم القرآن',
+  prayer: 'دعاء القرآن',
   continue: 'أكمل',
   back: 'رجوع',
   remove: 'إزالة',
